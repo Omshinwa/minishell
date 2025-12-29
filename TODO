@@ -1,5 +1,13 @@
 today: william will do fork() if in child: set_signal_child, else set_signal_parent.
 
+User input
+   ↓
+Tokenization (lexer)
+   ↓
+Parsing (grammar / precedence)
+   ↓
+Execution
+
 # EITHER:
 
 • Display a prompt when waiting for a new command.
@@ -52,6 +60,8 @@ connected to the input of the next command via a pipe.
 	◦ unset with no options
 	◦ env with no options or arguments
 	◦ exit with no options
+
+strerror, perror
 
 # BONUS
 
