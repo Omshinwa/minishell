@@ -1,36 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   readline.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
+/*   Updated: 2025/12/29 15:25:03 by wiwu             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include "libft.h"
 
-// History Storage
-// 	The history list is an array of history entries.  A history entry is declared as follows:
+// I dont think you can just use split if you have to handle ' " escape chars
+// TODO handle errors
+t_node	**parse(char *str)
+{
+	t_node	**node_list; 
+	t_node	*current_node; 
+	char	**str_list;
+	int		i;
+	int		len_arg;
 
-// 	typedef void * histdata_t;
+	str_list = ft_split(str, '|');
+	i = 0;
+	while(str_list[i] != NULL)
+		i++;
+	len_arg = i;
+	node_list = calloc(sizeof(t_node), len_arg);
+	i = -1;
+	while(++i < len_arg)
+	{
+		current_node = calloc(sizeof(t_node), 1);
+		current_node->cmd_args = ft_split(str_list[i], ' ');
+		node_list[i] = current_node;
+	}
+	node_list[i] = NULL;
+	return (node_list);
+}
 
-// 	typedef struct _hist_entry {
-// 		char *line;
-// 		char *timestamp;
-// 		histdata_t data;
-// 	} HIST_ENTRY;
+void print_list_of_cmds(t_node **node_list)
+{
+	int	i;
+	int	j;
+	t_node	*node;
 
-// 	The history list itself might therefore be declared as
-
-// 	HIST_ENTRY ** the_history_list;
-
-// 	The state of the History library is encapsulated into a single structure:
-
-// 	/*
-// 	* A structure used to pass around the current state of the history.
-// 	*/
-// 	typedef struct _hist_state {
-// 		HIST_ENTRY **entries; /* Pointer to the entries themselves. */
-// 		int offset;           /* The location pointer within this array. */
-// 		int length;           /* Number of elements within this array. */
-// 		int size;             /* Number of slots allocated to this array. */
-// 		int flags;
-// 	} HISTORY_STATE;
-
-// 	If the flags member includes HS_STIFLED, the history has been stifled.
-
+	i = -1;
+	while(node_list[++i])
+	{
+		node = node_list[i];
+		printf(BOLD "CMD: %s" RESET, node->cmd_args[0]);
+		j = 0;
+		while(node->cmd_args[++j])
+		{
+			printf(" arg%i: %s", j, node->cmd_args[j]);
+		}
+		printf("\n|\n");
+	}
+}
 
 volatile sig_atomic_t	g_ackowledge = 0;
 // an atomic operation guarantees that every read/write from g_acknoledge are
@@ -46,13 +73,14 @@ static void	acknowledge_sig(int signum)
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
+		// rl_redisplay();
 	}
 }
 
 int main(void)
 {
 	char *str;
+	t_node	**node_list; 
 
 	signal(SIGINT, acknowledge_sig);
 	signal(SIGQUIT, SIG_IGN);
@@ -66,7 +94,11 @@ int main(void)
 			break ;
 		}
 		if (ft_strlen(str))
+		{
 			add_history(str);
+			node_list = parse(str);
+			print_list_of_cmds(node_list);
+		}
 		free(str);
 	}
 	return (0);
