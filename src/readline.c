@@ -1,9 +1,15 @@
 #include "minishell.h"
+#include "libft.h"
 
 int main(void)
 {
 	char *str;
-	str = readline("👻");
-	add_history(str);
-	str = readline("👻");
+	while(1)
+	{
+		str = readline("👻>");
+		if (ft_strlen(str))
+			add_history(str);
+	}
+	// int rl_on_new_line(void);
+	// str = readline("👻>");
 }
