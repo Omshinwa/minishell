@@ -4,5 +4,6 @@ int main(void)
 {
 	char *str;
 	str = readline("👻");
-	printf("%s", str);
+	add_history(str);
+	str = readline("👻");
 }
