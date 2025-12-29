@@ -1,0 +1,20 @@
+{
+  // Launch philo with gdb; builds first via the preLaunchTask
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug philo",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/philo",
+      "args": ["5", "800", "200", "1", "10"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build philo"
+    }
+  ]
+}
