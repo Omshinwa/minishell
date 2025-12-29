@@ -2,7 +2,7 @@
 
 int main(void)
 {
-	char *str;
+	char *str = "salut";
 	str = readline("👻");
 	printf("%s", str);
 }
