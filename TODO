@@ -1,8 +1,10 @@
+today: william will do fork() if in child: set_signal_child, else set_signal_parent.
+
 # EITHER:
 
 • Display a prompt when waiting for a new command.
 
-• Have a working history.
+• Have a working history. ignore ! expansion (bash !3 will run the third command in history)
 
 • Use at most one global variable to indicate a received signal. Consider the
 implications: this approach ensures that your signal handler will not access your main data structures.
