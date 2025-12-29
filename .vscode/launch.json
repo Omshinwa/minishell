@@ -6,7 +6,7 @@
       "name": "Debug philo",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/philo",
+      "program": "${workspaceFolder}/minishell",
       "args": ["5", "800", "200", "1", "10"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
