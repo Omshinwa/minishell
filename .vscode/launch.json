@@ -1,5 +1,5 @@
 {
-  // Launch philo with gdb; builds first via the preLaunchTask
+  // Launch with gdb; builds first via the preLaunchTask
   "version": "0.2.0",
   "configurations": [
     {

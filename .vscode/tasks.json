@@ -1,9 +1,9 @@
 {
-  // Build philo via make
+  // Build via make
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build philo",
+      "label": "build program",
       "type": "shell",
       "command": "make",
       "options": {
