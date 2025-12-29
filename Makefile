@@ -3,44 +3,43 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
+#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/12/29 07:47:49 by dasamuel          #+#    #+#              #
-#    Updated: 2025/12/29 08:21:31 by dasamuel         ###   ########.fr        #
+#    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
+#    Updated: 2025/12/29 10:33:08 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	minishell
+.PHONY: all clean fclean re bonus
 
-CC		=	cc -Wall -Wextra -Werror -I includes -I libft
+NAME = philo
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -g -pthread
 
-RM		=	rm -rf
+SRC_FILES	= main.c parse.c init_table.c routine.c time.c error.c mutex_wrappers.c mutex_get_set.c
+OBJ_FILES	= $(SRC_FILES:.c=.o)
+SRC_PATH	= src/
+OBJ_PATH	= obj/
+INCLUDES	= include
 
-LIBFT	=	libft/libft.a
+SOURCES	= $(addprefix $(SRC_PATH),$(SRC_FILES))
+OBJECTS	= $(addprefix $(OBJ_PATH),$(OBJ_FILES))
 
-SRCS	=	
+# RULES
 
-OBJS	=	$(SRCS:.c=.o)
+all: $(NAME)
 
-.c.o:
-			$(CC) -c $< -o $@
-			
-all:		$(NAME)
+$(NAME): $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) -I$(INCLUDES) -o $(NAME)
 
-$(NAME):	$(OBJS) $(LIBFT)
-			$(CC) $(OBJS) $(LIBFT) -o $(NAME)
-
-$(LIBFT):
-			make -C libft
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(INCLUDES)/philo.h
+	mkdir -p $(OBJ_PATH)
+	$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 clean:
-			$(RM) $(OBJS)
-			make clean -C libft
+	rm -rf $(OBJ_PATH)
 
-fclean:		clean
-			$(RM) $(NAME)
-			make fclean -C libft
+fclean: clean
+	rm -f $(NAME)
 
-re:			fclean all
-
-.PHONY:		 all clean fclean re
+re: fclean all
