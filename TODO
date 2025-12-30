@@ -26,7 +26,7 @@ implications: this approach ensures that your signal handler will not access you
 
 # PARSING:
 
-• Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
+• Not interpret unclosed quotes or special characters which are not required by the subject such as \ or ; or &.
 
 • Handle ’ (single quote) which should prevent the shell from interpreting the meta-characters in the quoted sequence.
 
