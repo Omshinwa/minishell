@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/31 22:04:06 by wiwu             ###   ########.fr       */
+/*   Updated: 2025/12/31 22:44:05 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,14 @@ int	is_metachar(char c)
 {
 	if (ft_isalnum(c))
 		return (0);
+	// those char are fine if in quotes, otherwise special behavior
 	if (c == '|' || c == '<' || c == '>' || c == '&'
-		|| c == '(' || c == ')' || c == ' ')
+		|| c == '(' || c == ')' || c == ' ' || c == '"' || c == '\'')
 		return (1);
-	else
-		return (0);
+	// those char should always give an error:
+	if (c == ';' || c == '\\')
+		return (1);
+	return (0);
 }
 
 // give the first char of a new token, 
@@ -58,43 +61,32 @@ int	is_metachar(char c)
 int	set_token(t_token *token, char *str, int start)
 {
 	// TK_WORD
-	int end_offset; // sometimes we shave from the end
 	int	end; // return
 	int	c;
 
-	end_offset = 0;
 	end = start;
 	c = str[start];
-	if (!is_metachar(c)) // until space
+	if (!is_metachar(c) || c == '"' ||  c == '\'') // until space
 	{
 		token->type = TK_WORD;
-		while(str[end] && !is_metachar(str[end]))
-			end++;
-	}
-	else if (c == '-')
-	{
-		while (str[end] == '-')
-			end++;
-		if (!is_metachar(str[end])) // until space
+		while(str[end])
 		{
-			token->type = TK_WORD;
-			while(str[end] && !is_metachar(str[end]))
+			if (str[end] == '"' || str[end] == '\'') // until quotation mark
+			{
+				c = str[end];
 				end++;
+				while(str[end] && str[end] != c)
+					end++;
+				if (str[end] == c)
+					end++;
+				else // no matching quote mark
+					return (print_red("unclosed quotation"), -1);
+			}
+			else if (!is_metachar(str[end]))
+				end++;
+			else
+				break ;
 		}
-		else
-			return (print_red("argument invalid"), -1);
-	}
-	else if (c == '"' || c == '\'') // until quotation mark
-	{
-		start++;
-		token->type = TK_WORD;
-		end++;
-		while(str[end] && str[end] != c)
-			end++;
-		if (str[end] == c) // found matching quote mark
-			end_offset = 1;
-		else // reached end of str
-			return (print_red("unclosed quotation"), -1);
 	}
 	// PARENTHESIS
 	else if (c == '(')
@@ -152,7 +144,7 @@ int	set_token(t_token *token, char *str, int start)
 	else
 		return (print_red("invalid char"),-1);
 	token->str = ft_substr(str, start, end - start);
-	return (end + end_offset);
+	return (end);
 }
 
 // Goes through the string input,
@@ -179,7 +171,7 @@ t_token *tokenize(char *str)
 		new_i = set_token(&arr_token[j], str, i);
 		if (new_i == -1)
 		{
-			printf(RED "invalid token at index %i : %s\n", i, &str[i]);
+			printf(RED "invalid token at index %i : %c\n", i, str[i]);
 		}
 		i = new_i;
 		j++;
@@ -301,36 +293,36 @@ void	print_nodes(t_node *node, int depth)
 		while (node->argv[i] != NULL && i < 5)
 		{
 			if (i == 4 && node->argv[5])
-				printf("%s%s %13s\n" RESET, offset, color, "...");
+				printf("%s%s %13s" RESET "\n", offset, color, "...");
 			else if (i == 0)
-				printf("%s%s>CMD:%9s\n" RESET, offset, color, node->argv[i]);
+				printf("%s%s>CMD:%9s" RESET "\n", offset, color, node->argv[i]);
 			else
-				printf("%s%s %13s\n" RESET, offset, color, node->argv[i]);
+				printf("%s%s%14s" RESET "\n", offset, color, node->argv[i]);
 			i++;
 		}
 	}
 	else if (node->type == NODE_PIPE)
 	{
 		color = BG_RED;
-		printf("%s%s>PIPE: %7s\n" RESET, offset, color, "|");
+		printf("%s%s>PIPE: %7s" RESET "\n", offset, color, "|");
 	}
 	else if (node->type == NODE_AND)
 	{
 		color = BG_GREEN;
-		printf("%s%s>AND: %8s\n" RESET, offset, color, "&&");
+		printf("%s%s>AND: %8s" RESET "\n", offset, color, "&&");
 	}
 	else if (node->type == NODE_OR)
 	{
 		color = BG_YELLOW;
-		printf("%s%s>OR: %9s\n" RESET, offset, color, "&&");
+		printf("%s%s>OR: %9s" RESET "\n", offset, color, "&&");
 	}
 	else if (node->type == NODE_SUBSHELL)
 	{
 		color = BG_BLUE;
-		printf("%s%s>%13s\n" RESET, offset, color, "SUBSHELL     ");
+		printf("%s%s>%13s" RESET "\n", offset, color, "SUBSHELL     ");
 	}
 	while (i++ < 5)
-		printf("%s%s %13s\n" RESET, offset, color, " ");
+		printf("%s%s %13s" RESET "\n", offset, color, " ");
 	if (node->left)
 		print_nodes(node->left, depth + 1);
 	if (node->right)
@@ -470,6 +462,7 @@ int main(void)
 			add_history(str);
 			arr_token = tokenize(str);
 			print_tokens(arr_token);
+			printf("\n");
 			node = parse_tokens(arr_token);
 			print_nodes(node, 0);
 		}
