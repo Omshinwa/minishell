@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/31 22:44:05 by wiwu             ###   ########.fr       */
+/*   Updated: 2025/12/31 22:49:59 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ int	is_metachar(char c)
 }
 
 // give the first char of a new token, 
-// change the token type?
+// change the token type
 // return i as the progress made
-/// TODO: expands $ variables
 int	set_token(t_token *token, char *str, int start)
 {
 	// TK_WORD
@@ -393,9 +392,6 @@ t_node *parse_command(t_token *arr_token, int *index)
 			return ((*index)++, new_subshell(node));
 		else
 			return(print_red("missing closing parenthesis."), NULL);
-		// if (arr_token[*index].type == TK_END)
-		// 	return(print_red("missing closing parenthesis."), NULL);
-		// node = parse_expression(arr_token, index);
 	}
 	return parse_simple_command(arr_token, index);
 }
