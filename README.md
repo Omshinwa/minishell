@@ -9,3 +9,23 @@ cat README.md | grep "e" | wc -l
 < <<( echo 'test quotes' | cat 'like "Hello World " ' "ok" 'a' || echo wesh ) && wc > >>
 
 < <<( echo 'test quotes' | cat 'like "Hello World " ' "ok" 'a' || echo
+
+# command with in and out
+grep foo < in.txt > out.txt
+# multiple output redirections
+echo hi > out1.txt >> out2.txt
+command > out1 > out2
+
+echo '$USER'
+echo "$USER"
+echo $USER
+
+
+( echo "Hello World" || echo wesh ) && wc -l
+
+cat 'like "Hello World"' && echo hahaha
+
+( echo "Hello World" | echo wesh ) && wc -l
+
+echo 1 && echo 2 && echo 3 || echo 4 && echo 5
+echo 1 || echo 2 && echo 3

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 19:09:25 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/19 00:37:46 by dasamuel         ###   ########.fr       */
+/*   Updated: 2025/12/31 17:47:09 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef TK_PIPEX_H
+# define TK_PIPEX_H
 
 # include <unistd.h>
 # include <stdlib.h>

@@ -1,4 +1,13 @@
-today: william will do fork() if in child: set_signal_child, else set_signal_parent.
+* Ta fonction set_token utilise ft_isalnum pour délimiter les TK_WORD. C'est trop restrictif pour un shell.
+ex: filename test.txt
+Correction : Un TK_WORD doit consommer tout ce qui n'est PAS un métacaractère (|, <, >, &, (, ), espace).
+
+* Problème : Le shell doit gérer la concaténation de parties quotées et non quotées.
+Exemple : echo "he"llo doit être un seul argument hello.
+
+Correction : Soit le tokenizer fusionne ces parties, soit (plus courant) le parser doit détecter que deux TK_WORD se suivent sans espace et les fusionner en un seul argument. Actuellement, ton tokenizer saute les espaces avant d'appeler set_token, donc tu perds l'information "y avait-il un espace entre ces deux mots ?".
+
+* Handle < << > >>
 
 User input
    ↓
