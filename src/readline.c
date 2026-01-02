@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 12:34:57 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 13:32:17 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	is_metachar(char c)
 		|| c == '(' || c == ')' || c == ' ' || c == '"' || c == '\'')
 		return (1);
 	// those char should always give an error:
-	if (c == ';' || c == '\\' || c == '!')
+	if (c == ';' || c == '\\')
 		return (1);
 	return (0);
 }
@@ -65,7 +65,9 @@ int	set_token(t_token *token, char *str, int start)
 
 	end = start;
 	c = str[start];
-	if (!is_metachar(c) || c == '"' ||  c == '\'') // until space
+	if (c == '!')
+		return ((printf( RED "invalid char: %c", c), -1), -1);
+	else if (!is_metachar(c) || c == '"' ||  c == '\'') // until space
 	{
 		token->type = TK_WORD;
 		while(str[end])
@@ -103,6 +105,7 @@ int	set_token(t_token *token, char *str, int start)
 	// TK_PIPE
 	else if (c == '|')
 	{
+		token->str = "|";
 		token->type = TK_PIPE;
 		end++;
 		if (str[end] == '|')
@@ -126,20 +129,24 @@ int	set_token(t_token *token, char *str, int start)
 	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_ININ, TK_REDIR_OUTOUT
 	else if (c == '<')
 	{
+		token->str = "<";
 		token->type = TK_REDIR_IN;
 		end++;
 		if (str[end] == '<')
 		{
+			token->str = "<<";
 			token->type = TK_REDIR_ININ;
 			end++;
 		}
 	}
 	else if (c == '>')
 	{
+		token->str = ">";
 		token->type = TK_REDIR_OUT;
 		end++;
 		if (str[end] == '>')
 		{
+			token->str = ">>";
 			token->type = TK_REDIR_OUTOUT;
 			end++;
 		}
@@ -360,7 +367,7 @@ t_node	*parse_simple_command(t_token *arr_token, int *index)
 	if (arr_token[*index].type == TK_OP_AND ||
 		arr_token[*index].type == TK_OP_OR  ||
 		arr_token[*index].type == TK_PIPE   ||
-		arr_token[*index].type == TK_OPEN_PARENT   ||
+		arr_token[*index].type == TK_OPEN_PARENT ||
 		arr_token[*index].type == TK_CLOSE_PARENT)
 		return(printf(RED "syntax error near unexpected token `%s` \n", arr_token[*index].str), NULL);
 	node = new_node(NODE_CMD, NULL, NULL);

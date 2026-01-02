@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/02 12:32:38 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 13:31:06 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,19 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+// 111111111111 - 12 bits
 typedef enum e_token_type {
-	TK_WORD,
-	TK_PIPE,
-	TK_REDIR_IN,
-	TK_REDIR_OUT,
-	TK_REDIR_ININ,
-	TK_REDIR_OUTOUT,
-	TK_OP_AND,
-	TK_OP_OR,
-	TK_OPEN_PARENT,
-	TK_CLOSE_PARENT,
-	TK_END,
+	TK_WORD = 1,
+	TK_PIPE = 2,
+	TK_REDIR_IN = 4,
+	TK_REDIR_OUT = 8,
+	TK_REDIR_ININ = 16,
+	TK_REDIR_OUTOUT = 32,
+	TK_OP_AND = 64,
+	TK_OP_OR = 128,
+	TK_OPEN_PARENT = 256,
+	TK_CLOSE_PARENT = 512,
+	TK_END = 1024,
 } t_token_type;
 
 typedef struct s_token
