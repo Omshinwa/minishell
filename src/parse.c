@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   readline.c                                         :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 18:58:50 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 21:02:55 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ volatile sig_atomic_t	g_ackowledge = 0;
 // done in full before handling a signal.
 // volatile prevents the compiler from making some optimizations
 
-static void	acknowledge_sig(int signum)
+void	acknowledge_sig(int signum)
 {
 	g_ackowledge = signum;
 	if (signum == SIGINT)
@@ -62,17 +62,18 @@ int	is_metachar(char c)
 	return (0);
 }
 
-void	clean_tokens(t_token *arr_token)
+void	clean_tokens(t_token **arr_token)
 {
 	int	i;
 
 	i = 0;
-	while(arr_token[i].type != TK_END)
+	while((*arr_token)[i].type != TK_END)
 	{
-		free(arr_token[i].str);
+		free((*arr_token)[i].str);
 		i++;
 	}
-	free(arr_token);
+	free(*arr_token);
+	*arr_token = NULL;
 }
 
 // give the first char of a new token, 
@@ -86,8 +87,9 @@ int	set_token(t_token *token, char *str, int start)
 
 	end = start;
 	c = str[start];
+	token->str = NULL;
 	if (c == '!')
-		return (printf( RED "invalid char: %c", c), -1);
+		return (token->type = TK_END, printf( RED "invalid char: %c", c), -1);
 	else if (!is_metachar(c) || c == '"' ||  c == '\'') // until space
 	{
 		token->type = TK_WORD;
@@ -102,7 +104,7 @@ int	set_token(t_token *token, char *str, int start)
 				if (str[end] == c)
 					end++;
 				else // no matching quote mark
-					return (print_red("unclosed quotation"), -1);
+					return (token->type = TK_END, print_red("unclosed quotation"), -1);
 			}
 			else if (!is_metachar(str[end]))
 				end++;
@@ -140,7 +142,7 @@ int	set_token(t_token *token, char *str, int start)
 			end += 2;
 		}
 		else
-			return (print_red("invalid char: &"), -1);
+			return (token->type = TK_END, print_red("invalid char: &"), -1);
 	}
 	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
 	else if (c == '<')
@@ -164,7 +166,7 @@ int	set_token(t_token *token, char *str, int start)
 		}
 	}
 	else
-		return (print_red("invalid char"),-1);
+		return (token->type = TK_END, print_red("invalid char"),-1);
 	token->str = ft_substr(str, start, end - start);
 	return (end);
 }
@@ -191,16 +193,19 @@ t_token *tokenize(char *str)
 			i++;
 			continue;
 		}
-		arr_token[j] = (t_token) {"", -1};
+		arr_token[j] = (t_token) {NULL, TK_END};
 		new_i = set_token(&arr_token[j], str, i);
 		if (new_i == -1)
 		{
-			printf(RED "invalid token at index %i : %c\n", i, str[i]);
+			printf(RED "invalid token at index %i : %c" RESET "\n", i, str[i]);
+			break ;
 		}
 		i = new_i;
 		j++;
 	}
-	arr_token[j] = (t_token) {"", TK_END};
+	arr_token[j] = (t_token) {NULL, TK_END};
+	if (new_i == -1)
+		clean_tokens(&arr_token);
 	return (arr_token);
 }
 
@@ -210,6 +215,8 @@ void print_tokens(t_token *arr_token)
 	t_token	token;
 
 	i = -1;
+	if (!arr_token)
+		return;
 	while(arr_token[++i].type != TK_END)
 	{
 		token = arr_token[i];
@@ -244,14 +251,13 @@ void print_tokens(t_token *arr_token)
 //  █████        █████   █████ █████   █████▒▒█████████  ██████████
 // ▒▒▒▒▒        ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒   ▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒ 
 
-//    █████████   █████      █████████  ███████████                            
-//   ███▒▒▒▒▒███ ▒▒███      ███▒▒▒▒▒███▒█▒▒▒███▒▒▒█                            
-//  ▒███    ▒███  ▒███████ ▒███    ▒▒▒ ▒   ▒███  ▒  ████████   ██████   ██████ 
-//  ▒███████████  ▒███▒▒███▒▒█████████     ▒███    ▒▒███▒▒███ ███▒▒███ ███▒▒███
-//  ▒███▒▒▒▒▒███  ▒███ ▒███ ▒▒▒▒▒▒▒▒███    ▒███     ▒███ ▒▒▒ ▒███████ ▒███████ 
-//  ▒███    ▒███  ▒███ ▒███ ███    ▒███    ▒███     ▒███     ▒███▒▒▒  ▒███▒▒▒  
-//  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
-// ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
+//					parse_expression
+//						↓
+//					parse_pipeline
+//						↓
+//					parse_command
+//					↓			↘
+//	parse_simple_command	parse_expression (only for '(')
 
 // Create a new node in the AST
 t_node *new_node(t_node_type type, t_node *left, t_node *right)
@@ -259,7 +265,7 @@ t_node *new_node(t_node_type type, t_node *left, t_node *right)
 	t_node *node = safe_malloc(sizeof(t_node));
 
 	if (!node)
-		return (NULL);
+		return (clean_nodes(&left), clean_nodes(&right), NULL);
 	node->type = type;
 	node->argv = NULL;	// only for CMD nodes
 	node->redir = NULL;	// only for CMD nodes
@@ -283,24 +289,20 @@ t_node_type token_to_node_type(t_token_type type)
 	return (print_red("unrecognized token"), -1);
 }
 
-// parse_expression
-//    ↓
-// parse_pipeline
-//    ↓
-// parse_command
-//         ↘
-//          parse_expression (only for '(')
-
-void	clean_nodes(t_node *node)
+void	clean_nodes(t_node **node_addr)
 {
 	int	i;
 	t_redir	*redir;
 	t_redir	*redir_next;
+	t_node	*node;
 
+	if (node_addr == NULL)
+		return ;
+	node = *node_addr;
 	if (node == NULL)
 		return ;
-	clean_nodes(node->left);
-	clean_nodes(node->right);
+	clean_nodes(&node->left);
+	clean_nodes(&node->right);
 	i = 0;
 	while(node->argv && node->argv[i])
 		free(node->argv[i++]);
@@ -314,24 +316,22 @@ void	clean_nodes(t_node *node)
 		redir = redir_next;
 	}
 	free(node);
+	*node_addr = NULL;
 }
 
-t_node *parse_tokens(t_token *arr_token)
-{
-	int	i;
-
-	i = 0;
-	return (parse_expression(arr_token, &i));
-}
-
+// When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
+// Sets / append the NODE->REDIR
 void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 {
 	t_redir *redir;
 	t_redir *tmp;
 
-	redir = malloc(sizeof(t_redir));
+	redir = safe_malloc(sizeof(t_redir));
 	if (!redir)
+	{
+		(*index)++;
 		return ;
+	}
 	redir->type = arr_token[*index].type;
 	(*index)++;
 	redir->filename = ft_strdup(arr_token[*index].str);
@@ -350,20 +350,29 @@ void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 	return ;
 }
 
+t_node	*parse_simple_command(t_token *arr_token, int *index);
+t_node *parse_expression(t_token *arr_token, int *index);
+t_node *parse_pipeline(t_token *arr_token, int *index);
+t_node *parse_command(t_token *arr_token, int *index);
+
 t_node *parse_expression(t_token *arr_token, int *index)
 {
 	t_node *node;
 	t_token_type	op;
 
 	node = parse_pipeline(arr_token, index);
-	while (arr_token[*index].type == TK_OP_AND || arr_token[*index].type == TK_OP_OR)
+	while (node && arr_token[*index].type & (TK_OP_AND | TK_OP_OR))
 	{
 		op = arr_token[*index].type;
 		(*index)++;
 		node = new_node(token_to_node_type(op),
 			node, parse_pipeline(arr_token, index));
+		if (!node)
+			return (NULL);
+		if (node->left == NULL || node->right == NULL)
+			clean_nodes(&node);
 	}
-	return node;
+	return (node);
 }
 
 // Should never have index pointing at an && or || token.
@@ -375,16 +384,22 @@ t_node *parse_pipeline(t_token *arr_token, int *index)
 		arr_token[*index].type == TK_OP_OR)
 		return (printf(RED "invalid logic operator `%s`" RESET "\n", arr_token[*index].str), NULL);
 	node = parse_command(arr_token, index);
-	while (arr_token[*index].type == TK_PIPE)
+	while (node && arr_token[*index].type == TK_PIPE)
 	{
 		(*index)++;
 		node = new_node(NODE_PIPE, node, parse_command(arr_token, index));
+		if (!node)
+			return (NULL);
+		if (node->left == NULL || node->right == NULL)
+			clean_nodes(&node);
 	}
 	return node;
 }
 
 t_node *new_subshell(t_node *node)
 {
+	if (node == NULL)
+		return (node);
 	node = new_node(NODE_SUBSHELL, node, NULL);
 	return (node);
 }
@@ -398,7 +413,7 @@ t_node *parse_command(t_token *arr_token, int *index)
 	if (arr_token[*index].type == TK_OP_AND ||
 		arr_token[*index].type == TK_OP_OR  ||
 		arr_token[*index].type == TK_PIPE)
-		return (printf(RED "syntax error near unexpected token `%s` \n", arr_token[*index].str), NULL);
+		return (printf(RED "416: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
 	curr_token = arr_token[*index];
 	if (curr_token.type == TK_OPEN_PARENT)
 	{
@@ -409,7 +424,8 @@ t_node *parse_command(t_token *arr_token, int *index)
 		else
 			return(print_red("missing closing parenthesis."), NULL);
 	}
-	return parse_simple_command(arr_token, index);
+	node = parse_simple_command(arr_token, index);
+	return (node);
 }
 
 // Should never have index pointing at an &&, ||, pipe or () token.
@@ -424,14 +440,19 @@ t_node	*parse_simple_command(t_token *arr_token, int *index)
 		arr_token[*index].type == TK_PIPE   ||
 		arr_token[*index].type == TK_OPEN_PARENT ||
 		arr_token[*index].type == TK_CLOSE_PARENT)
-		return(printf(RED "syntax error near unexpected token `%s` \n", arr_token[*index].str), NULL);
+		return(printf(RED "443: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
 	node = new_node(NODE_CMD, NULL, NULL);
 	nb_of_consecutive_words = 0;
 	i = *index;
-	while (arr_token[i].type & (TK_WORD | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
+	while (arr_token[i].type & (TK_WORD | TK_OPEN_PARENT | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
 	{
 		if (arr_token[i].type == TK_WORD)
 			nb_of_consecutive_words++;
+		else if (arr_token[i].type == TK_OPEN_PARENT)
+		{
+			print_red("syntax, parenthesis cannot be placed there.");
+			return (clean_nodes(&node), NULL);
+		}
 		else
 		{
 			i++; // Skip operator (>, <, etc)
@@ -439,14 +460,14 @@ t_node	*parse_simple_command(t_token *arr_token, int *index)
 				{
 					print_red("redirection missing file.");
 					printf(RED"expected a filename, got `%s` instead." RESET "\n", arr_token[i].str);
-					return (clean_nodes(node), NULL);
+					return (clean_nodes(&node), NULL);
 				}
 		}
 		i++;
 	}
 	node->argv = safe_malloc((nb_of_consecutive_words + 1) * sizeof(char*)); // number of consecutive words
 	if (!node->argv)
-		return (clean_nodes(node), NULL);
+		return (clean_nodes(&node), NULL);
 	i = 0;
 	while (arr_token[*index].type & (TK_WORD | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
 	{
@@ -539,44 +560,30 @@ void	print_nodes(t_node *node, int depth)
 }
 
 
-//  ██████   ██████   █████████   █████ ██████   █████
-// ▒▒██████ ██████   ███▒▒▒▒▒███ ▒▒███ ▒▒██████ ▒▒███ 
-//  ▒███▒█████▒███  ▒███    ▒███  ▒███  ▒███▒███ ▒███ 
-//  ▒███▒▒███ ▒███  ▒███████████  ▒███  ▒███▒▒███▒███ 
-//  ▒███ ▒▒▒  ▒███  ▒███▒▒▒▒▒███  ▒███  ▒███ ▒▒██████ 
-//  ▒███      ▒███  ▒███    ▒███  ▒███  ▒███  ▒▒█████ 
-//  █████     █████ █████   █████ █████ █████  ▒▒█████
-// ▒▒▒▒▒     ▒▒▒▒▒ ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒ 
+//    █████████   █████      █████████  ███████████                            
+//   ███▒▒▒▒▒███ ▒▒███      ███▒▒▒▒▒███▒█▒▒▒███▒▒▒█                            
+//  ▒███    ▒███  ▒███████ ▒███    ▒▒▒ ▒   ▒███  ▒  ████████   ██████   ██████ 
+//  ▒███████████  ▒███▒▒███▒▒█████████     ▒███    ▒▒███▒▒███ ███▒▒███ ███▒▒███
+//  ▒███▒▒▒▒▒███  ▒███ ▒███ ▒▒▒▒▒▒▒▒███    ▒███     ▒███ ▒▒▒ ▒███████ ▒███████ 
+//  ▒███    ▒███  ▒███ ▒███ ███    ▒███    ▒███     ▒███     ▒███▒▒▒  ▒███▒▒▒  
+//  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
+// ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
 
-int main(void)
+t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 {
-	char *str;
-	t_token	*arr_token; 
+	t_token	*arr_token;
 	t_node *node;
+	int	i;
 
-	signal(SIGINT, acknowledge_sig);
-	signal(SIGQUIT, SIG_IGN);
-	while(1)
-	{
-		str = readline("👻>");
-		// str = readline("ghost>");
-		if (!str)
-		{
-			write(STDOUT_FILENO, "exit\n", 5);
-			break ;
-		}
-		if (ft_strlen(str))
-		{
-			add_history(str);
-			arr_token = tokenize(str);
-			print_tokens(arr_token);
-			printf("\n");
-			node = parse_tokens(arr_token);
-			clean_tokens(arr_token);
-			print_nodes(node, 0);
-			clean_nodes(node);
-		}
-		free(str);
-	}
-	return (0);
+	arr_token = tokenize(str);
+	if (show_debug)
+		print_tokens(arr_token);
+	i = 0;
+	if (!arr_token)
+		return (NULL);
+	node = parse_expression(arr_token, &i);
+	clean_tokens(&arr_token);
+	if (show_debug)
+		print_nodes(node, 0);
+	return (node);
 }

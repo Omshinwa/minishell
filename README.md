@@ -31,6 +31,8 @@ echo 1 && echo 2 && echo 3 || echo 4 && echo 5
 
 ( echo 1 && ( echo 2) && echo 3)|| echo 5
 
+# logic operator
+echo 1 && || echo 2
 
 # redirections
 echo 1 < in.txt
@@ -41,3 +43,9 @@ test in bash: > not followed by a word, followed by && or || etc
 ls | grep "e" && || echo 1
 
 ><>
+
+# check for () embedded in word, should throw error
+wtf is a stdin && multiline (sorry) > what
+wtf is a stdin && echo e(sorry)e > what
+wtf is a stdin && echo '(sorry" > what
+test && echo | ( )

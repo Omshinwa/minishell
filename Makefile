@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2025/12/30 15:58:29 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/02 19:18:29 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 LINK_FLAG = -lreadline
 
-SRC_FILES	= readline.c error.c
+SRC_FILES	= main.c parse.c error.c
 OBJ_FILES	= $(SRC_FILES:.c=.o)
 SRC_PATH	= src/
 OBJ_PATH	= obj/

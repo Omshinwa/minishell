@@ -28,7 +28,7 @@ Parsing (grammar / precedence)
    ↓
 Execution
 
-# EITHER:
+# PARSING:
 
 <!-- • Display a prompt when waiting for a new command. -->
 
@@ -36,20 +36,17 @@ Execution
 
 <!-- • Use at most one global variable to indicate a received signal. Consider the implications: this approach ensures that your signal handler will not access your main data structures. -->
 
-<!-- • Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash. -->
-
-<!-- • In interactive mode:
-	◦ ctrl-C displays a new prompt on a new line.
-	◦ ctrl-D exits the shell.
-	◦ ctrl-\ does nothing. -->
-
-# PARSING:
-
 <!-- • Not interpret unclosed quotes or special characters which are not required by the subject such as \ or ; or &. -->
 
 <!-- • Handle ’ (single quote) which should prevent the shell from interpreting the meta-characters in the quoted sequence. -->
 
 <!-- • Handle " (double quote) which should prevent the shell from interpreting the meta-characters in the quoted sequence except for $ (dollar sign). -->
+
+• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
+• In interactive mode:
+	◦ ctrl-C displays a new prompt on a new line.
+	◦ ctrl-D exits the shell.
+	◦ ctrl-\ does nothing.
 
 
 # EXECUTION:

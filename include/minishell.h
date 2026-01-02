@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/02 13:18:51 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/02 19:04:59 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,7 @@ int		ft_env(t_shell *shell);
 int		ft_export(char **args, t_shell *shell);
 int		ft_pwd(void);
 int		ft_unset(char **args, t_shell *shell);
+
+t_node	*get_abstract_syntax_tree(char *str, int debug);
 
 #endif
