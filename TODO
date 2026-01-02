@@ -1,7 +1,15 @@
-<!-- * error on 2 tokens && || in a row
-	ok? -->
+<!-- safe_malloc instead of just using calloc / malloc? -->
 
-* Handle < << > >>
+<!-- regler les prints pour que ca soit sur la sortie err?
+on err, display err msg then return to the prompt -->
+
+<!-- clean tokens function -->
+
+<!-- clean nodes function -->
+
+<!-- * error on 2 tokens && || in a row
+
+<!-- * Handle < << > >> -->
 
 * free stuff
 * read multilines???

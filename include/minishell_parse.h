@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/02 13:34:00 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 17:43:12 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ typedef enum e_token_type {
 	TK_PIPE = 2,
 	TK_REDIR_IN = 4,
 	TK_REDIR_OUT = 8,
-	TK_REDIR_ININ = 16,
-	TK_REDIR_OUTOUT = 32,
+	TK_REDIR_2IN = 16,
+	TK_REDIR_2OUT = 32,
 	TK_OP_AND = 64,
 	TK_OP_OR = 128,
 	TK_OPEN_PARENT = 256,
@@ -68,11 +68,6 @@ typedef struct s_token
 	t_token_type	type;
 } t_token;
 
-// typedef struct s_shell
-// {
-// 	int				err;
-// }	t_shell;
-
 typedef enum e_node_type {
 	NODE_CMD,
 	NODE_PIPE,
@@ -82,8 +77,8 @@ typedef enum e_node_type {
 } t_node_type;
 
 typedef struct s_redir {
-	int type;       // TK_REDIR_IN, TK_REDIR_OUT, REDIR_APPEND, HEREDOC
-	char *filename; // file or heredoc content
+	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
+	char *filename;			// file or heredoc content
 	struct s_redir *next;
 } t_redir;
 
@@ -98,5 +93,6 @@ typedef struct s_node {
 
 
 void	print_red(char *str);
+void	*safe_malloc(size_t __size);
 
 #endif

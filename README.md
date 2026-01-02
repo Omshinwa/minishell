@@ -33,8 +33,9 @@ echo 1 && echo 2 && echo 3 || echo 4 && echo 5
 
 
 # redirections
-echo 1 < file
+echo 1 < in.txt
 ls | grep "e">file
+ls | grep "e">file <input.txt
 
 test in bash: > not followed by a word, followed by && or || etc
 ls | grep "e" && || echo 1
