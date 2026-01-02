@@ -30,3 +30,11 @@ cat 'like "Hello World"' && echo hahaha
 echo 1 && echo 2 && echo 3 || echo 4 && echo 5
 
 ( echo 1 && ( echo 2) && echo 3)|| echo 5
+
+
+# redirections
+echo 1 < file
+ls | grep "e">file
+
+test in bash: > not followed by a word, followed by && or || etc
+ls | grep "e" && || echo 1

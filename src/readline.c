@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/31 22:49:59 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 12:34:57 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	is_metachar(char c)
 		|| c == '(' || c == ')' || c == ' ' || c == '"' || c == '\'')
 		return (1);
 	// those char should always give an error:
-	if (c == ';' || c == '\\')
+	if (c == ';' || c == '\\' || c == '!')
 		return (1);
 	return (0);
 }
@@ -91,11 +91,13 @@ int	set_token(t_token *token, char *str, int start)
 	else if (c == '(')
 	{
 		token->type = TK_OPEN_PARENT;
+		token->str = "(";
 		end++;
 	}
 	else if (c == ')')
 	{
 		token->type = TK_CLOSE_PARENT;
+		token->str = ")";
 		end++;
 	}
 	// TK_PIPE
@@ -106,6 +108,7 @@ int	set_token(t_token *token, char *str, int start)
 		if (str[end] == '|')
 		{
 			token->type = TK_OP_OR;
+			token->str = "||";
 			end++;
 		}
 	}
@@ -114,6 +117,7 @@ int	set_token(t_token *token, char *str, int start)
 		if (str[end + 1] == '&')
 		{
 			token->type = TK_OP_AND;
+			token->str = "&&";
 			end += 2;
 		}
 		else
@@ -195,7 +199,7 @@ void print_tokens(t_token *arr_token)
 			printf(BG_RED "%s" RESET, token.str);
 
 		else if (token.type == TK_REDIR_IN || token.type == TK_REDIR_OUT)
-			printf(BG_GREEN "%s" RESET, token.str);
+			printf(BG_MAGENTA "%s" RESET, token.str);
 		else if (token.type == TK_REDIR_ININ || token.type == TK_REDIR_OUTOUT)
 			printf(BG_YELLOW "%s" RESET, token.str);
 	
@@ -271,6 +275,117 @@ t_node_type token_to_node_type(t_token_type type)
 //         ↘
 //          parse_expression (only for '(')
 
+t_node	*parse_simple_command(t_token *arr_token, int *index);
+t_node *parse_expression(t_token *arr_token, int *index);
+t_node *parse_pipeline(t_token *arr_token, int *index);
+t_node *parse_command(t_token *arr_token, int *index);
+
+t_node *parse_tokens(t_token *arr_token)
+{
+	int	i;
+
+	i = 0;
+	return (parse_expression(arr_token, &i));
+}
+
+t_node *parse_expression(t_token *arr_token, int *index)
+{
+	t_node *node;
+	t_token_type	op;
+
+	node = parse_pipeline(arr_token, index);
+	while (arr_token[*index].type == TK_OP_AND || arr_token[*index].type == TK_OP_OR)
+	{
+		op = arr_token[*index].type;
+		(*index)++;
+		node = new_node(token_to_node_type(op),
+			node, parse_pipeline(arr_token, index));
+	}
+	return node;
+}
+
+// Should never have index pointing at an && or || token.
+t_node *parse_pipeline(t_token *arr_token, int *index)
+{
+	t_node *node;
+
+	if (arr_token[*index].type == TK_OP_AND ||
+		arr_token[*index].type == TK_OP_OR)
+		return (printf(RED "invalid logic operator `%s`\n", arr_token[*index].str), NULL);
+	node = parse_command(arr_token, index);
+	while (arr_token[*index].type == TK_PIPE)
+	{
+		(*index)++;
+		node = new_node(NODE_PIPE, node, parse_command(arr_token, index));
+	}
+	return node;
+}
+
+t_node *new_subshell(t_node *node)
+{
+	node = new_node(NODE_SUBSHELL, node, NULL);
+	return (node);
+}
+
+// Should never have index pointing at an &&, ||, or pipe token.
+t_node *parse_command(t_token *arr_token, int *index)
+{
+	t_node *node;
+	t_token curr_token;
+
+	if (arr_token[*index].type == TK_OP_AND ||
+		arr_token[*index].type == TK_OP_OR  ||
+		arr_token[*index].type == TK_PIPE)
+		return (printf(RED "syntax error near unexpected token `%s` \n", arr_token[*index].str), NULL);
+	curr_token = arr_token[*index];
+	if (curr_token.type == TK_OPEN_PARENT)
+	{
+		(*index)++;
+		node = parse_expression(arr_token, index);
+		if (arr_token[*index].type == TK_CLOSE_PARENT)
+			return ((*index)++, new_subshell(node));
+		else
+			return(print_red("missing closing parenthesis."), NULL);
+	}
+	return parse_simple_command(arr_token, index);
+}
+
+// Should never have index pointing at an &&, ||, pipe or () token.
+t_node	*parse_simple_command(t_token *arr_token, int *index)
+{
+	t_node *node;
+	t_token curr_token;
+	int	nb_of_consecutive_words;
+
+	if (arr_token[*index].type == TK_OP_AND ||
+		arr_token[*index].type == TK_OP_OR  ||
+		arr_token[*index].type == TK_PIPE   ||
+		arr_token[*index].type == TK_OPEN_PARENT   ||
+		arr_token[*index].type == TK_CLOSE_PARENT)
+		return(printf(RED "syntax error near unexpected token `%s` \n", arr_token[*index].str), NULL);
+	node = new_node(NODE_CMD, NULL, NULL);
+	nb_of_consecutive_words = 0;
+	while (arr_token[*index].type == TK_WORD)
+	{
+		nb_of_consecutive_words++;
+		(*index)++;
+	}
+	node->argv = calloc(nb_of_consecutive_words + 1, sizeof(char*)); // number of consecutive words
+	if (!node->argv)
+		print_red("calloc");
+	*index -= nb_of_consecutive_words;
+	curr_token = arr_token[*index];
+	int i = 0;
+	while (arr_token[*index].type == TK_WORD)
+	{
+		node->argv[i] = strdup(arr_token[*index].str);
+		(*index)++;
+		i++;
+	}
+	node->argv[i] = NULL;
+	return (node);
+}
+
 void	print_nodes(t_node *node, int depth)
 {
 	char *color;
@@ -313,7 +428,7 @@ void	print_nodes(t_node *node, int depth)
 	else if (node->type == NODE_OR)
 	{
 		color = BG_YELLOW;
-		printf("%s%s>OR: %9s" RESET "\n", offset, color, "&&");
+		printf("%s%s>OR: %9s" RESET "\n", offset, color, "||");
 	}
 	else if (node->type == NODE_SUBSHELL)
 	{
@@ -326,104 +441,6 @@ void	print_nodes(t_node *node, int depth)
 		print_nodes(node->left, depth + 1);
 	if (node->right)
 		print_nodes(node->right, depth + 1);
-}
-
-t_node	*parse_simple_command(t_token *arr_token, int *index);
-t_node *parse_expression(t_token *arr_token, int *index);
-t_node *parse_pipeline(t_token *arr_token, int *index);
-t_node *parse_command(t_token *arr_token, int *index);
-
-t_node *parse_tokens(t_token *arr_token)
-{
-	int	i;
-
-	i = 0;
-	return (parse_expression(arr_token, &i));
-}
-
-t_node *parse_expression(t_token *arr_token, int *index)
-{
-	t_node *node;
-	t_token_type	op;
-
-	node = parse_pipeline(arr_token, index);
-	while (arr_token[*index].type == TK_OP_AND || arr_token[*index].type == TK_OP_OR)
-	{
-		op = arr_token[*index].type;
-		(*index)++;
-		node = new_node(token_to_node_type(op),
-			node, parse_pipeline(arr_token, index));
-	}
-	return node;
-}
-
-// Should never have index pointing at an && or || token.
-t_node *parse_pipeline(t_token *arr_token, int *index)
-{
-	t_node *node;
-
-	node = parse_command(arr_token, index);
-	while (arr_token[*index].type == TK_PIPE)
-	{
-		(*index)++;
-		node = new_node(NODE_PIPE, node, parse_command(arr_token, index));
-	}
-	return node;
-}
-
-t_node *new_subshell(t_node *node)
-{
-	node = new_node(NODE_SUBSHELL, node, NULL);
-	return (node);
-}
-
-// Should never have index pointing at an &&, ||, or pipe token.
-t_node *parse_command(t_token *arr_token, int *index)
-{
-	t_node *node;
-	t_token curr_token;
-
-	curr_token = arr_token[*index];
-	if (curr_token.type == TK_OPEN_PARENT)
-	{
-		(*index)++;
-		node = parse_expression(arr_token, index);
-		if (arr_token[*index].type == TK_CLOSE_PARENT)
-			return ((*index)++, new_subshell(node));
-		else
-			return(print_red("missing closing parenthesis."), NULL);
-	}
-	return parse_simple_command(arr_token, index);
-}
-
-// Should never have index pointing at an &&, ||, pipe or () token.
-t_node	*parse_simple_command(t_token *arr_token, int *index)
-{
-	t_node *node;
-	t_token curr_token;
-	int	nb_of_consecutive_words;
-
-	node = new_node(NODE_CMD, NULL, NULL);
-	nb_of_consecutive_words = 0;
-	while (arr_token[*index].type == TK_WORD)
-	{
-		nb_of_consecutive_words++;
-		(*index)++;
-	}
-	node->argv = calloc(nb_of_consecutive_words + 1, sizeof(char*)); // number of consecutive words
-	if (!node->argv)
-		print_red("calloc");
-	*index -= nb_of_consecutive_words;
-	curr_token = arr_token[*index];
-	int i = 0;
-	while (arr_token[*index].type == TK_WORD)
-	{
-		node->argv[i] = strdup(arr_token[*index].str);
-		(*index)++;
-		i++;
-	}
-	node->argv[i] = NULL;
-	return (node);
 }
 
 //  ██████   ██████   █████████   █████ ██████   █████

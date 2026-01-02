@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2025/12/31 18:46:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 12:32:38 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ typedef struct s_token
 	t_token_type	type;
 } t_token;
 
-typedef struct s_shell
-{
-	int				err;
-}	t_shell;
+// typedef struct s_shell
+// {
+// 	int				err;
+// }	t_shell;
 
 typedef enum e_node_type {
 	NODE_CMD,

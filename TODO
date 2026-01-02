@@ -1,13 +1,20 @@
-* Ta fonction set_token utilise ft_isalnum pour délimiter les TK_WORD. C'est trop restrictif pour un shell.
-ex: filename test.txt
-Correction : Un TK_WORD doit consommer tout ce qui n'est PAS un métacaractère (|, <, >, &, (, ), espace).
->> solved? gotta double check
-
-* Problème : Le shell doit gérer la concaténation de parties quotées et non quotées.
-Exemple : echo "he"llo doit être un seul argument hello.
->> solved? gotta double check
+<!-- * error on 2 tokens && || in a row
+	ok? -->
 
 * Handle < << > >>
+
+* free stuff
+* read multilines???
+ex  grep "e" &&
+
+<!-- * Ta fonction set_token utilise ft_isalnum pour délimiter les TK_WORD. C'est trop restrictif pour un shell.
+ex: filename test.txt
+Correction : Un TK_WORD doit consommer tout ce qui n'est PAS un métacaractère (|, <, >, &, (, ), espace).
+>> solved? gotta double check -->
+
+<!-- * Problème : Le shell doit gérer la concaténation de parties quotées et non quotées.
+Exemple : echo "he"llo doit être un seul argument hello.
+>> solved? gotta double check -->
 
 User input
    ↓
