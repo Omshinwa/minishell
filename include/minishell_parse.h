@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/02 17:43:12 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 18:58:14 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,10 @@ typedef struct s_node {
 	struct s_node *right;
 } t_node;
 
-
+t_node	*parse_simple_command(t_token *arr_token, int *index);
+t_node *parse_expression(t_token *arr_token, int *index);
+t_node *parse_pipeline(t_token *arr_token, int *index);
+t_node *parse_command(t_token *arr_token, int *index);
 
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);

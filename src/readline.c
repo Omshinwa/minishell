@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 17:52:16 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 18:58:50 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,25 +114,21 @@ int	set_token(t_token *token, char *str, int start)
 	else if (c == '(')
 	{
 		token->type = TK_OPEN_PARENT;
-		token->str = "(";
 		end++;
 	}
 	else if (c == ')')
 	{
 		token->type = TK_CLOSE_PARENT;
-		token->str = ")";
 		end++;
 	}
 	// TK_PIPE
 	else if (c == '|')
 	{
-		token->str = "|";
 		token->type = TK_PIPE;
 		end++;
 		if (str[end] == '|')
 		{
 			token->type = TK_OP_OR;
-			token->str = "||";
 			end++;
 		}
 	}
@@ -141,7 +137,6 @@ int	set_token(t_token *token, char *str, int start)
 		if (str[end + 1] == '&')
 		{
 			token->type = TK_OP_AND;
-			token->str = "&&";
 			end += 2;
 		}
 		else
@@ -150,24 +145,20 @@ int	set_token(t_token *token, char *str, int start)
 	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
 	else if (c == '<')
 	{
-		token->str = "<";
 		token->type = TK_REDIR_IN;
 		end++;
 		if (str[end] == '<')
 		{
-			token->str = "<<";
 			token->type = TK_REDIR_2IN;
 			end++;
 		}
 	}
 	else if (c == '>')
 	{
-		token->str = ">";
 		token->type = TK_REDIR_OUT;
 		end++;
 		if (str[end] == '>')
 		{
-			token->str = ">>";
 			token->type = TK_REDIR_2OUT;
 			end++;
 		}
@@ -190,7 +181,7 @@ t_token *tokenize(char *str)
 
 	i = 0;
 	j = 0;
-	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) / 2 + 1 + 1));
+	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
 	if (!arr_token)
 		return (NULL);
 	while (str[i])
@@ -300,11 +291,6 @@ t_node_type token_to_node_type(t_token_type type)
 //         ↘
 //          parse_expression (only for '(')
 
-t_node	*parse_simple_command(t_token *arr_token, int *index);
-t_node *parse_expression(t_token *arr_token, int *index);
-t_node *parse_pipeline(t_token *arr_token, int *index);
-t_node *parse_command(t_token *arr_token, int *index);
-
 void	clean_nodes(t_node *node)
 {
 	int	i;
@@ -387,7 +373,7 @@ t_node *parse_pipeline(t_token *arr_token, int *index)
 
 	if (arr_token[*index].type == TK_OP_AND ||
 		arr_token[*index].type == TK_OP_OR)
-		return (printf(RED "invalid logic operator `%s`\n", arr_token[*index].str), NULL);
+		return (printf(RED "invalid logic operator `%s`" RESET "\n", arr_token[*index].str), NULL);
 	node = parse_command(arr_token, index);
 	while (arr_token[*index].type == TK_PIPE)
 	{
@@ -572,8 +558,8 @@ int main(void)
 	signal(SIGQUIT, SIG_IGN);
 	while(1)
 	{
-		// str = readline("👻>");
-		str = readline("ghost>");
+		str = readline("👻>");
+		// str = readline("ghost>");
 		if (!str)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);

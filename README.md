@@ -39,3 +39,5 @@ ls | grep "e">file <input.txt
 
 test in bash: > not followed by a word, followed by && or || etc
 ls | grep "e" && || echo 1
+
+><>
