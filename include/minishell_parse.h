@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parse.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2025/12/31 18:46:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/02 06:12:33 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 # define RESET "\033[0m"
 # define BOLD "\033[1m"
 
-#define RESET "\033[0m"
-#define BOLD  "\033[1m"
+# define RESET "\033[0m"
+# define BOLD  "\033[1m"
 
-#define BG_BLACK   "\033[40m"
-#define BG_RED     "\033[41m"
-#define BG_GREEN   "\033[42m"
-#define BG_YELLOW  "\033[43m"
-#define BG_BLUE    "\033[44m"
-#define BG_MAGENTA "\033[45m"
-#define BG_CYAN    "\033[46m"
-#define BG_WHITE   "\033[47m"
+# define BG_BLACK   "\033[40m"
+# define BG_RED     "\033[41m"
+# define BG_GREEN   "\033[42m"
+# define BG_YELLOW  "\033[43m"
+# define BG_BLUE    "\033[44m"
+# define BG_MAGENTA "\033[45m"
+# define BG_CYAN    "\033[46m"
+# define BG_WHITE   "\033[47m"
 
 # include "libft.h"
 
@@ -47,7 +47,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef enum e_token_type {
+typedef enum e_token_type
+{
 	TK_WORD,
 	TK_PIPE,
 	TK_REDIR_IN,
@@ -59,7 +60,7 @@ typedef enum e_token_type {
 	TK_OPEN_PARENT,
 	TK_CLOSE_PARENT,
 	TK_END,
-} t_token_type;
+}	t_token_type;
 
 typedef struct s_token
 {
@@ -93,6 +94,8 @@ typedef struct s_node {
 	struct s_node *left;
 	struct s_node *right;
 } t_node;
+
+
 
 void	print_red(char *str);
 

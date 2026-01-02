@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:05 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/29 15:12:49 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/02 12:03:22 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,13 @@ int	ft_pwd(void)
 {
 	char	*pwd;
 
-	pwd = getcwd(0, NULL);
+	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
-		perror("Error:\ngetcwd\n");
+		perror("Error: getcwd");
 		return (1);
 	}
 	printf("%s\n", pwd);
+	free(pwd);
 	return (0);
 }
