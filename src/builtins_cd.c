@@ -6,7 +6,25 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2025/12/29 13:17:31 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/02 11:23:14 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
+
+int	ft_cd(char **args, t_shell *shell)
+{
+	char	*path;
+
+	if (!args[1])
+	{
+		path = getenv("HOME");
+		if (!path)
+			return (ft_putendl_fd("cd: HOME not set", 2), 1);
+	}
+	else
+		path = args[1];
+	if (chdir(path))
+		return (perror("cd"), 1);
+	return (0);
+}
