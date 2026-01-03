@@ -76,13 +76,10 @@ echo 1 || echo 2 &&
 cmdor cmdand> echo 3 || echo 4 &&       
 cmdor cmdand cmdor cmdand> echo 5
 
-what i am doing for non terminated command is:
-
-tokenize everything, parse the tokens, then, when it realizes it's ending with an operator, call parse_rest_of_cmd()
-ideally it would call a new prompt, read a new line, tokenize this newline, replace the current arr_token with the new one and keep going.
-
-this line woud replace a reference
-	*arr_token = tokenize(line);
-	the problem is, it doesnt replace the arr_token for every stack right? only parse_simple_command() that called parse_rest_of_cmd() would get its reference of arr_token changed, if parse_command() has its own *arr_token, call parse_simple_command() (passing its *arr_token), then it gets changed inside parse_rest_of_cmd(), it will get changed in parse_simple_command() but not parse_command() right?
-
-	I should create a struct instead that has a field for *arr_token (and also *index) and pass this struct around?
+f1r4s7% cat << delimiter_1 &&
+cmdand heredoc> this is the first cat
+cmdand heredoc> delimiter_1
+cmdand> cat << delimiter_2 && echo 'hold on this isnt all' ||       
+cmdand cmdand cmdor heredoc> second cat
+cmdand cmdand cmdor heredoc> delimiter_2
+cmdand cmdand cmdor> echo "last"    

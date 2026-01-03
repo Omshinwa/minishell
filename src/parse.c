@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 16:36:15 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/03 20:34:51 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ int	set_heredoc_fd(t_redir *redir, char *delimiter)
 		return (print_red("pipe fail"), -1);
 	while (1)
 	{
-		line = readline("👂heredoc<<");
+		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002");
 		if (!line)
 		{
 			printf("here-decoument delimited by end-of-file, expected `%s` \n", delimiter);
@@ -283,25 +283,51 @@ int	set_heredoc_fd(t_redir *redir, char *delimiter)
 	return (0);
 }
 
-t_node *parse_rest_of_cmd(t_token **arr_token, int *index, int show_debug)
+int read_more_input(t_parser *ctx)
 {
-	t_node *node;
 	char	*line;
+	t_token *new_tokens;
+	char	*prompt;
+	char	*color;
 
-	line = readline("💀>");
-	clean_tokens(arr_token);
-	*arr_token = tokenize(line);
-	*index = 0;
-	if (*arr_token && show_debug)
+	if (ctx->arr_token[ctx->i - 1].type == TK_OP_AND)
+		color = BG_GREEN;
+	else if (ctx->arr_token[ctx->i - 1].type == TK_OP_OR)
+		color = BG_YELLOW;
+	else if (ctx->arr_token[ctx->i - 1].type == TK_PIPE)
+		color = BG_RED;
+	prompt = safe_malloc(sizeof(char) * 50);
+	if (!prompt)
+		return (-1);
+	prompt[0] = '\0';
+	ft_strlcat(prompt, "\001", 50);
+	ft_strlcat(prompt, color, 50);
+	ft_strlcat(prompt, "\002", 50);
+	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 50);
+	ft_strlcat(prompt, "\001", 50);
+	ft_strlcat(prompt, RESET, 50);
+	ft_strlcat(prompt, "\002", 50);
+	while (1)
 	{
-		printf("tokens: ");
-		print_tokens(*arr_token);
+		line = readline(prompt);
+		if (!line)
+		{
+			free(prompt);
+			return (print_red("syntax error: unexpected end of file"), -1);
+		}
+		if (ft_strlen(line) > 0)
+			break;
+		free(line);
 	}
-	if (!*arr_token)
-		return (NULL);
-	node = parse_simple_command(*arr_token, index);
-	
-	return (node);
+	free(prompt);
+	new_tokens = tokenize(line);
+	free(line);
+	if (!new_tokens)
+		return (-1);
+	clean_tokens(&ctx->arr_token);
+	ctx->arr_token = new_tokens;
+	ctx->i = 0;
+	return (0);
 }
 
 
@@ -354,7 +380,7 @@ t_node_type token_to_node_type(t_token_type type)
 
 // When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
 // Sets / append the NODE->REDIR
-void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
+void	parse_redirection(t_node *node,	t_parser *ctx)
 {
 	t_redir *redir;
 	t_redir *tmp;
@@ -362,15 +388,15 @@ void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 	redir = safe_malloc(sizeof(t_redir));
 	if (!redir)
 	{
-		(*index)++;
+		ctx->i++;
 		return ;
 	}
-	redir->type = arr_token[*index].type;
-	(*index)++;
-	redir->filename = ft_strdup(arr_token[*index].str);
+	redir->type = ctx->arr_token[ctx->i].type;
+	ctx->i++;
+	redir->filename = ft_strdup(ctx->arr_token[ctx->i].str);
 	redir->next = NULL;
 	redir->fd = -1;
-	(*index)++;
+	ctx->i++;
 	if (redir->type == TK_REDIR_2IN)
 		set_heredoc_fd(redir, redir->filename);
 	// add it to the next
@@ -386,18 +412,18 @@ void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 	return ;
 }
 
-t_node *parse_expression(t_token *arr_token, int *index)
+t_node *parse_expression(t_parser *ctx)
 {
 	t_node *node;
 	t_token_type	op;
 
-	node = parse_pipeline(arr_token, index);
-	while (node && arr_token[*index].type & (TK_OP_AND | TK_OP_OR))
+	node = parse_pipeline(ctx);
+	while (node && ctx->arr_token[ctx->i].type & (TK_OP_AND | TK_OP_OR))
 	{
-		op = arr_token[*index].type;
-		(*index)++;
+		op = ctx->arr_token[ctx->i].type;
+		ctx->i++;
 		node = new_node(token_to_node_type(op),
-			node, parse_pipeline(arr_token, index));
+			node, parse_pipeline(ctx));
 		if (!node)
 			return (NULL);
 		if (node->left == NULL || node->right == NULL)
@@ -407,18 +433,18 @@ t_node *parse_expression(t_token *arr_token, int *index)
 }
 
 // Should never have index pointing at an && or || token.
-t_node *parse_pipeline(t_token *arr_token, int *index)
+t_node *parse_pipeline(t_parser *ctx)
 {
 	t_node *node;
 
-	if (arr_token[*index].type == TK_OP_AND ||
-		arr_token[*index].type == TK_OP_OR)
-		return (printf(RED "invalid logic operator `%s`" RESET "\n", arr_token[*index].str), NULL);
-	node = parse_command(arr_token, index);
-	while (node && arr_token[*index].type == TK_PIPE)
+	if (ctx->arr_token[ctx->i].type == TK_OP_AND ||
+		ctx->arr_token[ctx->i].type == TK_OP_OR)
+		return (printf(RED "invalid logic operator `%s`" RESET "\n", ctx->arr_token[ctx->i].str), NULL);
+	node = parse_command(ctx);
+	while (node && ctx->arr_token[ctx->i].type == TK_PIPE)
 	{
-		(*index)++;
-		node = new_node(NODE_PIPE, node, parse_command(arr_token, index));
+		ctx->i++;
+		node = new_node(NODE_PIPE, node, parse_command(ctx));
 		if (!node)
 			return (NULL);
 		if (node->left == NULL || node->right == NULL)
@@ -436,53 +462,54 @@ t_node *new_subshell(t_node *node)
 }
 
 // Should never have index pointing at an &&, ||, or pipe token.
-t_node *parse_command(t_token *arr_token, int *index)
+t_node *parse_command(t_parser *ctx)
 {
 	t_node *node;
 	t_token curr_token;
 
-	if (arr_token[*index].type == TK_OP_AND ||
-		arr_token[*index].type == TK_OP_OR  ||
-		arr_token[*index].type == TK_PIPE)
-		return (printf(RED "416: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
-	curr_token = arr_token[*index];
+	if (ctx->arr_token[ctx->i].type == TK_OP_AND ||
+		ctx->arr_token[ctx->i].type == TK_OP_OR  ||
+		ctx->arr_token[ctx->i].type == TK_PIPE)
+		return (printf(RED "416: syntax error near unexpected token `%s`" RESET "\n", ctx->arr_token[ctx->i].str), NULL);
+	curr_token = ctx->arr_token[ctx->i];
 	if (curr_token.type == TK_OPEN_PARENT)
 	{
-		(*index)++;
-		node = parse_expression(arr_token, index);
-		if (arr_token[*index].type == TK_CLOSE_PARENT)
-			return ((*index)++, new_subshell(node));
+		ctx->i++;
+		node = parse_expression(ctx);
+		if (ctx->arr_token[ctx->i].type == TK_CLOSE_PARENT)
+			return (ctx->i++, new_subshell(node));
 		else
 			return(print_red("missing closing parenthesis."), NULL);
 	}
-	node = parse_simple_command(arr_token, index);
+	node = parse_simple_command(ctx);
 	return (node);
 }
 
 // Should never have index pointing at an &&, ||, pipe or () token OR END token.
-t_node	*parse_simple_command(t_token *arr_token, int *index)
+t_node	*parse_simple_command(t_parser *ctx)
 {
 	t_node *node;
 	int	nb_of_consecutive_words;
 	int i;
 
-	if (arr_token[*index].type & (TK_OP_AND | TK_OP_OR |
+	// HANDLE TRAILING OPERATORS
+	if (ctx->arr_token[ctx->i].type == TK_END)
+	{
+		if (read_more_input(ctx) == -1)
+			return (NULL);
+	}
+	if (ctx->arr_token[ctx->i].type & (TK_OP_AND | TK_OP_OR |
 		TK_PIPE | TK_OPEN_PARENT | TK_CLOSE_PARENT) )
-		return (printf(RED "443: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
-	
-	// IF WE DONT HANDLE TRAILING OPERATORS
-	if (arr_token[*index].type == TK_END)
-		return (parse_rest_of_cmd(&arr_token, index, 1));
-		// return (printf(RED "417: syntax error: unexpected end of command" RESET "\n"), NULL);
+		return (printf(RED "443: syntax error near unexpected token `%s`" RESET "\n", ctx->arr_token[ctx->i].str), NULL);
 
 	node = new_node(NODE_CMD, NULL, NULL);
 	nb_of_consecutive_words = 0;
-	i = *index;
-	while (arr_token[i].type & (TK_WORD | TK_OPEN_PARENT | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
+	i = ctx->i;
+	while (ctx->arr_token[i].type & (TK_WORD | TK_OPEN_PARENT | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
 	{
-		if (arr_token[i].type == TK_WORD)
+		if (ctx->arr_token[i].type == TK_WORD)
 			nb_of_consecutive_words++;
-		else if (arr_token[i].type == TK_OPEN_PARENT)
+		else if (ctx->arr_token[i].type == TK_OPEN_PARENT)
 		{
 			print_red("syntax, parenthesis cannot be placed there.");
 			return (clean_nodes(&node), NULL);
@@ -490,10 +517,10 @@ t_node	*parse_simple_command(t_token *arr_token, int *index)
 		else
 		{
 			i++; // Skip operator (>, <, etc)
-			if (arr_token[i].type != TK_WORD)
+			if (ctx->arr_token[i].type != TK_WORD)
 				{
 					print_red("redirection missing file.");
-					printf(RED"expected a filename, got `%s` instead." RESET "\n", arr_token[i].str);
+					printf(RED"expected a filename, got `%s` instead." RESET "\n", ctx->arr_token[i].str);
 					return (clean_nodes(&node), NULL);
 				}
 		}
@@ -503,20 +530,22 @@ t_node	*parse_simple_command(t_token *arr_token, int *index)
 	if (!node->argv)
 		return (clean_nodes(&node), NULL);
 	i = 0;
-	while (arr_token[*index].type & (TK_WORD | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
+	while (ctx->arr_token[ctx->i].type & (TK_WORD | TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
 	{
-		if (arr_token[*index].type == TK_WORD)
+		if (ctx->arr_token[ctx->i].type == TK_WORD)
 		{
-			node->argv[i++] = ft_strdup(arr_token[*index].str);
-			(*index)++;
+			node->argv[i++] = ft_strdup(ctx->arr_token[ctx->i].str);
+			ctx->i++;
 		}
 		else
-			parse_redirection(node, arr_token, index);
+			parse_redirection(node, ctx);
 	}
 	node->argv[i] = NULL;
 	return (node);
 }
 
+// When you call it, give DEPTH the value 0
+// This will print NODE and every children node
 void	print_nodes(t_node *node, int depth)
 {
 	char *color;
@@ -591,6 +620,7 @@ void	print_nodes(t_node *node, int depth)
 		print_nodes(node->left, depth + 1);
 	if (node->right)
 		print_nodes(node->right, depth + 1);
+	fflush(stdout);
 }
 
 
@@ -605,21 +635,20 @@ void	print_nodes(t_node *node, int depth)
 
 t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 {
-	t_token	*arr_token;
+	t_parser ctx;
 	t_node *node;
-	int	i;
 
-	arr_token = tokenize(str);
-	if (arr_token && show_debug)
+	ctx.arr_token = tokenize(str);
+	ctx.i = 0;
+	if (ctx.arr_token && show_debug)
 	{
 		printf("tokens: ");
-		print_tokens(arr_token);
+		print_tokens(ctx.arr_token);
 	}
-	i = 0;
-	if (!arr_token)
+	if (!ctx.arr_token)
 		return (NULL);
-	node = parse_expression(arr_token, &i);
-	clean_tokens(&arr_token);
+	node = parse_expression(&ctx);
+	clean_tokens(&ctx.arr_token);
 	if (node && show_debug)
 	{
 		printf("asbtract syntax tree: \n");

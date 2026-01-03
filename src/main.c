@@ -6,11 +6,11 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 16:11:22 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/03 20:06:21 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_exec.h"
 
 //  ██████   ██████   █████████   █████ ██████   █████
 // ▒▒██████ ██████   ███▒▒▒▒▒███ ▒▒███ ▒▒██████ ▒▒███ 
@@ -35,6 +35,7 @@ t_shell	*init_shell(char **envp)
 		return (NULL);
 	}
 	shell->last_exit = 0;
+	shell->envp = envp;
 	return (shell);
 }
 
@@ -50,6 +51,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	node = get_abstract_syntax_tree(str, 1);
 	if (node)
 	{
+		execute_tree(node, shell);
 /*		exit_status = execute(); create an execute file who return an int*/
 		shell->last_exit = exit_status;
 		clean_nodes(&node);

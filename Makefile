@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
+#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/03 08:51:57 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/03 18:32:44 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ SRC_FILES	=	builtin_cd.c		\
 				env_utils.c			\
 				error.c				\
 				main.c				\
-				parse.c
+				parse.c				\
+				execute.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
