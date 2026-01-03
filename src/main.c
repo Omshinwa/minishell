@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 11:31:18 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:11:22 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	if (!str || !ft_strlen(str))
 		return ;
 	add_history(str);
-	node = get_abstract_syntax_tree(str, 0);
+	node = get_abstract_syntax_tree(str, 1);
 	if (node)
 	{
 /*		exit_status = execute(); create an execute file who return an int*/
@@ -60,7 +60,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*str;
+	char	*line;
 	t_shell	*shell;
 	int		exit_code;
 
@@ -73,14 +73,14 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		str = readline("👻> ");
-		if (!str)
+		line = readline("👻>");
+		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
-		parse_and_run_command(str, shell);
-		free(str);
+		parse_and_run_command(line, shell);
+		free(line);
 	}
 	exit_code = shell->last_exit;
 	clean_shell(shell);

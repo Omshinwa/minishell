@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 09:08:26 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:36:15 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,69 @@ void print_tokens(t_token *arr_token)
 	printf("\n");
 }
 
+//  ██████   ██████            ████   █████     ███  ████   ███                             
+// ▒▒██████ ██████            ▒▒███  ▒▒███     ▒▒▒  ▒▒███  ▒▒▒                              
+//  ▒███▒█████▒███  █████ ████ ▒███  ███████   ████  ▒███  ████  ████████    ██████   █████ 
+//  ▒███▒▒███ ▒███ ▒▒███ ▒███  ▒███ ▒▒▒███▒   ▒▒███  ▒███ ▒▒███ ▒▒███▒▒███  ███▒▒███ ███▒▒  
+//  ▒███ ▒▒▒  ▒███  ▒███ ▒███  ▒███   ▒███     ▒███  ▒███  ▒███  ▒███ ▒███ ▒███████ ▒▒█████ 
+//  ▒███      ▒███  ▒███ ▒███  ▒███   ▒███ ███ ▒███  ▒███  ▒███  ▒███ ▒███ ▒███▒▒▒   ▒▒▒▒███
+//  █████     █████ ▒▒████████ █████  ▒▒█████  █████ █████ █████ ████ █████▒▒██████  ██████ 
+// ▒▒▒▒▒     ▒▒▒▒▒   ▒▒▒▒▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒  ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒▒▒  
+
+// You might want to handle SIGINT (Ctrl+C) specifically inside this loop. If the user presses Ctrl+C, you should stop reading,
+// close the pipe, and probably cancel the execution of the entire command line.
+// CTRL D: bash: warning: here-document at line 2 delimited by end-of-file (wanted `end')
+int	set_heredoc_fd(t_redir *redir, char *delimiter)
+{
+	char	*line;
+	int	fd[2];
+
+	if (pipe(fd) == -1)
+		return (print_red("pipe fail"), -1);
+	while (1)
+	{
+		line = readline("👂heredoc<<");
+		if (!line)
+		{
+			printf("here-decoument delimited by end-of-file, expected `%s` \n", delimiter);
+			break ;
+		}
+		if (ft_strcmp(line, delimiter) == 0)
+		{
+            free(line);
+            break;
+		}
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
+		free(line);
+	}
+	close(fd[1]);
+	redir->fd = fd[0];
+	return (0);
+}
+
+t_node *parse_rest_of_cmd(t_token **arr_token, int *index, int show_debug)
+{
+	t_node *node;
+	char	*line;
+
+	line = readline("💀>");
+	clean_tokens(arr_token);
+	*arr_token = tokenize(line);
+	*index = 0;
+	if (*arr_token && show_debug)
+	{
+		printf("tokens: ");
+		print_tokens(*arr_token);
+	}
+	if (!*arr_token)
+		return (NULL);
+	node = parse_simple_command(*arr_token, index);
+	
+	return (node);
+}
+
+
 //  ███████████    █████████   ███████████    █████████  ██████████
 // ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███ ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███▒▒███▒▒▒▒▒█
 //  ▒███    ▒███ ▒███    ▒███  ▒███    ▒███ ▒███    ▒▒▒  ▒███  █ ▒ 
@@ -306,7 +369,10 @@ void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 	(*index)++;
 	redir->filename = ft_strdup(arr_token[*index].str);
 	redir->next = NULL;
+	redir->fd = -1;
 	(*index)++;
+	if (redir->type == TK_REDIR_2IN)
+		set_heredoc_fd(redir, redir->filename);
 	// add it to the next
 	tmp = node->redir;
 	if (!tmp)
@@ -319,11 +385,6 @@ void	parse_redirection(t_node *node,	t_token *arr_token, int *index)
 	tmp->next = redir;
 	return ;
 }
-
-t_node	*parse_simple_command(t_token *arr_token, int *index);
-t_node *parse_expression(t_token *arr_token, int *index);
-t_node *parse_pipeline(t_token *arr_token, int *index);
-t_node *parse_command(t_token *arr_token, int *index);
 
 t_node *parse_expression(t_token *arr_token, int *index)
 {
@@ -398,19 +459,22 @@ t_node *parse_command(t_token *arr_token, int *index)
 	return (node);
 }
 
-// Should never have index pointing at an &&, ||, pipe or () token.
+// Should never have index pointing at an &&, ||, pipe or () token OR END token.
 t_node	*parse_simple_command(t_token *arr_token, int *index)
 {
 	t_node *node;
 	int	nb_of_consecutive_words;
 	int i;
 
-	if (arr_token[*index].type == TK_OP_AND ||
-		arr_token[*index].type == TK_OP_OR  ||
-		arr_token[*index].type == TK_PIPE   ||
-		arr_token[*index].type == TK_OPEN_PARENT ||
-		arr_token[*index].type == TK_CLOSE_PARENT)
-		return(printf(RED "443: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
+	if (arr_token[*index].type & (TK_OP_AND | TK_OP_OR |
+		TK_PIPE | TK_OPEN_PARENT | TK_CLOSE_PARENT) )
+		return (printf(RED "443: syntax error near unexpected token `%s`" RESET "\n", arr_token[*index].str), NULL);
+	
+	// IF WE DONT HANDLE TRAILING OPERATORS
+	if (arr_token[*index].type == TK_END)
+		return (parse_rest_of_cmd(&arr_token, index, 1));
+		// return (printf(RED "417: syntax error: unexpected end of command" RESET "\n"), NULL);
+
 	node = new_node(NODE_CMD, NULL, NULL);
 	nb_of_consecutive_words = 0;
 	i = *index;
@@ -546,14 +610,20 @@ t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 	int	i;
 
 	arr_token = tokenize(str);
-	if (show_debug)
+	if (arr_token && show_debug)
+	{
+		printf("tokens: ");
 		print_tokens(arr_token);
+	}
 	i = 0;
 	if (!arr_token)
 		return (NULL);
 	node = parse_expression(arr_token, &i);
 	clean_tokens(&arr_token);
-	if (show_debug)
+	if (node && show_debug)
+	{
+		printf("asbtract syntax tree: \n");
 		print_nodes(node, 0);
+	}
 	return (node);
 }

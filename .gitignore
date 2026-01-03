@@ -1,6 +1,4 @@
-.william
-.david
-.vscode
+.*
+*.o
 obj/*
 minishell
-*.o

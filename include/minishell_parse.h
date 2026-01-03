@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parse.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/03 09:11:15 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:15:46 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,13 @@ typedef enum e_node_type {
 	NODE_PIPE,
 	NODE_AND,
 	NODE_OR,
-	NODE_SUBSHELL
+	NODE_SUBSHELL,
 } t_node_type;
 
 typedef struct s_redir {
 	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
 	char *filename;			// file or heredoc content
+	int	fd;
 	struct s_redir *next;
 } t_redir;
 
@@ -77,6 +78,12 @@ typedef struct s_node {
 t_node	*get_abstract_syntax_tree(char *str, int debug);
 void	print_nodes(t_node *node, int depth);
 void	clean_nodes(t_node **node);
+
+// recursive calls
+t_node *parse_expression(t_token *arr_token, int *index);
+t_node *parse_pipeline(t_token *arr_token, int *index);
+t_node *parse_command(t_token *arr_token, int *index);
+t_node	*parse_simple_command(t_token *arr_token, int *index);
 
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);
