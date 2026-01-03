@@ -101,7 +101,7 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 		free(path);
 		return (1);
 	}
-	if (pid == 0)
+	if (pid == 0) // child
 	{
 		// do redirections
 		t_redir	*tmp;
@@ -112,12 +112,15 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 				dup2(tmp->fd, STDIN_FILENO);
 			tmp = tmp->next;
 		}
+
+		// execute
 		if (execve(path, node->argv, shell->envp) == -1)
 		{
 			print_red("execve");
 			free(path);
 			exit(1);
 		}
+		
 		// close the fds
 		tmp = node->redir;
 		while (tmp)
@@ -129,12 +132,15 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 	}
 	free(path);
 	waitpid(pid, &status, 0);
+	// you can delete this idk the AI told me we need WIFEXITED
+	// because status isnt just 0 or something.
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	// Case 2: Child was killed by a signal (Ctrl+C, Segfault)
+	// not tested yet
 	if (WIFSIGNALED(status))
 		return (128 + WTERMSIG(status)); 
-	// Standard shell behavior (128 + signal// filepath: /home/wiwu/Documents/minishell/src/execute.c
+	// Standard shell behavior (128 + signal ???)
 	return (0);
 }
 
@@ -164,23 +170,13 @@ int	execute_tree(t_node *node, t_shell *shell)
 
 	// 3. Handle Pipes (|)
 	if (node->type == NODE_PIPE)
-	{
-		// Pipes are special: they run Left and Right simultaneously
-		return (execute_pipeline(node)); 
-	}
+		return (execute_pipeline(node));
 
-	// 4. Handle Subshells (parenthesis)
 	if (node->type == NODE_SUBSHELL)
-	{
-		// Usually involves forking a new shell instance or just recursing
 		return (execute_subshell(node));
-	}
 
-	// 5. Handle Simple Command (Leaf Node)
 	if (node->type == NODE_CMD)
-	{
 		return (execute_simple_command(node, shell));
-	}
 
 	return (0);
 }
