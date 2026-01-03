@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_pwd.c                                     :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/29 13:17:05 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 12:03:22 by dasamuel         ###   ########.fr       */
+/*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
+/*   Updated: 2026/01/03 08:13:37 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_exit(char **args, t_shell *shell)
 {
-	char	*pwd;
+	int	exit_code;
 
-	pwd = getcwd(NULL, 0);
-	if (!pwd)
+	printf("exit\n");
+	if (args[1])
 	{
-		perror("Error: getcwd");
-		return (1);
+		exit_code = ft_atoi(args[1]);
+		clean_shell(shell);
+		exit(exit_code);
 	}
-	printf("%s\n", pwd);
-	free(pwd);
-	return (0);
+	clean_shell(shell);
+	exit(shell->last_exit);
 }

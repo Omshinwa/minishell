@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 17:40:12 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/03 09:08:40 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parse.h"
+#include "minishell.h"
 
 void	print_red(char *str)
 {

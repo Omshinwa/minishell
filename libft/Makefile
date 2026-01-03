@@ -6,7 +6,7 @@
 #    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/05 15:19:36 by dasamuel          #+#    #+#              #
-#    Updated: 2025/11/17 07:52:31 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/03 08:47:43 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRCS = 	ft_atoi.c		\
 		ft_isdigit.c	\
 		ft_isprint.c	\
 		ft_isspace.c	\
+		ft_is_in_set.c	\
 		ft_itoa.c		\
 		ft_memchr.c		\
 		ft_memcmp.c		\
@@ -42,12 +43,14 @@ SRCS = 	ft_atoi.c		\
 		ft_putstr_fd.c	\
 		ft_split.c		\
 		ft_strchr.c		\
+		ft_strcmp.c		\
 		ft_strdup.c		\
 		ft_striteri.c	\
 		ft_strjoin.c	\
 		ft_strlcat.c	\
 		ft_strlcpy.c	\
 		ft_strlen.c		\
+		ft_strnlen.c	\
 		ft_strmapi.c	\
 		ft_strncmp.c	\
 		ft_strnstr.c	\

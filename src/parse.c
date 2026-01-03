@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 21:15:28 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/03 09:08:26 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parse.h"
+#include "minishell.h"
 
 //   █████████  █████   █████████  ██████   █████   █████████   █████      
 //  ███▒▒▒▒▒███▒▒███   ███▒▒▒▒▒███▒▒██████ ▒▒███   ███▒▒▒▒▒███ ▒▒███       
@@ -287,36 +287,6 @@ t_node_type token_to_node_type(t_token_type type)
 	else if (type == TK_OPEN_PARENT)
 		return (NODE_SUBSHELL);
 	return (print_red("unrecognized token"), -1);
-}
-
-void	clean_nodes(t_node **node_addr)
-{
-	int	i;
-	t_redir	*redir;
-	t_redir	*redir_next;
-	t_node	*node;
-
-	if (node_addr == NULL)
-		return ;
-	node = *node_addr;
-	if (node == NULL)
-		return ;
-	clean_nodes(&node->left);
-	clean_nodes(&node->right);
-	i = 0;
-	while(node->argv && node->argv[i])
-		free(node->argv[i++]);
-	free(node->argv);
-	redir = node->redir;
-	while (redir)
-	{
-		free(redir->filename);
-		redir_next = redir->next;
-		free(redir);
-		redir = redir_next;
-	}
-	free(node);
-	*node_addr = NULL;
 }
 
 // When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:

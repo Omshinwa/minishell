@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 08:10:12 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 09:05:38 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 08:43:15 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	**env_to_array(t_shell *shell)
 		return (NULL);
 	while (i < count)
 	{
-		temp = ft_strjoin(tmp->key, '=');
+		temp = ft_strjoin(tmp->key, "=");
 		envp[i++] = ft_strjoin(temp, tmp->value);
 		tmp = tmp->next;
 		free(temp);

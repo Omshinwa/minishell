@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_cd.c                                      :+:      :+:    :+:   */
+/*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 11:23:14 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 09:09:06 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,20 @@ int	ft_cd(char **args, t_shell *shell)
 	{
 		path = getenv("HOME");
 		if (!path)
-			return (ft_putendl_fd("cd: HOME not set", 2), 1);
+		{
+			ft_putendl_fd("cd: HOME not set", 2);
+			shell->last_exit = 1;
+			return (1);
+		}
 	}
 	else
 		path = args[1];
-	if (chdir(path))
-		return (perror("cd"), 1);
+	if (chdir(path) == -1)
+	{
+		perror("cd");
+		shell->last_exit = 1;
+		return (1);
+	}
+	shell->last_exit = 0;
 	return (0);
 }
