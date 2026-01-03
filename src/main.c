@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 09:44:01 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/03 11:29:54 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	node = get_abstract_syntax_tree(str, 0);
 	if (node)
 	{
-/*		exit_status = execute(); create execute file*/
+/*		exit_status = execute(); create execute file who return an int*/
 		shell->last_exit = exit_status;
 		clean_nodes(&node);
 	}
