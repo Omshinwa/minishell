@@ -9,15 +9,31 @@
 
 #include "minishell_exec.h"
 
-int	execute_pipeline(t_node *node)
+int	execute_pipeline(t_node *node, t_shell *shell)
 {
 	(void) node;
+	(void) shell;
 	return (0);
 }
 
-int	execute_subshell(t_node *node)
+int	execute_subshell(t_node *node, t_shell *shell)
 {
-	(void) node;
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (1);
+	}
+	if (pid == 0) // child
+		return (execute_tree(node->left, shell));
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
 	return (0);
 }
 
@@ -170,10 +186,10 @@ int	execute_tree(t_node *node, t_shell *shell)
 
 	// 3. Handle Pipes (|)
 	if (node->type == NODE_PIPE)
-		return (execute_pipeline(node));
+		return (execute_pipeline(node, shell));
 
 	if (node->type == NODE_SUBSHELL)
-		return (execute_subshell(node));
+		return (execute_subshell(node, shell));
 
 	if (node->type == NODE_CMD)
 		return (execute_simple_command(node, shell));

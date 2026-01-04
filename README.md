@@ -1,16 +1,6 @@
+Tu peux me montrer ton Abstract syntax tree (un printer?).
 
 
-
-if ( false || COND2 )
-
-
-examples of commands to run:
-
-cat README.md | grep "e" | wc -l
-< logs.txt cat | grep "error" | wc > error_nb.txt -l
-1    2      3  4  5     6     7  8 9   10         11
-
-( echo "Hello World" || echo wesh ) && wc -l
 
 < <<( echo 'test quotes' | cat 'like "Hello World " ' "ok" 'a' || echo wesh ) && wc > >>
 
@@ -50,7 +40,30 @@ ls | grep "e" && >|| echo 1
 
 ><>
 
+# pipe
+
+cat README.md | grep "e" | wc -l
+
+< logs.txt cat | grep "error" | wc > error_nb.txt -l
+1    2      3  4  5     6     7  8 9   10         11
+
+# parenthesis
+( echo "Hello World" || echo wesh ) && ls -l
+
+( echo "Hello World" || echo wesh ) && wc -l
+
 # check for () embedded in word, should throw error
+
+echo ( 1
+echo ) 1
+echo ( 1 )
+
+# this is not valid
+ls | | ls
+
+# this is valid
+ls | < TODO | ls
+
 wtf is a stdin && multiline (sorry) > what
 wtf is a stdin && echo e(sorry)e > what
 wtf is a stdin && echo '(sorry" > what
@@ -83,3 +96,12 @@ cmdand> cat << delimiter_2 && echo 'hold on this isnt all' ||
 cmdand cmdand cmdor heredoc> second cat
 cmdand cmdand cmdor heredoc> delimiter_2
 cmdand cmdand cmdor> echo "last"    
+
+test just entering newlines for the trailing && / ||
+
+
+echo 1 && (
+	echo 2)
+
+echo 1 &&
+	(echo 2)

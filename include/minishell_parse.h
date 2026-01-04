@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/03 18:08:29 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/04 19:59:56 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@
 # define BG_MAGENTA "\033[45m"
 # define BG_CYAN    "\033[46m"
 # define BG_WHITE   "\033[47m"
+
+# include "libft.h"
+# include <stdlib.h>
+# include <signal.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 // 111111111111 - 12 bits
 typedef enum e_token_type {
@@ -81,9 +89,21 @@ typedef struct s_node {
 	struct s_node *right;
 } t_node;
 
-t_node	*get_abstract_syntax_tree(char *str, int debug);
+// multilines.c
+int	set_heredoc_fd(t_redir *redir, char *delimiter);
+int	read_more_input(t_parser *ctx);
+
+// token.c
+t_token	*tokenize(char *str);
+void	print_tokens(t_token *arr_token);
+void	clean_tokens(t_token **arr_token);
 void	print_nodes(t_node *node, int depth);
+
+// node.c
+t_node *new_node(t_node_type type, t_node *left, t_node *right);
 void	clean_nodes(t_node **node);
+
+t_node	*get_abstract_syntax_tree(char *str, int debug);
 
 // recursive calls
 t_node *parse_expression(t_parser *ctx);

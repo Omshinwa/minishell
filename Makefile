@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/03 18:32:44 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/04 20:50:12 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,11 @@ SRC_FILES	=	builtin_cd.c		\
 				error.c				\
 				main.c				\
 				parse.c				\
-				execute.c
+				parse/multilines.c	\
+				parse/token.c		\
+				parse/node.c		\
+				parse/parse_cmd.c	\
+				execute.c			\
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
@@ -58,7 +62,7 @@ $(NAME): $(OBJECTS) $(LIBFT_A)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) -I$(INCLUDES) $(LINK_FLAG) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADERS)
-	mkdir -p $(OBJ_PATH)
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 $(LIBFT_A):
