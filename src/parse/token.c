@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 23:04:10 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/04 23:10:57 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	set_token(t_token *token, char *str, int start)
 	end = start;
 	c = str[start];
 	token->str = NULL;
-	if (c == '!')
+	if (c == '!') // DO INVALID CHARS HERE
 		return (token->type = TK_END, -1);
 	else if (!is_metachar(c) || c == '"' || c == '\'')
 	{
@@ -75,7 +75,11 @@ static int	set_token(t_token *token, char *str, int start)
 				if (str[end] == c)
 					end++;
 				else
-					return (token->type = TK_END, print_red("unclosed quotation"), -1);
+				{
+					token->type = TK_END;
+					print_red("unclosed quotation");
+					return (-1);
+				}
 			}
 			else if (!is_metachar(str[end]))
 				end++;
@@ -111,7 +115,7 @@ static int	set_token(t_token *token, char *str, int start)
 			end += 2;
 		}
 		else
-			return (token->type = TK_END, print_red("invalid char: &"), -1);
+			return (token->type = TK_END, -1);
 	}
 	else if (c == '<')
 	{
