@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 19:12:21 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/04 23:04:10 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	set_token(t_token *token, char *str, int start)
 	c = str[start];
 	token->str = NULL;
 	if (c == '!')
-		return (token->type = TK_END, printf(RED "invalid char: %c", c), -1);
+		return (token->type = TK_END, -1);
 	else if (!is_metachar(c) || c == '"' || c == '\'')
 	{
 		token->type = TK_WORD;
@@ -165,7 +165,7 @@ t_token	*tokenize(char *str)
 		new_i = set_token(&arr_token[j], str, i);
 		if (new_i == -1)
 		{
-			printf(RED "invalid token at index %i : %c" RESET "\n", i, str[i]);
+			printf(RED "invalid token at index %i: %c" RESET "\n", i, str[i]);
 			break ;
 		}
 		i = new_i;

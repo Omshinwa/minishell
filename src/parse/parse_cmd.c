@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 22:24:08 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/04 22:43:58 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ t_node	*parse_simple_command(t_parser *ctx)
 
 	if (!(ctx->arr_token[ctx->i].type & (TK_WORD | TK_REDIR_IN
 		| TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT)))
-		return (printf(RED"syntax error near unexpected token `%s`"RESET"\n",
+		return (printf(RED"unexpected token `%s`, expected command"RESET"\n",
 				ctx->arr_token[ctx->i].str), NULL);
 	nb_of_words = get_argv_size(ctx);
 	if (nb_of_words == -1)

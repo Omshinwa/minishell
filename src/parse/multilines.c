@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 20:09:43 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/04 22:54:27 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // You might want to handle SIGINT (Ctrl+C) specifically inside this loop.
 // If the user presses Ctrl+C, you should stop reading, close the pipe,
 // and probably cancel the execution of the entire command line.
-int	set_heredoc_fd(t_redir *redir, char *delimiter)
+int	set_heredoc_fd(t_redir *redir, char *del)
 {
 	char	*line;
 	int		fd[2];
@@ -24,13 +24,13 @@ int	set_heredoc_fd(t_redir *redir, char *delimiter)
 		return (print_red("pipe fail"), -1);
 	while (1)
 	{
-		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002");
+		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
 		if (!line)
 		{
-			printf("here-doc: expected `%s`, got EOF instead \n", delimiter);
+			printf(RED"here-doc: expected %s, got EOF instead"RESET"\n", del);
 			break ;
 		}
-		if (ft_strcmp(line, delimiter) == 0)
+		if (ft_strcmp(line, del) == 0)
 		{
 			free(line);
 			break ;
@@ -57,7 +57,7 @@ static char	*new_prompt(t_parser *ctx)
 		color = BG_RED;
 	else if (ctx->arr_token[ctx->i - 1].type == TK_OPEN_PARENT)
 		color = BG_BLUE;
-	prompt = safe_malloc(sizeof(char) * 50);
+	prompt = safe_malloc(sizeof(char) * 40);
 	if (!prompt)
 		return (NULL);
 	prompt[0] = '\0';
@@ -68,6 +68,7 @@ static char	*new_prompt(t_parser *ctx)
 	ft_strlcat(prompt, "\001", 50);
 	ft_strlcat(prompt, RESET, 50);
 	ft_strlcat(prompt, "\002", 50);
+	ft_strlcat(prompt, " ", 50);
 	return (prompt);
 }
 

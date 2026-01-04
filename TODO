@@ -28,6 +28,12 @@ Parsing (grammar / precedence)
    ↓
 Execution
 
+• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
+• In interactive mode:
+	◦ ctrl-C displays a new prompt on a new line.
+	◦ ctrl-D exits the shell.
+	◦ ctrl-\ does nothing.
+
 # PARSING:
 
 <!-- • Display a prompt when waiting for a new command. -->
@@ -42,13 +48,6 @@ Execution
 
 <!-- • Handle " (double quote) which should prevent the shell from interpreting the meta-characters in the quoted sequence except for $ (dollar sign). -->
 
-• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
-• In interactive mode:
-	◦ ctrl-C displays a new prompt on a new line.
-	◦ ctrl-D exits the shell.
-	◦ ctrl-\ does nothing.
-
-
 # EXECUTION:
 
 • Implement the following redirections:
@@ -62,7 +61,7 @@ should expand to their values.
 
 • Handle $? which should expand to the exit status of the most recently executed foreground pipeline.
 
-• Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
+<!-- • Search and launch the right executable (based on the PATH variable or using a relative or an absolute path). -->
 
 • Implement pipes (| character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
 
@@ -79,5 +78,5 @@ strerror, perror
 
 # BONUS
 
-• && and || with parenthesis for priorities.
+<!-- • && and || with parenthesis for priorities. -->
 • Wildcards * should work for the current working directory.
