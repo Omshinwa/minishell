@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/03 09:25:24 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/05 09:24:44 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,19 @@ t_env	*new_env_node(char *key, char *value);
 void	add_env_node(t_env **env, t_env *new);
 char	*extract_key(char *s);
 char	*extract_value(char *s);
+
+int		is_var_char(char c);
+char	*extract_var_name(char *s, int i);
+char	*get_var_value(t_shell *shell, char *var_name);
+char	*append_to_result(char *result, char *to_add);
+void	update_quote_state(char c, int *in_single, int *in_double);
+
+void	free_argv(char **argv);
+char	**expand_argv(char **argv, t_shell *shell);
+void	expand_redirections(t_redir *redir, t_shell *shell);
+void	expand_cmd_node(t_node *node, t_shell *shell);
+char	*expand_variables(char *s, t_shell *shell);
+void	expand_node(t_node *node, t_shell *shell);
 
 int		count_env(t_env *env);
 char	**env_to_array(t_shell *shell);

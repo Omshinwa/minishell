@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/04 20:50:12 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/05 09:26:12 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,9 @@ SRC_FILES	=	builtin_cd.c		\
 				env_init.c			\
 				env_set.c			\
 				env_utils.c			\
+				expand_utils.c		\
+				expand_var.c		\
+				expand_node.c		\
 				error.c				\
 				main.c				\
 				parse.c				\
@@ -39,7 +42,7 @@ SRC_FILES	=	builtin_cd.c		\
 				parse/token.c		\
 				parse/node.c		\
 				parse/parse_cmd.c	\
-				execute.c			\
+				execute.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
