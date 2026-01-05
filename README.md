@@ -95,3 +95,6 @@ echo 1 && (
 
 echo 1 &&
 	(echo 2)
+
+# check which chars are valid or not for words / args
+ex: / is like an alpha

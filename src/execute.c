@@ -73,7 +73,7 @@ char	*get_path(char *cmd, t_shell *shell)
 	char	**split_path;
 	char	*path;
 
-	if (access(cmd, X_OK) == 0)
+	if (ft_strchr(cmd, '/') && access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	find_path = find_env_node(shell->env, "PATH")->value;
 	if (!find_path)
