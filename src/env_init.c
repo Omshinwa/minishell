@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 08:07:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 08:08:27 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/05 13:39:33 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,11 +101,9 @@ t_env	*init_env(char **envp)
 		key = extract_key(envp[i]);
 		value = extract_value(envp[i]);
 		if (key && value)
-		{
 			add_env_node(&env, new_env_node(key, value));
-			free(key);
-			free(value);
-		}
+		free(key);
+		free(value);
 		i++;
 	}
 	return (env);

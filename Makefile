@@ -6,7 +6,7 @@
 #    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/05 09:26:12 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/05 13:53:49 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,11 @@ SRC_FILES	=	builtin_cd.c		\
 				expand_utils.c		\
 				expand_var.c		\
 				expand_node.c		\
+				exec_builtins.c		\
+				exec_cmd.c			\
+				exec_redir.c		\
+				exec_tree.c			\
+				exec_utils.c		\
 				error.c				\
 				main.c				\
 				parse.c				\

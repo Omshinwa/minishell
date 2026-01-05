@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/05 09:24:44 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/05 13:48:32 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,17 @@ int		ft_pwd(t_shell *shell);
 int		ft_unset(char **args, t_shell *shell);
 int		ft_exit(char **args, t_shell *shell);
 int		is_builtin(char *cmd);
+int		execute_builtin(char **args, t_shell *shell);
+int		execute_builtin_redir(char **argv, t_redir *redir, t_shell *shell);
+
+int		execute_simple_command(t_node *node, t_shell *shell);
+int		handle_redirections(t_redir *redir);
+int		execute_tree(t_node *node, t_shell *shell);
+
+void	free_split(char **split);
+char	*try_path(char *dir, char *cmd);
+char	*get_path(char *cmd, t_shell *shell);
+int		get_exit_status(int status);
 
 void	clean_shell(t_shell *shell);
 void	clean_env(t_env *env);
