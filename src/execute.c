@@ -6,7 +6,7 @@
 //  ▒███ ▒   █  ███ ▒▒███  ▒███ ▒   █
 //  ██████████ █████ █████ ██████████
 // ▒▒▒▒▒▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒▒▒▒▒▒  
-
+/
 #include "minishell_exec.h"
 
 int	execute_pipeline(t_node *node, t_shell *shell)

@@ -6,13 +6,13 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 13:43:56 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 14:32:21 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/08 11:07:29 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	execute_pipeline(t_node *node, t_shell *shell)
+void	execute_pipe(int pipefd[2])
 {
 	
 }
