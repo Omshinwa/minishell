@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 09:48:48 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 10:36:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,11 +156,11 @@ t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 
 	ctx.arr_token = tokenize(str);
 	ctx.i = 0;
-	if (ctx.arr_token && show_debug)
-	{
-		printf("tokens: ");
-		print_tokens(ctx.arr_token);
-	}
+	// if (ctx.arr_token && show_debug)
+	// {
+	// 	printf("tokens: ");
+	// 	print_tokens(ctx.arr_token);
+	// }
 	if (!ctx.arr_token)
 		return (NULL);
 	node = parse_expression(&ctx);
@@ -172,7 +172,7 @@ t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 	clean_tokens(&ctx.arr_token);
 	if (node && show_debug)
 	{
-		printf("asbtract syntax tree: \n");
+		// printf("asbtract syntax tree: \n");
 		print_nodes(node, 0);
 	}
 	return (node);
