@@ -11,8 +11,8 @@ on err, display err msg then return to the prompt -->
 
 <!-- * Handle < << > >> -->
 
-* read multilines???
-ex  grep "e" &&
+<!-- * read multilines???
+ex  grep "e" && -->
 
 <!-- * Ta fonction set_token utilise ft_isalnum pour délimiter les TK_WORD. C'est trop restrictif pour un shell.
 ex: filename test.txt
@@ -61,20 +61,20 @@ should expand to their values.
 
 • Handle $? which should expand to the exit status of the most recently executed foreground pipeline.
 
+• dont run command if it doesnt start with ./
+
 <!-- • Search and launch the right executable (based on the PATH variable or using a relative or an absolute path). -->
 
 • Implement pipes (| character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
 
-• Your shell must implement the following built-in commands:
+<!-- • Your shell must implement the following built-in commands:
 	◦ echo with option -n
 	◦ cd with only a relative or absolute path
-	◦ pwd with no options
+	◦ pwd with no options -->
 	◦ export with no options
-	◦ unset with no options
+<!-- ◦ unset with no options
 	◦ env with no options or arguments
-	◦ exit with no options
-
-strerror, perror
+	◦ exit with no options -->
 
 # BONUS
 
