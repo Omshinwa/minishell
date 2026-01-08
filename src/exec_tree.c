@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 13:54:29 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/08 20:50:57 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@ int	execute_subshell(t_node *node, t_shell *shell)
 		return (1);
 	}
 	if (pid == 0)
-		return (execute_tree(node->left, shell));
+	{
+		int code;
+		// return (execute_tree(node->left, shell));
+		code = execute_tree(node->left, shell);
+		exit(code); // IMPORTANT: terminate the child process
+	}
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
 }
