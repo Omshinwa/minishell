@@ -6,9 +6,11 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 22:08:48 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 09:48:48 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+///TODO use ioctl in signal handler
 
 #include "minishell_parse.h"
 
@@ -26,16 +28,21 @@ volatile sig_atomic_t	g_ackowledge = 0;
 // done in full before handling a signal.
 // volatile prevents the compiler from making some optimizations
 
-void	acknowledge_sig(int signum)
+void	signal_handler(int signum)
 {
 	g_ackowledge = signum;
-	if (signum == SIGINT)
-	{
-		write(STDOUT_FILENO, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+	// if (signum == SIGINT)
+	// {
+	// 	write(STDOUT_FILENO, "\n", 1);
+	// 	if (g_state == STATE_INTERACTIVE)
+	// 	{
+	// 		rl_on_new_line();
+	// 		rl_replace_line("", 0);
+	// 		rl_redisplay();
+	// 	}
+	// 	else if (g_state == STATE_HEREDOC)
+	// 		ioctl(STDIN_FILENO, TIOCSTI, "\n"); // Force readline to return
+	// }
 }
 
 //  ███████████    █████████   ███████████    █████████  ██████████

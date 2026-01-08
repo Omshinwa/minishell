@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/05 13:48:32 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/08 09:59:54 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,16 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef enum e_state {
+	STATE_INTERACTIVE,
+	STAGE_HEREDOC,
+	STATE_EXEC
+}	t_state;
+
 typedef struct s_shell
 {
+	t_state	state;
+	char	**envp;
 	t_env	*env;
 	int		last_exit;
 }	t_shell;

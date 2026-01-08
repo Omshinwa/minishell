@@ -6,20 +6,19 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/03 20:03:30 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 09:59:52 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef MINISHELL_EXEC_H
+# define MINISHELL_EXEC_H
 
 # define RED "\033[1;31m"
 # define GREEN "\033[1;32m"
 # define RESET "\033[0m"
 # define BOLD "\033[1m"
 
-# include "libft.h"
-# include "minishell_parse.h"
+# include "minishell.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -33,20 +32,6 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
-
-typedef struct s_shell
-{
-	char	**envp;
-	t_env	*env;
-	int		last_exit;
-}	t_shell;
 
 t_shell	*init_shell(char **envp);
 t_env	*init_env(char **envp);

@@ -6,11 +6,11 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 13:12:32 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 09:59:56 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_exec.h"
+#include "minishell.h"
 
 //  ██████   ██████   █████████   █████ ██████   █████
 // ▒▒██████ ██████   ███▒▒▒▒▒███ ▒▒███ ▒▒██████ ▒▒███ 
@@ -36,6 +36,7 @@ t_shell	*init_shell(char **envp)
 	}
 	shell->last_exit = 0;
 	shell->envp = envp;
+	shell->state = STATE_INTERACTIVE;
 	return (shell);
 }
 
@@ -71,7 +72,7 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_shell(envp);
 	if (!shell)
 		return (1);
-	signal(SIGINT, acknowledge_sig);
+	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{

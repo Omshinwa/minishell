@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/04 19:59:56 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 09:48:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+// typedef enum e_state {
+// 	STATE_INTERACTIVE,
+// 	STAGE_HEREDOC,
+// 	STATE_EXEC
+// }	t_state;
+
+// typedef struct s_shell
+// {
+// 	t_state	state;
+// 	t_env	*env;
+// 	int		last_exit;
+// }	t_shell;
 
 // 111111111111 - 12 bits
 typedef enum e_token_type {
@@ -115,6 +128,6 @@ void	print_red(char *str);
 void	*safe_malloc(size_t __size);
 
 // currently signals are pretty dirty, need some rework
-void	acknowledge_sig(int signum);
+void	signal_handler(int signum);
 
 #endif

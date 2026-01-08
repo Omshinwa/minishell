@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 22:54:27 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/07 19:48:55 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	set_heredoc_fd(t_redir *redir, char *del)
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
 		if (!line)
 		{
-			printf(RED"here-doc: expected %s, got EOF instead"RESET"\n", del);
+			printf(RED"here-doc: expected %s got EOF instead"RESET"\n", del);
 			break ;
 		}
 		if (ft_strcmp(line, del) == 0)
