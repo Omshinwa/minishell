@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 19:51:16 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 20:34:23 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 	redir = safe_malloc(sizeof(t_redir));
 	if (!redir)
 		return (ctx->i++, -1);
+	redir_append(node, redir);
 	redir->type = ctx->arr_token[ctx->i].type;
 	ctx->i++;
 	redir->filename = ft_strdup(ctx->arr_token[ctx->i].str);
@@ -79,7 +80,6 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 		}
 		redir->fd = fd[0];
 	}
-	redir_append(node, redir);
 	return (0);
 }
 
