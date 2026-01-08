@@ -36,6 +36,8 @@ Execution
 
 # PARSING:
 
+heredocs should expand variables and commands
+
 <!-- • Display a prompt when waiting for a new command. -->
 
 <!-- • Have a working history. ignore ! expansion (bash !3 will run the third command in history) -->

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 07:52:47 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 19:46:32 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 19:21:44 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	clean_shell(t_shell *shell)
 		return ;
 	if (shell->env)
 		clean_env(shell->env);
+	if (shell->node)
+		clean_nodes(&shell->node);
 	free(shell);
 }
 

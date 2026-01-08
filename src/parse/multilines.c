@@ -6,22 +6,19 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/07 19:48:55 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 19:10:46 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
+#include "minishell.h"
 
-// You might want to handle SIGINT (Ctrl+C) specifically inside this loop.
-// If the user presses Ctrl+C, you should stop reading, close the pipe,
-// and probably cancel the execution of the entire command line.
-int	set_heredoc_fd(t_redir *redir, char *del)
+// This read what's in the standard input and write to FD
+int	read_heredoc_fd(int fd, char *del)
 {
 	char	*line;
-	int		fd[2];
 
-	if (pipe(fd) == -1)
-		return (print_red("pipe fail"), -1);
+	signal(SIGINT, SIG_DFL);
 	while (1)
 	{
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
@@ -35,13 +32,13 @@ int	set_heredoc_fd(t_redir *redir, char *del)
 			free(line);
 			break ;
 		}
-		write(fd[1], line, ft_strlen(line));
-		write(fd[1], "\n", 1);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
-	close(fd[1]);
-	redir->fd = fd[0];
-	return (0);
+	close(fd);
+	signal(SIGINT, signal_handler);
+	exit(0);
 }
 
 static char	*new_prompt(t_parser *ctx)
@@ -102,12 +99,24 @@ int	read_more_input(t_parser *ctx)
 	while (1)
 	{
 		line = readline(prompt);
+		if (g_acknowledge)
+		{
+			g_acknowledge = 0;
+			if (line)
+				free(line);
+			free(prompt);
+			return (-1);
+		}
 		if (!line)
+{
+			signal(SIGINT, signal_handler);
 			return (free(prompt), print_red("syntax: unexpected EOF"), -1);
+}
 		if (not_just_empty_space(line))
 			break ;
 		free(line);
 	}
+	signal(SIGINT, signal_handler);
 	free(prompt);
 	new_tokens = tokenize(line);
 	free(line);

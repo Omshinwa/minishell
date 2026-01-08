@@ -6,11 +6,9 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 10:36:28 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 14:56:12 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-///TODO use ioctl in signal handler
 
 #include "minishell_parse.h"
 
@@ -23,26 +21,26 @@
 // ▒▒█████████  █████ ▒▒█████████  █████  ▒▒█████ █████   █████ ███████████
 //  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒    ▒▒▒▒▒ ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒▒▒▒ 
 
-volatile sig_atomic_t	g_ackowledge = 0;
+volatile sig_atomic_t	g_acknowledge = 0;
 // an atomic operation guarantees that every read/write from g_acknoledge are
 // done in full before handling a signal.
 // volatile prevents the compiler from making some optimizations
 
+#include <asm/termbits.h>  /* Definition of TIOCSTI */
+#include <sys/ioctl.h>
+
 void	signal_handler(int signum)
 {
-	g_ackowledge = signum;
-	// if (signum == SIGINT)
-	// {
-	// 	write(STDOUT_FILENO, "\n", 1);
-	// 	if (g_state == STATE_INTERACTIVE)
-	// 	{
-	// 		rl_on_new_line();
-	// 		rl_replace_line("", 0);
-	// 		rl_redisplay();
-	// 	}
-	// 	else if (g_state == STATE_HEREDOC)
-	// 		ioctl(STDIN_FILENO, TIOCSTI, "\n"); // Force readline to return
-	// }
+	(void)signum;
+	g_acknowledge = 1;
+	// rl_done = 1;
+	// ioctl(STDIN_FILENO, TIOCSTI, "\n"); // Force readline to return
+	// rl_done = 1;
+	// rl_redisplay();
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 //  ███████████    █████████   ███████████    █████████  ██████████
@@ -149,7 +147,7 @@ t_node *parse_command(t_parser *ctx)
 //  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
 // ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
 
-t_node	*get_abstract_syntax_tree(char *str, int show_debug)
+t_node	*get_abstract_syntax_tree(char *str)
 {
 	t_parser ctx;
 	t_node *node;
@@ -170,10 +168,5 @@ t_node	*get_abstract_syntax_tree(char *str, int show_debug)
 		clean_nodes(&node);
 	}
 	clean_tokens(&ctx.arr_token);
-	if (node && show_debug)
-	{
-		// printf("asbtract syntax tree: \n");
-		print_nodes(node, 0);
-	}
 	return (node);
 }

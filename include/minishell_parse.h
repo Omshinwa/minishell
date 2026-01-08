@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/08 09:48:37 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 19:16:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,12 @@
 # include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
+
 # include <readline/readline.h>
 # include <readline/history.h>
+
+# include <sys/types.h>
+# include <sys/wait.h>
 
 // typedef enum e_state {
 // 	STATE_INTERACTIVE,
@@ -89,7 +93,7 @@ typedef enum e_node_type {
 
 typedef struct s_redir {
 	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
-	char *filename;			// file or heredoc content
+	char *filename;			// file or heredoc delimiter
 	int	fd;
 	struct s_redir *next;
 } t_redir;
@@ -103,7 +107,7 @@ typedef struct s_node {
 } t_node;
 
 // multilines.c
-int	set_heredoc_fd(t_redir *redir, char *delimiter);
+int	read_heredoc_fd(int fd, char *del);
 int	read_more_input(t_parser *ctx);
 
 // token.c
@@ -116,7 +120,7 @@ void	print_nodes(t_node *node, int depth);
 t_node *new_node(t_node_type type, t_node *left, t_node *right);
 void	clean_nodes(t_node **node);
 
-t_node	*get_abstract_syntax_tree(char *str, int debug);
+t_node	*get_abstract_syntax_tree(char *str);
 
 // recursive calls
 t_node *parse_expression(t_parser *ctx);

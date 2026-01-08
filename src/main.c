@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 11:01:34 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/08 19:21:51 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,20 @@ t_shell	*init_shell(char **envp)
 
 static void	parse_and_run_command(char *str, t_shell *shell)
 {
-	t_node	*node;
 	int		exit_status;
 
 	exit_status = shell->last_exit;
 	if (!str || !ft_strlen(str))
 		return ;
 	add_history(str);
-	node = get_abstract_syntax_tree(str, 1);
-	if (node)
+	shell->node = get_abstract_syntax_tree(str);
+	if (shell->node)
 	{
-		expand_node(node, shell);
-		exit_status = execute_tree(node, shell);
+		expand_node(shell->node, shell);
+		print_nodes(shell->node, 0);
+		exit_status = execute_tree(shell->node, shell);
 		shell->last_exit = exit_status;
-		clean_nodes(&node);
+		clean_nodes(&shell->node);
 	}
 	else
 		shell->last_exit = 1;
@@ -72,16 +72,30 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_shell(envp);
 	if (!shell)
 		return (1);
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		signal(SIGINT, signal_handler);
+		signal(SIGQUIT, SIG_IGN);
 		line = readline("👻👻> ");
+		if (g_acknowledge)
+		{
+			shell->last_exit = 130;
+			g_acknowledge = 0;
+		}
+
+	// 	write(STDOUT_FILENO, "\n", 1);
+	// 	if (g_state == STATE_INTERACTIVE)
+	// 	{
+	// 		rl_on_new_line();
+	// 		rl_replace_line("", 0);
+	// 		rl_redisplay();
+	// 	}
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
+		signal(SIGINT, SIG_DFL);
 		parse_and_run_command(line, shell);
 		free(line);
 	}

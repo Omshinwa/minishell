@@ -6,13 +6,13 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 13:42:07 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/08 19:51:16 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
 
-// Link REDIR to the last of NODE->next
+// Append REDIR to the last NODE->next
 static void	redir_append(t_node *node, t_redir *redir)
 {
 	t_redir	*tmp;
@@ -29,7 +29,7 @@ static void	redir_append(t_node *node, t_redir *redir)
 }
 
 // When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
-// Calls set_heredoc_fd
+// Calls read_heredoc_fd
 // Sets / append the NODE->REDIR
 static int	parse_redirection(t_node *node,	t_parser *ctx)
 {
@@ -46,8 +46,38 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 	ctx->i++;
 	if (redir->type == TK_REDIR_2IN)
 	{
-		if (set_heredoc_fd(redir, redir->filename))
+		signal(SIGINT, SIG_IGN);
+		// doc a fork to read heredoc
+		int fd[2];
+		int pid;
+		int	status;
+	
+		status = 0;
+		pipe(fd);
+		pid = fork();
+		if (pid == 0) // child
+		{
+			close(fd[0]);
+			read_heredoc_fd(fd[1], redir->filename);
+		}
+		else if (pid == -1) // child
+			return(print_red("pid"), -1);
+		else
+		{
+			close(fd[1]);
+			wait(&status);
+		}
+		
+		signal(SIGINT, signal_handler);
+		if (!WIFEXITED(status)) // KILLED BY CTRL + C
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			rl_on_new_line();
+			// rl_replace_line("", 0);
+			// rl_redisplay();
 			return (-1);
+		}
+		redir->fd = fd[0];
 	}
 	redir_append(node, redir);
 	return (0);

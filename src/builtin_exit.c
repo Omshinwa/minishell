@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/03 08:13:37 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/08 19:08:49 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	ft_exit(char **args, t_shell *shell)
 		clean_shell(shell);
 		exit(exit_code);
 	}
+	exit_code = shell->last_exit;
 	clean_shell(shell);
-	exit(shell->last_exit);
+	exit(exit_code);
 }
