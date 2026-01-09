@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 14:46:11 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 15:48:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,14 +80,16 @@ typedef enum e_node_type {
 	NODE_SUBSHELL,
 } t_node_type;
 
-
+// FILENAME has a file name or heredoc delimiter
+// FD is only valid for TK_REDIR_2IN (heredoc)
 typedef struct s_redir {
 	t_token_type	type;
-	char *filename;			// file or heredoc delimiter
-	int	fd;				// dont use it, except when TK_REDIR_2IN
+	char *filename;
+	int	fd;	
 	struct s_redir *next;
 } t_redir;
 
+// ARGV and REDIR are only valid for CMD nodes
 typedef struct s_node {
 	t_node_type type;
 	char **argv;

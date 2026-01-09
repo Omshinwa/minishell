@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 20:39:08 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 15:47:30 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ t_node *new_node(t_node_type type, t_node *left, t_node *right)
 	if (!node)
 		return (clean_nodes(&left), clean_nodes(&right), NULL);
 	node->type = type;
-	node->argv = NULL;	// only for CMD nodes
-	node->redir = NULL;	// only for CMD nodes
+	node->argv = NULL;
+	node->redir = NULL;
 	node->left = left;
 	node->right = right;
 	return node;

@@ -8,6 +8,8 @@ Q: Tu peux me montrer ton Abstract syntax tree (un printer?).
 
 valgrind --leak-check=full --show-leak-kinds=all --suppressions=.readline.supp --track-fds=yes --trace-children=yes ./minishell
 
+ulimit -n 10 to test a reasonable amount of pipes / redirections that fit under the limit
+
 # command with in and out
 grep foo < in.txt > out.txt
 

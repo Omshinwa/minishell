@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:33:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 11:24:39 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/09 17:11:18 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	save_fds(int *saved_stdin, int *saved_stdout)
 {
 	*saved_stdin = dup(STDIN_FILENO);
 	*saved_stdout = dup(STDOUT_FILENO);
-	if (*saved_stdin == -1 || *saved_stdout -1)
+	if (*saved_stdin == -1 || *saved_stdout ==-1)
 	{
 		if (*saved_stdin != -1)
 			close(*saved_stdin);
