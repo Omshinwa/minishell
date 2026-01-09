@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 15:48:28 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 20:26:01 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,11 @@ int	read_heredoc_fd(int fd, char *del);
 int	read_more_input(t_ctx_parser *ctx);
 
 // token.c
-t_token	*tokenize(char *str);
 void	print_tokens(t_token *arr_token);
 void	clean_tokens(t_token **arr_token);
 void	print_nodes(t_node *node, int depth);
+t_token	*tokenize(char *str);
+int		set_token(t_token *token, char *str, int start);
 
 // node.c
 t_node *new_node(t_node_type type, t_node *left, t_node *right);

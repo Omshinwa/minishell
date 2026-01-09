@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/09 17:51:57 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/09 20:26:58 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,9 +43,10 @@ SRC_FILES	=	builtins/builtin_cd.c		\
 				expand_node.c				\
 				error.c						\
 				main.c						\
-				parse/parse.c						\
+				parse/parse.c				\
 				parse/multilines.c			\
 				parse/token.c				\
+				parse/token_internal.c		\
 				parse/node.c				\
 				parse/parse_cmd.c			\
 				signal.c
