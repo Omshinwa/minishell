@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:04:07 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:29:34 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,10 @@ int	get_exit_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
+	{
+		if (status == 128 + SIGQUIT)
+			printf("Quit (core dumped)\n");
 		return (128 + WTERMSIG(status));
+	}
 	return (0);
 }

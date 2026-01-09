@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/04 23:10:57 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:41:38 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ t_token	*tokenize(char *str)
 
 	i = 0;
 	j = 0;
+	new_i = -1;
 	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
 	if (!arr_token)
 		return (NULL);
@@ -176,7 +177,7 @@ t_token	*tokenize(char *str)
 		j++;
 	}
 	arr_token[j] = (t_token){NULL, TK_END};
-	if (new_i == -1)
+	if (new_i == -1 || j == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);
 }
