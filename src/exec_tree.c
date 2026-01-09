@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 20:50:57 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 09:27:22 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell_signal.h"
 
 int	execute_subshell(t_node *node, t_shell *shell)
 {
@@ -30,6 +31,7 @@ int	execute_subshell(t_node *node, t_shell *shell)
 		code = execute_tree(node->left, shell);
 		exit(code); // IMPORTANT: terminate the child process
 	}
+	ignore_signals();
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
 }

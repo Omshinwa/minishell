@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 20:34:23 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 09:51:55 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
+#include "minishell_signal.h"
 
 // Append REDIR to the last NODE->next
 static void	redir_append(t_node *node, t_redir *redir)
@@ -47,8 +48,6 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 	ctx->i++;
 	if (redir->type == TK_REDIR_2IN)
 	{
-		signal(SIGINT, SIG_IGN);
-		// doc a fork to read heredoc
 		int fd[2];
 		int pid;
 		int	status;
@@ -58,7 +57,7 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 		pid = fork();
 		if (pid == 0) // child
 		{
-			close(fd[0]);
+			set_signals_multilines();
 			read_heredoc_fd(fd[1], redir->filename);
 		}
 		else if (pid == -1) // child
@@ -66,16 +65,13 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 		else
 		{
 			close(fd[1]);
+			ignore_signals();
 			wait(&status);
 		}
-		
-		signal(SIGINT, signal_handler);
 		if (!WIFEXITED(status)) // KILLED BY CTRL + C
 		{
 			write(STDOUT_FILENO, "\n", 1);
 			rl_on_new_line();
-			// rl_replace_line("", 0);
-			// rl_redisplay();
 			return (-1);
 		}
 		redir->fd = fd[0];

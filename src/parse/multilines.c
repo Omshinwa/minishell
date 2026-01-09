@@ -6,19 +6,19 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 19:10:46 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 09:49:07 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
 #include "minishell.h"
+#include "minishell_signal.h"
 
 // This read what's in the standard input and write to FD
 int	read_heredoc_fd(int fd, char *del)
 {
 	char	*line;
 
-	signal(SIGINT, SIG_DFL);
 	while (1)
 	{
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
@@ -36,8 +36,6 @@ int	read_heredoc_fd(int fd, char *del)
 		write(fd, "\n", 1);
 		free(line);
 	}
-	close(fd);
-	signal(SIGINT, signal_handler);
 	exit(0);
 }
 
@@ -93,30 +91,27 @@ int	read_more_input(t_parser *ctx)
 	t_token	*new_tokens;
 	char	*prompt;
 
+	set_signals_multilines();
 	prompt = new_prompt(ctx);
 	if (!prompt)
 		return (-1);
 	while (1)
 	{
 		line = readline(prompt);
-		if (g_acknowledge)
-		{
-			g_acknowledge = 0;
-			if (line)
-				free(line);
-			free(prompt);
-			return (-1);
-		}
+		// if (g_acknowledge)
+		// {
+		// 	g_acknowledge = 0;
+		// 	if (line)
+		// 		free(line);
+		// 	free(prompt);
+		// 	return (-1);
+		// }
 		if (!line)
-{
-			signal(SIGINT, signal_handler);
 			return (free(prompt), print_red("syntax: unexpected EOF"), -1);
-}
 		if (not_just_empty_space(line))
 			break ;
 		free(line);
 	}
-	signal(SIGINT, signal_handler);
 	free(prompt);
 	new_tokens = tokenize(line);
 	free(line);

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/08 19:20:36 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 08:51:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,10 @@
 # include <string.h>
 # include <fcntl.h>
 # include <dirent.h>
-# include <sys/ioctl.h>
-# include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
-extern volatile sig_atomic_t g_acknowledge;
 
 typedef struct s_env
 {

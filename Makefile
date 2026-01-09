@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/06 14:47:54 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/09 09:04:34 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,13 +47,14 @@ SRC_FILES	=	builtin_cd.c		\
 				parse/token.c		\
 				parse/node.c		\
 				parse/parse_cmd.c	\
+				signal.c			\
 # 				execute.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
 OBJ_PATH	=	obj/
 INCLUDES	=	include/
-HEADER_FILES =	minishell.h minishell_parse.h
+HEADER_FILES =	minishell.h minishell_parse.h minishell_signal.h
 
 LIBFT_DIR = libft
 LIBFT_A = $(LIBFT_DIR)/libft.a
@@ -67,7 +68,7 @@ HEADERS = $(addprefix $(INCLUDES),$(HEADER_FILES))
 all: $(NAME)
 
 $(NAME): $(OBJECTS) $(LIBFT_A)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) -I$(INCLUDES) $(LINK_FLAG) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) $(LINK_FLAG) -o $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADERS)
 	mkdir -p $(dir $@)

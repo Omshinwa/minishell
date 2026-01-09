@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 19:21:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 09:18:31 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell_signal.h"
 
 //  ██████   ██████   █████████   █████ ██████   █████
 // ▒▒██████ ██████   ███▒▒▒▒▒███ ▒▒███ ▒▒██████ ▒▒███ 
@@ -74,28 +75,15 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (1)
 	{
-		signal(SIGINT, signal_handler);
-		signal(SIGQUIT, SIG_IGN);
+		set_signals_interactive_mode();
+		if (shell->last_exit)
+			printf(" last exit: %i\n", shell->last_exit);
 		line = readline("👻👻> ");
-		if (g_acknowledge)
-		{
-			shell->last_exit = 130;
-			g_acknowledge = 0;
-		}
-
-	// 	write(STDOUT_FILENO, "\n", 1);
-	// 	if (g_state == STATE_INTERACTIVE)
-	// 	{
-	// 		rl_on_new_line();
-	// 		rl_replace_line("", 0);
-	// 		rl_redisplay();
-	// 	}
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
-		signal(SIGINT, SIG_DFL);
 		parse_and_run_command(line, shell);
 		free(line);
 	}

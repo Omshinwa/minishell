@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/08 19:16:13 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 08:46:17 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,5 @@ t_node	*parse_simple_command(t_parser *ctx);
 
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);
-
-// currently signals are pretty dirty, need some rework
-void	signal_handler(int signum);
 
 #endif

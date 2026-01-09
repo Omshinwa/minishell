@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2025/12/15 18:32:00 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 08:04:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	add_letter_to_str(char letter, t_buff *s_buffer)
 	return (0);
 }
 
-static void	signal_handler(int signum, siginfo_t *info, void *ucontext)
+static void	redisplay_prompt(int signum, siginfo_t *info, void *ucontext)
 {
 	static int		counter = 0;
 	static int		binary_repr = 0;
@@ -80,7 +80,7 @@ static int	set_up_actions(void)
 {
 	struct sigaction	action;
 
-	action.sa_sigaction = signal_handler;
+	action.sa_sigaction = redisplay_prompt;
 	sigemptyset(&action.sa_mask);
 	sigaddset(&action.sa_mask, SIGUSR1);
 	sigaddset(&action.sa_mask, SIGUSR2);

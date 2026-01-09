@@ -6,42 +6,11 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 14:56:12 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:16:19 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
-
-//   █████████  █████   █████████  ██████   █████   █████████   █████      
-//  ███▒▒▒▒▒███▒▒███   ███▒▒▒▒▒███▒▒██████ ▒▒███   ███▒▒▒▒▒███ ▒▒███       
-// ▒███    ▒▒▒  ▒███  ███     ▒▒▒  ▒███▒███ ▒███  ▒███    ▒███  ▒███       
-// ▒▒█████████  ▒███ ▒███          ▒███▒▒███▒███  ▒███████████  ▒███       
-//  ▒▒▒▒▒▒▒▒███ ▒███ ▒███    █████ ▒███ ▒▒██████  ▒███▒▒▒▒▒███  ▒███       
-//  ███    ▒███ ▒███ ▒▒███  ▒▒███  ▒███  ▒▒█████  ▒███    ▒███  ▒███      █
-// ▒▒█████████  █████ ▒▒█████████  █████  ▒▒█████ █████   █████ ███████████
-//  ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒  ▒▒▒▒▒    ▒▒▒▒▒ ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒▒▒▒ 
-
-volatile sig_atomic_t	g_acknowledge = 0;
-// an atomic operation guarantees that every read/write from g_acknoledge are
-// done in full before handling a signal.
-// volatile prevents the compiler from making some optimizations
-
-#include <asm/termbits.h>  /* Definition of TIOCSTI */
-#include <sys/ioctl.h>
-
-void	signal_handler(int signum)
-{
-	(void)signum;
-	g_acknowledge = 1;
-	// rl_done = 1;
-	// ioctl(STDIN_FILENO, TIOCSTI, "\n"); // Force readline to return
-	// rl_done = 1;
-	// rl_redisplay();
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
 
 //  ███████████    █████████   ███████████    █████████  ██████████
 // ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███ ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███▒▒███▒▒▒▒▒█
@@ -154,11 +123,6 @@ t_node	*get_abstract_syntax_tree(char *str)
 
 	ctx.arr_token = tokenize(str);
 	ctx.i = 0;
-	// if (ctx.arr_token && show_debug)
-	// {
-	// 	printf("tokens: ");
-	// 	print_tokens(ctx.arr_token);
-	// }
 	if (!ctx.arr_token)
 		return (NULL);
 	node = parse_expression(&ctx);

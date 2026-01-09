@@ -1,5 +1,10 @@
-Q: Tu peux me montrer ton Abstract syntax tree (un printer?).
+CONCERNANT LES SIGNAUX:
 
+execve reset les customs signal handlers, mais il n'undo pas SIG_IGN.
+Si on fait signal(machin, SIG_IGN), on doit le reset par SIG_DFL avant de execve.
+
+
+Q: Tu peux me montrer ton Abstract syntax tree (un printer?).
 
 # command with in and out
 grep foo < in.txt > out.txt

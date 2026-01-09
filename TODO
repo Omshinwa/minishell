@@ -29,10 +29,29 @@ Parsing (grammar / precedence)
 Execution
 
 • Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
-• In interactive mode:
+
+<!-- • In interactive mode:
 	◦ ctrl-C displays a new prompt on a new line.
-	◦ ctrl-D exits the shell.
-	◦ ctrl-\ does nothing.
+	◦ ctrl-\ does nothing. -->
+<!-- • In heredocs:
+	◦ ctrl-C returns to terminal (^C)
+	◦ ctrl-\ Nothing -->
+• In && || read more cmds: (need refactor into fork)
+	◦ ctrl-C returns to terminal (^C)
+	◦ ctrl-\ Nothing
+• In execve (stdin):
+	◦ ctrl-C returns to terminal (^C)
+	◦ ctrl-\ returns to terminal (^\Quit (core dumped))
+
+ctrl-D:
+• In interactive mode:
+	exit.
+• In heredocs:
+	returns to terminal (warning: here-document at line 10 delimited by end-of-file (wanted `.'))
+• In && || read more cmds:
+	exit (bash: syntax error: unexpected end of file)
+• In cat (stdin):
+	returns to terminal
 
 # PARSING:
 

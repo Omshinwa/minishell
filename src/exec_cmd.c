@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 13:51:44 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/09 10:07:11 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell_signal.h"
 
 static void	exec_child_process(t_node *node, t_shell *shell, char *path)
 {
 	if (handle_redirections(node->redir) != 0)
 		exit(1);
+	reset_signals();
 	if (execve(path, node->argv, env_to_array(shell)) == -1)
 	{
 		perror("execve");
@@ -39,6 +41,7 @@ static int	exec_external_cmd(t_node *node, t_shell *shell, char *path)
 	if (pid == 0)
 		exec_child_process(node, shell, path);
 	free(path);
+	ignore_signals();
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
 }
