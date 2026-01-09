@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/09 10:19:58 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/09 11:11:55 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,36 +20,35 @@ LINK_FLAG	=	-lreadline
 
 RM			=	rm -rf
 
-SRC_FILES	=	builtin_cd.c		\
-				builtin_echo.c		\
-				builtin_env.c		\
-				builtin_exit.c		\
-				builtin_export.c	\
-				builtin_pwd.c		\
-				builtin_unset.c		\
-				builtins.c			\
-				clean.c				\
-				env_init.c			\
-				env_set.c			\
-				env_utils.c			\
-				expand_utils.c		\
-				expand_var.c		\
-				expand_node.c		\
-				exec_builtins.c		\
-				exec_cmd.c			\
-				exec_redir.c		\
-				exec_pipe.c			\
-				exec_tree.c			\
-				exec_utils.c		\
-				error.c				\
-				main.c				\
-				parse.c				\
-				parse/multilines.c	\
-				parse/token.c		\
-				parse/node.c		\
-				parse/parse_cmd.c	\
-				signal.c			\
-# 				execute.c
+SRC_FILES	=	builtins/builtin_cd.c		\
+				builtins/builtin_echo.c		\
+				builtins/builtin_env.c		\
+				builtins/builtin_exit.c		\
+				builtins/builtin_export.c	\
+				builtins/builtin_pwd.c		\
+				builtins/builtin_unset.c	\
+				builtins/builtins.c			\
+				exec/exec_builtins.c		\
+				exec/exec_cmd.c				\
+				exec/exec_redir.c			\
+				exec/exec_pipe.c			\
+				exec/exec_tree.c			\
+				exec/exec_utils.c			\
+				clean.c						\
+				env_init.c					\
+				env_set.c					\
+				env_utils.c					\
+				expand_utils.c				\
+				expand_var.c				\
+				expand_node.c				\
+				error.c						\
+				main.c						\
+				parse.c						\
+				parse/multilines.c			\
+				parse/token.c				\
+				parse/node.c				\
+				parse/parse_cmd.c			\
+				signal.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
