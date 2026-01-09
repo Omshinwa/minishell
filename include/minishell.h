@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/08 19:20:36 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 07:07:05 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-extern volatile sig_atomic_t g_acknowledge;
+extern volatile sig_atomic_t	g_acknowledge;
 
 typedef struct s_env
 {
@@ -100,6 +100,7 @@ int		execute_builtin_redir(char **argv, t_redir *redir, t_shell *shell);
 
 int		execute_simple_command(t_node *node, t_shell *shell);
 int		handle_redirections(t_redir *redir);
+int		execute_pipeline(t_node *node, t_shell *shell);
 int		execute_tree(t_node *node, t_shell *shell);
 
 void	free_split(char **split);

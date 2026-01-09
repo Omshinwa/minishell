@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_tree.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 20:50:57 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 06:48:44 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	execute_subshell(t_node *node, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
+	int		code;
 
 	pid = fork();
 	if (pid == -1)
@@ -25,10 +26,8 @@ int	execute_subshell(t_node *node, t_shell *shell)
 	}
 	if (pid == 0)
 	{
-		int code;
-		// return (execute_tree(node->left, shell));
 		code = execute_tree(node->left, shell);
-		exit(code); // IMPORTANT: terminate the child process
+		exit(code);
 	}
 	waitpid(pid, &status, 0);
 	return (get_exit_status(status));
@@ -62,8 +61,8 @@ int	execute_tree(t_node *node, t_shell *shell)
 		return (execute_and(node, shell));
 	if (node->type == NODE_OR)
 		return (execute_or(node, shell));
-	/*if (node->type == NODE_PIPE)
-		return (execute_pipeline(node, shell));*/
+	if (node->type == NODE_PIPE)
+		return (execute_pipeline(node, shell));
 	if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, shell));
 	if (node->type == NODE_CMD)
