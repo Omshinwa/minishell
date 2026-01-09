@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 08:58:39 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 09:27:45 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/09 08:59:37 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 t_env	*find_env_node(t_env *env, char *key)
 {
+	if (!key)
+		return (NULL);
 	while (env)
 	{
 		if (ft_strcmp(env->key, key) == 0)
@@ -28,11 +30,15 @@ void	set_env_value(t_shell *shell, char *key, char *value)
 	t_env	*node;
 	t_env	*last;
 
+	if (!shell || !key || !value)
+		return ;
 	node = find_env_node(shell->env, key);
 	if (node)
 	{
 		free(node->value);
 		node->value = ft_strdup(value);
+		if (!node->value)
+			node->value = ft_strdup("");
 		return ;
 	}
 	if (!shell->env)

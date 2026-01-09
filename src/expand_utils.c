@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:03:09 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 09:22:27 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/09 10:07:44 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*extract_var_name(char *s, int i)
 	len = 0;
 	start = i;
 	if (s[i] == '?')
-		return (ft_strdup(""));
+		return (ft_strdup("?"));
 	while (s[i] && is_var_char(s[i]))
 	{
 		i++;

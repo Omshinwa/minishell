@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 08:51:37 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:20:27 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int		execute_builtin_redir(char **argv, t_redir *redir, t_shell *shell);
 
 int		execute_simple_command(t_node *node, t_shell *shell);
 int		handle_redirections(t_redir *redir);
+int		execute_pipeline(t_node *node, t_shell *shell);
 int		execute_tree(t_node *node, t_shell *shell);
 
 void	free_split(char **split);

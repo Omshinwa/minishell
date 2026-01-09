@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 19:59:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:10:22 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 
 void	expand_cmd_node(t_node *node, t_shell *shell)
 {
+	int		i;
 	char	**expanded_argv;
 
 	if (node->argv)
@@ -82,12 +83,7 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 		expanded_argv = expand_argv(node->argv, shell);
 		if (expanded_argv)
 		{
-			// free(node->argv); // j'ai passe 1h a trouver cette ligne qui fait
-			// bugger mon clean_nodes, tu peux pas juste free ca, faut
-			// que tu free les argv[i] dedans d'abord.
-			// maybe faire un util qui clean un array de pointeur? j'ai recopie
-			// mon bout de code de clean_nodes ici
-			int i = 0;
+			i = 0;
 			while (node->argv && node->argv[i])
 				free(node->argv[i++]);
 			free(node->argv);

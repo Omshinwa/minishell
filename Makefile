@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/09 09:04:34 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/09 10:19:58 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC_FILES	=	builtin_cd.c		\
 				exec_builtins.c		\
 				exec_cmd.c			\
 				exec_redir.c		\
+				exec_pipe.c			\
 				exec_tree.c			\
 				exec_utils.c		\
 				error.c				\
@@ -87,4 +88,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re

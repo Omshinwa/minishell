@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 09:27:22 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:22:22 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	execute_subshell(t_node *node, t_shell *shell)
 {
 	pid_t	pid;
 	int		status;
+	int		code;
 
 	pid = fork();
 	if (pid == -1)
@@ -26,10 +27,8 @@ int	execute_subshell(t_node *node, t_shell *shell)
 	}
 	if (pid == 0)
 	{
-		int code;
-		// return (execute_tree(node->left, shell));
 		code = execute_tree(node->left, shell);
-		exit(code); // IMPORTANT: terminate the child process
+		exit(code);
 	}
 	ignore_signals();
 	waitpid(pid, &status, 0);
@@ -64,8 +63,8 @@ int	execute_tree(t_node *node, t_shell *shell)
 		return (execute_and(node, shell));
 	if (node->type == NODE_OR)
 		return (execute_or(node, shell));
-	/*if (node->type == NODE_PIPE)
-		return (execute_pipeline(node, shell));*/
+	if (node->type == NODE_PIPE)
+		return (execute_pipeline(node, shell));
 	if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, shell));
 	if (node->type == NODE_CMD)
