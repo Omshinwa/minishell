@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 08:07:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 13:39:33 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/09 08:52:20 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*extract_key(char *s)
 	int		len;
 	char	*key;
 
-	if (!ft_is_in_set(s, '='))
+	if (!s || !ft_is_in_set(s, '='))
 		return (NULL);
 	i = 0;
 	len = ft_strnlen(s, '=');
@@ -69,7 +69,7 @@ char	*extract_value(char *s)
 	int		start;
 	char	*value;
 
-	if (!ft_is_in_set(s, '='))
+	if (!s || !ft_is_in_set(s, '='))
 		return (NULL);
 	i = 0;
 	start = ft_strnlen(s, '=');
