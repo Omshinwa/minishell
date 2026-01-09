@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 10:21:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 12:23:04 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,10 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef enum e_state
-{
-	STATE_INTERACTIVE,
-	STAGE_HEREDOC,
-	STATE_EXEC
-}	t_state;
-
 typedef struct s_shell
 {
+	t_ctx_parser *ctx;
 	t_node	*node;
-	t_state	state;
 	char	**envp;
 	t_env	*env;
 	int		last_exit;

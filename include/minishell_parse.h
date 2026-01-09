@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 08:46:17 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 14:46:11 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-// typedef enum e_state {
-// 	STATE_INTERACTIVE,
-// 	STAGE_HEREDOC,
-// 	STATE_EXEC
-// }	t_state;
+typedef struct s_shell	t_shell;
 
-// typedef struct s_shell
-// {
-// 	t_state	state;
-// 	t_env	*env;
-// 	int		last_exit;
-// }	t_shell;
-
-// 111111111111 - 12 bits
 typedef enum e_token_type {
 	TK_WORD = 1,
 	TK_PIPE = 2,
@@ -77,11 +65,12 @@ typedef struct s_token
 	t_token_type	type;
 } t_token;
 
-typedef struct s_parser
+typedef struct s_ctx_parser
 {
+	t_shell	*shell;
 	t_token *arr_token;
 	int     i;
-} t_parser;
+} t_ctx_parser;
 
 typedef enum e_node_type {
 	NODE_CMD,
@@ -91,10 +80,11 @@ typedef enum e_node_type {
 	NODE_SUBSHELL,
 } t_node_type;
 
+
 typedef struct s_redir {
-	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
+	t_token_type	type;
 	char *filename;			// file or heredoc delimiter
-	int	fd;
+	int	fd;				// dont use it, except when TK_REDIR_2IN
 	struct s_redir *next;
 } t_redir;
 
@@ -108,7 +98,7 @@ typedef struct s_node {
 
 // multilines.c
 int	read_heredoc_fd(int fd, char *del);
-int	read_more_input(t_parser *ctx);
+int	read_more_input(t_ctx_parser *ctx);
 
 // token.c
 t_token	*tokenize(char *str);
@@ -120,13 +110,13 @@ void	print_nodes(t_node *node, int depth);
 t_node *new_node(t_node_type type, t_node *left, t_node *right);
 void	clean_nodes(t_node **node);
 
-t_node	*get_abstract_syntax_tree(char *str);
+t_node	*get_abstract_syntax_tree(char *str, t_shell *shell);
 
 // recursive calls
-t_node *parse_expression(t_parser *ctx);
-t_node *parse_pipeline(t_parser *ctx);
-t_node *parse_command(t_parser *ctx);
-t_node	*parse_simple_command(t_parser *ctx);
+t_node *parse_expression(t_ctx_parser *ctx);
+t_node *parse_pipeline(t_ctx_parser *ctx);
+t_node *parse_command(t_ctx_parser *ctx);
+t_node	*parse_simple_command(t_ctx_parser *ctx);
 
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);

@@ -6,12 +6,13 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 09:51:55 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 14:59:07 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
 #include "minishell_signal.h"
+#include "minishell.h"
 
 // Append REDIR to the last NODE->next
 static void	redir_append(t_node *node, t_redir *redir)
@@ -32,7 +33,7 @@ static void	redir_append(t_node *node, t_redir *redir)
 // When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
 // Calls read_heredoc_fd
 // Sets / append the NODE->REDIR
-static int	parse_redirection(t_node *node,	t_parser *ctx)
+static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 {
 	t_redir	*redir;
 
@@ -57,8 +58,14 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 		pid = fork();
 		if (pid == 0) // child
 		{
+			close(fd[0]);
 			set_signals_multilines();
 			read_heredoc_fd(fd[1], redir->filename);
+			close(fd[1]);
+			clean_tokens(&ctx->arr_token);
+			clean_shell(ctx->shell);
+			clean_nodes(&node);
+			exit(0);
 		}
 		else if (pid == -1) // child
 			return(print_red("pid"), -1);
@@ -68,8 +75,10 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 			ignore_signals();
 			wait(&status);
 		}
-		if (!WIFEXITED(status)) // KILLED BY CTRL + C
+		if (WIFSIGNALED(status)) // KILLED BY CTRL + C
 		{
+			close(fd[0]);
+			close(fd[1]);
 			write(STDOUT_FILENO, "\n", 1);
 			rl_on_new_line();
 			return (-1);
@@ -82,7 +91,7 @@ static int	parse_redirection(t_node *node,	t_parser *ctx)
 // Check if there's anything wrong with the command (redirection 
 // without filename, parenthesis in the middle)
 // return the malloc size for argv.
-int	get_argv_size(t_parser *ctx)
+int	get_argv_size(t_ctx_parser *ctx)
 {
 	int		nb_of_words;
 	int		i;
@@ -109,7 +118,7 @@ int	get_argv_size(t_parser *ctx)
 	return (nb_of_words);
 }
 
-static int	populate_argv(t_parser *ctx, t_node *node)
+static int	populate_argv(t_ctx_parser *ctx, t_node *node)
 {
 	int		i;
 
@@ -136,7 +145,7 @@ static int	populate_argv(t_parser *ctx, t_node *node)
 // a SIMPLE COMMAND, is made of REDIRECTIONS and WORDS, no other operators.
 // CTX should always be pointing at a WORD / REDIR token.
 // Should never have an &&, ||, pipe or () token OR END token.
-t_node	*parse_simple_command(t_parser *ctx)
+t_node	*parse_simple_command(t_ctx_parser *ctx)
 {
 	t_node	*node;
 	int		nb_of_words;

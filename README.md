@@ -6,6 +6,8 @@ Si on fait signal(machin, SIG_IGN), on doit le reset par SIG_DFL avant de execve
 
 Q: Tu peux me montrer ton Abstract syntax tree (un printer?).
 
+valgrind --leak-check=full --show-leak-kinds=all --suppressions=.readline.supp --track-fds=yes --trace-children=yes ./minishell
+
 # command with in and out
 grep foo < in.txt > out.txt
 

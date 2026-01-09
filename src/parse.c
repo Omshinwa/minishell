@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:16:19 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 14:45:59 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 //	parse_simple_command	parse_expression (only for '(')
 
 // Consumes && TK_OP_AND and || TK_OP_OR tokens
-t_node *parse_expression(t_parser *ctx)
+t_node *parse_expression(t_ctx_parser *ctx)
 {
 	t_node *node;
 	t_token_type	token_op;
@@ -55,7 +55,7 @@ t_node *parse_expression(t_parser *ctx)
 }
 
 // Consumes | TK_PIPE tokens
-t_node *parse_pipeline(t_parser *ctx)
+t_node *parse_pipeline(t_ctx_parser *ctx)
 {
 	t_node *node;
 
@@ -81,7 +81,7 @@ t_node *new_subshell(t_node *node)
 }
 
 // Consumes ( TK_OPEN_PARENT tokens
-t_node *parse_command(t_parser *ctx)
+t_node *parse_command(t_ctx_parser *ctx)
 {
 	t_node *node;
 	t_token curr_token;
@@ -116,15 +116,16 @@ t_node *parse_command(t_parser *ctx)
 //  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
 // ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
 
-t_node	*get_abstract_syntax_tree(char *str)
+t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 {
-	t_parser ctx;
+	t_ctx_parser ctx;
 	t_node *node;
 
 	ctx.arr_token = tokenize(str);
 	ctx.i = 0;
 	if (!ctx.arr_token)
 		return (NULL);
+	ctx.shell = shell;
 	node = parse_expression(&ctx);
 	if (node && ctx.arr_token[ctx.i].type != TK_END)
 	{

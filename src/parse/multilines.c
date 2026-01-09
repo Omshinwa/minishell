@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 11:11:46 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 12:20:31 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ int	read_heredoc_fd(int fd, char *del)
 		write(fd, "\n", 1);
 		free(line);
 	}
-	exit(0);
+	return (0);
 }
 
-static char	*new_prompt(t_parser *ctx)
+static char	*new_prompt(t_ctx_parser *ctx)
 {
 	char	*prompt;
 	char	*color;
@@ -85,7 +85,7 @@ static int	not_just_empty_space(char *str)
 // We tokenize the new input, and change the context's array of token to the
 // new array and set the index to 0.
 // Return 0 on success, -1 on error
-int	read_more_input(t_parser *ctx)
+int	read_more_input(t_ctx_parser *ctx)
 {
 	char	*line;
 	t_token	*new_tokens;

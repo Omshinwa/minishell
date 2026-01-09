@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:55:01 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 14:51:36 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_shell	*init_shell(char **envp)
 	}
 	shell->last_exit = 0;
 	shell->envp = envp;
-	shell->state = STATE_INTERACTIVE;
+	shell->node = NULL;
 	return (shell);
 }
 
@@ -49,7 +49,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	if (!str || !ft_strlen(str))
 		return ;
 	add_history(str);
-	shell->node = get_abstract_syntax_tree(str);
+	shell->node = get_abstract_syntax_tree(str, shell);
 	if (shell->node)
 	{
 		expand_node(shell->node, shell);
