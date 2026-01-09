@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 18:54:37 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 19:56:54 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,19 +175,20 @@ static int	populate_token(char *str, t_token *arr_token, int *size)
 t_token	*tokenize(char *str)
 {
 	int		i;
-	int		new_i;
 	int		size;
 	t_token	*arr_token;
+	int		failed;
 
 	i = 0;
 	size = 0;
-	new_i = -1;
+	failed = 0;
 	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
 	if (!arr_token)
 		return (NULL);
-	populate_token(str, arr_token, &size);
+	if (populate_token(str, arr_token, &size))
+		failed = 1;
 	arr_token[size] = (t_token){NULL, TK_END};
-	if (size == 0)
+	if (failed || size == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);
 }
