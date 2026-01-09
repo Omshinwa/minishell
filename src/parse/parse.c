@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 14:45:59 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 18:01:30 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@
 //	parse_simple_command	parse_expression (only for '(')
 
 // Consumes && TK_OP_AND and || TK_OP_OR tokens
-t_node *parse_expression(t_ctx_parser *ctx)
+t_node	*parse_expression(t_ctx_parser *ctx)
 {
-	t_node *node;
+	t_node			*node;
 	t_token_type	token_op;
 	t_node_type		node_op;
 
@@ -55,9 +55,9 @@ t_node *parse_expression(t_ctx_parser *ctx)
 }
 
 // Consumes | TK_PIPE tokens
-t_node *parse_pipeline(t_ctx_parser *ctx)
+t_node	*parse_pipeline(t_ctx_parser *ctx)
 {
-	t_node *node;
+	t_node	*node;
 
 	node = parse_command(ctx);
 	while (node && ctx->arr_token[ctx->i].type == TK_PIPE)
@@ -69,10 +69,10 @@ t_node *parse_pipeline(t_ctx_parser *ctx)
 		if (node->left == NULL || node->right == NULL)
 			clean_nodes(&node);
 	}
-	return node;
+	return (node);
 }
 
-t_node *new_subshell(t_node *node)
+t_node	*new_subshell(t_node *node)
 {
 	if (node == NULL)
 		return (node);
@@ -81,18 +81,18 @@ t_node *new_subshell(t_node *node)
 }
 
 // Consumes ( TK_OPEN_PARENT tokens
-t_node *parse_command(t_ctx_parser *ctx)
+// if (ctx->arr_token[ctx->i].type == TK_END)
+// HANDLE TRAILING OPERATORS
+t_node	*parse_command(t_ctx_parser *ctx)
 {
-	t_node *node;
-	t_token curr_token;
+	t_node	*node;
+	t_token	curr_token;
 
-	// HANDLE TRAILING OPERATORS
 	if (ctx->arr_token[ctx->i].type == TK_END)
 	{
 		if (read_more_input(ctx) == -1)
 			return (NULL);
 	}
-	
 	curr_token = ctx->arr_token[ctx->i];
 	if (curr_token.type == TK_OPEN_PARENT)
 	{
@@ -101,7 +101,7 @@ t_node *parse_command(t_ctx_parser *ctx)
 		if (ctx->arr_token[ctx->i].type == TK_CLOSE_PARENT)
 			return (ctx->i++, new_subshell(node));
 		else
-			return(print_red("missing closing parenthesis."), NULL);
+			return (print_red("missing closing parenthesis."), NULL);
 	}
 	node = parse_simple_command(ctx);
 	return (node);
@@ -118,8 +118,8 @@ t_node *parse_command(t_ctx_parser *ctx)
 
 t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 {
-	t_ctx_parser ctx;
-	t_node *node;
+	t_ctx_parser	ctx;
+	t_node			*node;
 
 	ctx.arr_token = tokenize(str);
 	ctx.i = 0;

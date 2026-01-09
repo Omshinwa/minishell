@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:41:38 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 18:54:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@
 //    ▒▒▒▒▒       ▒▒▒▒▒▒▒    ▒▒▒▒▒   ▒▒▒▒ ▒▒▒▒▒▒▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒  
 
 // (|, <, >, &, (, ), espace).
-static int	is_metachar(char c)
+static int	is_valid_word_char(char c)
 {
 	if (ft_isalnum(c))
-		return (0);
+		return (1);
 	if (c == '|' || c == '<' || c == '>' || c == '&'
 		|| c == '(' || c == ')' || c == ' ' || c == '"' || c == '\'')
-		return (1);
+		return (0);
 	if (c == ';' || c == '\\')
-		return (1);
-	return (0);
+		return (0);
+	return (1);
 }
 
 void	clean_tokens(t_token **arr_token)
@@ -59,9 +59,9 @@ static int	set_token(t_token *token, char *str, int start)
 	end = start;
 	c = str[start];
 	token->str = NULL;
-	if (c == '!') // DO INVALID CHARS HERE
+	if (c == '!') /// !!! DO INVALID CHARS HERE
 		return (token->type = TK_END, -1);
-	else if (!is_metachar(c) || c == '"' || c == '\'')
+	else if (is_valid_word_char(c) || c == '"' || c == '\'')
 	{
 		token->type = TK_WORD;
 		while (str[end])
@@ -81,7 +81,7 @@ static int	set_token(t_token *token, char *str, int start)
 					return (-1);
 				}
 			}
-			else if (!is_metachar(str[end]))
+			else if (is_valid_word_char(str[end]))
 				end++;
 			else
 				break ;
@@ -143,22 +143,13 @@ static int	set_token(t_token *token, char *str, int start)
 	return (end);
 }
 
-// Goes through the string input,
-// Returns an array of tokens.
-/// TODO: could optimize the calloc, im doing the worst case scenario.
-t_token	*tokenize(char *str)
+static int	populate_token(char *str, t_token *arr_token, int *size)
 {
 	int		i;
-	int		new_i;
-	int		j;
-	t_token	*arr_token;
+	int		valid_token;
 
 	i = 0;
-	j = 0;
-	new_i = -1;
-	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
-	if (!arr_token)
-		return (NULL);
+	valid_token = -1;
 	while (str[i])
 	{
 		if (str[i] == ' ' || str[i] == '\n')
@@ -166,18 +157,37 @@ t_token	*tokenize(char *str)
 			i++;
 			continue ;
 		}
-		arr_token[j] = (t_token){NULL, TK_END};
-		new_i = set_token(&arr_token[j], str, i);
-		if (new_i == -1)
-		{
-			printf(RED "invalid token at index %i: %c" RESET "\n", i, str[i]);
-			break ;
-		}
-		i = new_i;
-		j++;
+		arr_token[*size] = (t_token){NULL, TK_END};
+		valid_token = set_token(&arr_token[*size], str, i);
+		if (valid_token == -1)
+			return(printf(RED "invalid token at index %i: %c" RESET "\n",
+				i, str[i]), -1);
+		i = valid_token;
+		(*size)++;
 	}
-	arr_token[j] = (t_token){NULL, TK_END};
-	if (new_i == -1 || j == 0)
+	return (0);
+}
+
+// Goes through the string input, Returns an array of tokens.
+// logic: j is the length of tokens, i for str
+// new_i is the new index after setting a token
+/// TODO: could optimize the calloc, im doing the worst case scenario.
+t_token	*tokenize(char *str)
+{
+	int		i;
+	int		new_i;
+	int		size;
+	t_token	*arr_token;
+
+	i = 0;
+	size = 0;
+	new_i = -1;
+	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
+	if (!arr_token)
+		return (NULL);
+	populate_token(str, arr_token, &size);
+	arr_token[size] = (t_token){NULL, TK_END};
+	if (size == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);
 }

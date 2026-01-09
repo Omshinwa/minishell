@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 12:20:31 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 18:15:55 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	read_heredoc_fd(int fd, char *del)
 	return (0);
 }
 
+// prints a pretty prompt when && || etc
 static char	*new_prompt(t_ctx_parser *ctx)
 {
 	char	*prompt;
@@ -85,13 +86,13 @@ static int	not_just_empty_space(char *str)
 // We tokenize the new input, and change the context's array of token to the
 // new array and set the index to 0.
 // Return 0 on success, -1 on error
+// set_signals_multilines() if we used fork, but we don't
 int	read_more_input(t_ctx_parser *ctx)
 {
 	char	*line;
 	t_token	*new_tokens;
 	char	*prompt;
 
-	// set_signals_multilines();
 	prompt = new_prompt(ctx);
 	if (!prompt)
 		return (-1);

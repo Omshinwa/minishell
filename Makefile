@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
+#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/09 11:11:55 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/09 17:51:57 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ SRC_FILES	=	builtins/builtin_cd.c		\
 				expand_node.c				\
 				error.c						\
 				main.c						\
-				parse.c						\
+				parse/parse.c						\
 				parse/multilines.c			\
 				parse/token.c				\
 				parse/node.c				\

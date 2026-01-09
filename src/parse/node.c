@@ -6,17 +6,18 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 15:47:30 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 18:14:55 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
 
 // Create a new node in the AST
-t_node *new_node(t_node_type type, t_node *left, t_node *right)
+t_node	*new_node(t_node_type type, t_node *left, t_node *right)
 {
-	t_node *node = safe_malloc(sizeof(t_node));
+	t_node	*node;
 
+	node = safe_malloc(sizeof(t_node));
 	if (!node)
 		return (clean_nodes(&left), clean_nodes(&right), NULL);
 	node->type = type;
@@ -24,7 +25,7 @@ t_node *new_node(t_node_type type, t_node *left, t_node *right)
 	node->redir = NULL;
 	node->left = left;
 	node->right = right;
-	return node;
+	return (node);
 }
 
 void	clean_nodes(t_node **node_addr)
@@ -36,7 +37,6 @@ void	clean_nodes(t_node **node_addr)
 
 	if (!node_addr || !*node_addr)
 		return ;
-
 	node = *node_addr;
 	clean_nodes(&node->left);
 	clean_nodes(&node->right);
@@ -94,13 +94,17 @@ void	print_nodes(t_node *node, int depth)
 		{
 			color = BG_MAGENTA;
 			if (tmp_redir->type == TK_REDIR_IN)
-				printf("%s%s<%13s" RESET "\n", offset, color, tmp_redir->filename);
+				printf("%s%s<%13s" RESET "\n", offset, color,
+					tmp_redir->filename);
 			if (tmp_redir->type == TK_REDIR_OUT)
-				printf("%s%s>%13s" RESET "\n", offset, color, tmp_redir->filename);
+				printf("%s%s>%13s" RESET "\n", offset, color,
+					tmp_redir->filename);
 			if (tmp_redir->type == TK_REDIR_2IN)
-				printf("%s%s<<%12s" RESET "\n", offset, color, tmp_redir->filename);
+				printf("%s%s<<%12s" RESET "\n", offset, color,
+					tmp_redir->filename);
 			if (tmp_redir->type == TK_REDIR_2OUT)
-				printf("%s%s>>%12s" RESET "\n", offset, color, tmp_redir->filename);
+				printf("%s%s>>%12s" RESET "\n", offset, color,
+					tmp_redir->filename);
 			tmp_redir = tmp_redir->next;
 			color = BG_WHITE BOLD;
 			i++;
