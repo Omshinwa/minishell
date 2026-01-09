@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:29:34 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 11:05:26 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,21 @@ char	*get_path(char *cmd, t_shell *shell)
 
 int	get_exit_status(int status)
 {
+	int	sig;
+
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status))
 	{
-		if (status == 128 + SIGQUIT)
-			printf("Quit (core dumped)\n");
-		return (128 + WTERMSIG(status));
+		sig = WTERMSIG(status);
+		printf(" Terminated by signal %i. ", sig);
+		if (sig == SIGINT)
+			printf("\n");
+			// write(STDOUT_FILENO, "\n", 1);
+		else if (sig == SIGQUIT)
+			printf("Quit \n");
+			// write(STDOUT_FILENO, "Quit\n", 5);
+		return (128 + sig);
 	}
 	return (0);
 }

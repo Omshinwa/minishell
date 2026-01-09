@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:30:21 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 10:55:01 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signals_interactive_mode();
-		if (shell->last_exit)
-			printf("\n");
+		// if (shell->last_exit)
+			// printf("\n");
 			// printf(" last exit: %i\n", shell->last_exit);
 		line = readline("👻👻> ");
 		if (!line)

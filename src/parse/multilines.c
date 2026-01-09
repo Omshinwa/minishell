@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 09:49:07 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/09 11:11:46 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,21 +91,13 @@ int	read_more_input(t_parser *ctx)
 	t_token	*new_tokens;
 	char	*prompt;
 
-	set_signals_multilines();
+	// set_signals_multilines();
 	prompt = new_prompt(ctx);
 	if (!prompt)
 		return (-1);
 	while (1)
 	{
 		line = readline(prompt);
-		// if (g_acknowledge)
-		// {
-		// 	g_acknowledge = 0;
-		// 	if (line)
-		// 		free(line);
-		// 	free(prompt);
-		// 	return (-1);
-		// }
 		if (!line)
 			return (free(prompt), print_red("syntax: unexpected EOF"), -1);
 		if (not_just_empty_space(line))

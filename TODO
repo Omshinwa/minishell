@@ -39,9 +39,9 @@ Execution
 • In && || read more cmds: (need refactor into fork)
 	◦ ctrl-C returns to terminal (^C)
 	◦ ctrl-\ Nothing
-• In execve (stdin):
+<!-- • In execve (stdin):
 	◦ ctrl-C returns to terminal (^C)
-	◦ ctrl-\ returns to terminal (^\Quit (core dumped))
+	◦ ctrl-\ returns to terminal (^\Quit (core dumped)) -->
 
 ctrl-D:
 • In interactive mode:
