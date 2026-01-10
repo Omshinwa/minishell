@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parse.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/10 05:32:34 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/10 20:03:08 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,20 +57,7 @@ typedef enum e_token_type {
 	TK_OPEN_PARENT = 256,
 	TK_CLOSE_PARENT = 512,
 	TK_END = 1024,
-} t_token_type;
-
-typedef struct s_token
-{
-	char			*str;
-	t_token_type	type;
-} t_token;
-
-typedef struct s_ctx_parser
-{
-	t_shell	*shell;
-	t_token *arr_token;
-	int     i;
-} t_ctx_parser;
+}	t_token_type;
 
 typedef enum e_node_type {
 	NODE_CMD,
@@ -78,29 +65,44 @@ typedef enum e_node_type {
 	NODE_AND,
 	NODE_OR,
 	NODE_SUBSHELL,
-} t_node_type;
+}	t_node_type;
 
+typedef struct s_token
+{
+	char			*str;
+	t_token_type	type;
+}	t_token;
+
+// Linked list of redirections
 // FILENAME has a file name or heredoc delimiter
 // FD is only valid for TK_REDIR_2IN (heredoc)
 typedef struct s_redir {
-	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
-	char *filename;			// file or heredoc delimiter
-	int	fd;
-	struct s_redir *next;
-} t_redir;
+	t_token_type	type;
+	char			*filename;
+	int				fd;
+	struct s_redir	*next;
+}	t_redir;
 
 // ARGV and REDIR are only valid for CMD nodes
 typedef struct s_node {
-	t_node_type type;
-	char **argv;
-	t_redir *redir;
-	struct s_node *left;
-	struct s_node *right;
-} t_node;
+	t_node_type		type;
+	char			**argv;
+	t_redir			*redir;
+	struct s_node	*left;
+	struct s_node	*right;
+}	t_node;
+
+typedef struct s_ctx_parser
+{
+	t_shell	*shell;
+	t_token	*arr_token;
+	int		i;
+}	t_ctx_parser;
 
 // multilines.c
-int	read_heredoc_fd(int fd, char *del);
-int	read_more_input(t_ctx_parser *ctx);
+int		command_continuation(t_ctx_parser *ctx);
+int		fork_heredoc(t_node *node, t_ctx_parser *ctx,
+			t_redir *redir, int fd[2]);
 
 // token.c
 void	print_tokens(t_token *arr_token);
@@ -110,15 +112,15 @@ t_token	*tokenize(char *str);
 int		set_token(t_token *token, char *str, int start);
 
 // node.c
-t_node *new_node(t_node_type type, t_node *left, t_node *right);
+t_node	*new_node(t_node_type type, t_node *left, t_node *right);
 void	clean_nodes(t_node **node);
 
 t_node	*get_abstract_syntax_tree(char *str, t_shell *shell);
 
 // recursive calls
-t_node *parse_expression(t_ctx_parser *ctx);
-t_node *parse_pipeline(t_ctx_parser *ctx);
-t_node *parse_command(t_ctx_parser *ctx);
+t_node	*parse_expression(t_ctx_parser *ctx);
+t_node	*parse_pipeline(t_ctx_parser *ctx);
+t_node	*parse_command(t_ctx_parser *ctx);
 t_node	*parse_simple_command(t_ctx_parser *ctx);
 
 void	print_red(char *str);

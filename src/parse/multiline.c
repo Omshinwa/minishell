@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   multilines.c                                       :+:      :+:    :+:   */
+/*   multiline.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 18:15:55 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 19:27:20 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "minishell_signal.h"
 
 // This read what's in the standard input and write to FD
-int	read_heredoc_fd(int fd, char *del)
+void	read_heredoc_fd(int fd, char *del)
 {
 	char	*line;
 
@@ -36,7 +36,34 @@ int	read_heredoc_fd(int fd, char *del)
 		write(fd, "\n", 1);
 		free(line);
 	}
-	return (0);
+}
+
+// Fork a heredoc, close the write fd
+int	fork_heredoc(t_node *node, t_ctx_parser *ctx, t_redir *redir
+	, int fd[2])
+{
+	int	pid;
+	int	status;
+
+	status = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		close(fd[0]);
+		set_signals_multilines();
+		read_heredoc_fd(fd[1], redir->filename);
+		close(fd[1]);
+		clean_tokens(&ctx->arr_token);
+		clean_shell(ctx->shell);
+		clean_nodes(&node);
+		exit(0);
+	}
+	else if (pid == -1)
+		return (print_red("pid"), -1);
+	close(fd[1]);
+	ignore_signals();
+	wait(&status);
+	return (status);
 }
 
 // prints a pretty prompt when && || etc
@@ -87,7 +114,7 @@ static int	not_just_empty_space(char *str)
 // new array and set the index to 0.
 // Return 0 on success, -1 on error
 // set_signals_multilines() if we used fork, but we don't
-int	read_more_input(t_ctx_parser *ctx)
+int	command_continuation(t_ctx_parser *ctx)
 {
 	char	*line;
 	t_token	*new_tokens;

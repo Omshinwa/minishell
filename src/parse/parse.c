@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 18:01:30 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 19:27:20 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_node	*parse_command(t_ctx_parser *ctx)
 
 	if (ctx->arr_token[ctx->i].type == TK_END)
 	{
-		if (read_more_input(ctx) == -1)
+		if (command_continuation(ctx) == -1)
 			return (NULL);
 	}
 	curr_token = ctx->arr_token[ctx->i];

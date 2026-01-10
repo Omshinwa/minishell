@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 05:54:17 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/10 19:27:46 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,68 +14,49 @@
 #include "minishell_signal.h"
 #include "minishell.h"
 
-// Append REDIR to the last NODE->next
-static void	redir_append(t_node *node, t_redir *redir)
-{
-	t_redir	*tmp;
-
-	tmp = node->redir;
-	if (!tmp)
-	{
-		node->redir = redir;
-		return ;
-	}
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = redir;
-}
-
-// When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
-// Calls read_heredoc_fd
-// Sets / append the NODE->REDIR
-static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
+// Malloc a new REDIR
+// sets the fields correctly (and move up the ctx)
+// add it to the end of NODE->REDIR
+static t_redir	*create_new_redir(t_node *node,	t_ctx_parser *ctx)
 {
 	t_redir	*redir;
+	t_redir	*last_redir;
 
 	redir = safe_malloc(sizeof(t_redir));
 	if (!redir)
-		return (ctx->i++, -1);
-	redir_append(node, redir);
+		return (ctx->i++, NULL);
 	redir->type = ctx->arr_token[ctx->i].type;
 	ctx->i++;
 	redir->filename = ft_strdup(ctx->arr_token[ctx->i].str);
 	redir->next = NULL;
 	redir->fd = -1;
 	ctx->i++;
+	last_redir = node->redir;
+	if (!last_redir)
+		return (node->redir = redir, redir);
+	while (last_redir->next)
+		last_redir = last_redir->next;
+	last_redir->next = redir;
+	return (redir);
+}
+
+// When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
+// Calls read_heredoc_fd
+// append a new REDIR to NODE->REDIR
+static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
+{
+	t_redir	*redir;
+	int		fd[2];
+	int		status;
+
+	redir = create_new_redir(node, ctx);
+	if (!redir)
+		return (-1);
 	if (redir->type == TK_REDIR_2IN)
 	{
-		int fd[2];
-		int pid;
-		int	status;
-	
-		status = 0;
 		pipe(fd);
-		pid = fork();
-		if (pid == 0) // child
-		{
-			close(fd[0]);
-			set_signals_multilines();
-			read_heredoc_fd(fd[1], redir->filename);
-			close(fd[1]);
-			clean_tokens(&ctx->arr_token);
-			clean_shell(ctx->shell);
-			clean_nodes(&node);
-			exit(0);
-		}
-		else if (pid == -1) // child
-			return(print_red("pid"), -1);
-		else
-		{
-			close(fd[1]);
-			ignore_signals();
-			wait(&status);
-		}
-		if (WIFSIGNALED(status)) // KILLED BY CTRL + C
+		status = fork_heredoc(node, ctx, redir, fd);
+		if (WIFSIGNALED(status))
 		{
 			close(fd[0]);
 			write(STDOUT_FILENO, "\n", 1);
@@ -90,7 +71,7 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 // Check if there's anything wrong with the command (redirection 
 // without filename, parenthesis in the middle)
 // return the malloc size for argv.
-int	get_argv_size(t_ctx_parser *ctx)
+static int	get_argv_size(t_ctx_parser *ctx)
 {
 	int		nb_of_words;
 	int		i;
@@ -98,7 +79,7 @@ int	get_argv_size(t_ctx_parser *ctx)
 	i = ctx->i;
 	nb_of_words = 0;
 	while (ctx->arr_token[i].type & (TK_WORD
-		| TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
+			| TK_REDIR_IN | TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT))
 	{
 		if (ctx->arr_token[i].type == TK_WORD)
 			nb_of_words++;
@@ -150,7 +131,7 @@ t_node	*parse_simple_command(t_ctx_parser *ctx)
 	int		nb_of_words;
 
 	if (!(ctx->arr_token[ctx->i].type & (TK_WORD | TK_REDIR_IN
-		| TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT)))
+				| TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT)))
 		return (printf(RED"unexpected token `%s`, expected command"RESET"\n",
 				ctx->arr_token[ctx->i].str), NULL);
 	nb_of_words = get_argv_size(ctx);

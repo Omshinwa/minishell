@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 11:05:26 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 19:30:14 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,8 @@ int	get_exit_status(int status)
 		printf(" Terminated by signal %i. ", sig);
 		if (sig == SIGINT)
 			printf("\n");
-			// write(STDOUT_FILENO, "\n", 1);
 		else if (sig == SIGQUIT)
 			printf("Quit \n");
-			// write(STDOUT_FILENO, "Quit\n", 5);
 		return (128 + sig);
 	}
 	return (0);

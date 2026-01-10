@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 10:00:17 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 19:58:34 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 # include <readline/readline.h>
 
 void	redisplay_prompt(int signum);
-void	set_signals_interactive_mode();
-void	set_signals_multilines();
-void	ignore_signals();
-void	reset_signals();
+void	set_signals_interactive_mode(void);
+void	set_signals_multilines(void);
+void	ignore_signals(void);
+void	reset_signals(void);
 
 #endif
