@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 18:14:55 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 05:58:51 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	clean_nodes(t_node **node_addr)
 	while (redir)
 	{
 		free(redir->filename);
+		if (redir->fd != -1)
+			close(redir->fd);
 		redir_next = redir->next;
 		free(redir);
 		redir = redir_next;

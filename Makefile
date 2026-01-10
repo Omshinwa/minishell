@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/09 20:26:58 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/10 09:14:46 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,41 +14,44 @@ NAME		=	minishell
 
 CC			=	cc
 
-CFLAGS		=	-Wall -Wextra -Werror -g3
+CFLAGS		=	-Wall -Wextra -Werror -g3 -D_DEFAULT_SOURCE
 
 LINK_FLAG	=	-lreadline
 
 RM			=	rm -rf
 
-SRC_FILES	=	builtins/builtin_cd.c		\
-				builtins/builtin_echo.c		\
-				builtins/builtin_env.c		\
-				builtins/builtin_exit.c		\
-				builtins/builtin_export.c	\
-				builtins/builtin_pwd.c		\
-				builtins/builtin_unset.c	\
-				builtins/builtins.c			\
-				exec/exec_builtins.c		\
-				exec/exec_cmd.c				\
-				exec/exec_redir.c			\
-				exec/exec_pipe.c			\
-				exec/exec_tree.c			\
-				exec/exec_utils.c			\
-				clean.c						\
-				env_init.c					\
-				env_set.c					\
-				env_utils.c					\
-				expand_utils.c				\
-				expand_var.c				\
-				expand_node.c				\
-				error.c						\
-				main.c						\
-				parse/parse.c				\
-				parse/multilines.c			\
-				parse/token.c				\
-				parse/token_internal.c		\
-				parse/node.c				\
-				parse/parse_cmd.c			\
+SRC_FILES	=	builtins/builtin_cd.c				\
+				builtins/builtin_echo.c				\
+				builtins/builtin_env.c				\
+				builtins/builtin_exit.c				\
+				builtins/builtin_export.c			\
+				builtins/builtin_pwd.c				\
+				builtins/builtin_unset.c			\
+				builtins/builtins.c					\
+				exec/exec_builtins.c				\
+				exec/exec_cmd.c						\
+				exec/exec_redir.c					\
+				exec/exec_pipe.c					\
+				exec/exec_tree.c					\
+				exec/exec_utils.c					\
+				expand/expand_utils.c				\
+				expand/expand_var.c					\
+				expand/expand_node.c				\
+				expand/expand_wildcards.c			\
+				expand/expand_wildcards_utils.c		\
+				expand/expand_wildcards_utils2.c	\
+				clean.c								\
+				env_init.c							\
+				env_set.c							\
+				env_utils.c							\
+				error.c								\
+				main.c								\
+				parse/parse.c						\
+				parse/multilines.c					\
+				parse/token.c						\
+				parse/token_internal.c				\
+				parse/node.c						\
+				parse/parse_cmd.c					\
 				signal.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)

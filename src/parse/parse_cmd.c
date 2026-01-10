@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 14:59:07 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 05:54:17 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 		if (WIFSIGNALED(status)) // KILLED BY CTRL + C
 		{
 			close(fd[0]);
-			close(fd[1]);
 			write(STDOUT_FILENO, "\n", 1);
 			rl_on_new_line();
 			return (-1);

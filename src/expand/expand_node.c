@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:10:22 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/10 07:14:07 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 {
 	int		i;
 	char	**expanded_argv;
+	char	**wildcards_argv;
 
 	if (node->argv)
 	{
@@ -84,10 +85,17 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 		if (expanded_argv)
 		{
 			i = 0;
+			wildcards_argv = expand_wildcards_in_argv(expanded_argv);
 			while (node->argv && node->argv[i])
 				free(node->argv[i++]);
 			free(node->argv);
-			node->argv = expanded_argv;
+			if (wildcards_argv)
+			{
+				free_argv(expanded_argv);
+				node->argv = wildcards_argv;
+			}
+			else
+				node->argv = expanded_argv;
 		}
 	}
 	if (node->redir)

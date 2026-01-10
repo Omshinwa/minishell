@@ -2,3 +2,5 @@
 *.o
 obj/*
 minishell
+readline.supp
+val

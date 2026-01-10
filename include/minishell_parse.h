@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parse.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/09 20:26:01 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/10 05:32:34 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ typedef enum e_node_type {
 // FILENAME has a file name or heredoc delimiter
 // FD is only valid for TK_REDIR_2IN (heredoc)
 typedef struct s_redir {
-	t_token_type	type;
-	char *filename;
-	int	fd;	
+	t_token_type	type;	// TK_REDIR_IN, TK_REDIR_OUT, TK_REDIR_2IN, TK_REDIR_2OUT
+	char *filename;			// file or heredoc delimiter
+	int	fd;
 	struct s_redir *next;
 } t_redir;
 
