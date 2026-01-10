@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:22 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/08 10:53:10 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/10 20:20:40 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_echo(char **args)
 
 	i = 1;
 	newline = 1;
-	if (ft_strcmp(args[1], "-n") == 0)
+	if (args[1] && ft_strcmp(args[1], "-n") == 0)
 	{
 		i = 2;
 		newline = 0;

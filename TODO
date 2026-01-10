@@ -1,19 +1,3 @@
-<!-- safe_malloc instead of just using calloc / malloc? -->
-
-<!-- regler les prints pour que ca soit sur la sortie err?
-on err, display err msg then return to the prompt -->
-
-<!-- clean tokens function -->
-
-<!-- clean nodes function -->
-
-<!-- * error on 2 tokens && || in a row
-
-<!-- * Handle < << > >> -->
-
-<!-- * read multilines???
-ex  grep "e" && -->
-
 <!-- * Ta fonction set_token utilise ft_isalnum pour délimiter les TK_WORD. C'est trop restrictif pour un shell.
 ex: filename test.txt
 Correction : Un TK_WORD doit consommer tout ce qui n'est PAS un métacaractère (|, <, >, &, (, ), espace). -->
@@ -28,11 +12,11 @@ Parsing (grammar / precedence)
    ↓
 Execution
 
-• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
 
 Special chars that are never part of text:
 & | < >
 
+• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
 <!-- • In interactive mode:
 	◦ ctrl-C displays a new prompt on a new line.
 	◦ ctrl-\ does nothing. -->
@@ -46,6 +30,7 @@ Special chars that are never part of text:
 	◦ ctrl-C returns to terminal (^C)
 	◦ ctrl-\ returns to terminal (^\Quit (core dumped)) -->
 
+
 <!-- ctrl-D:
 • In interactive mode:
 	exit. 
@@ -58,7 +43,8 @@ Special chars that are never part of text:
 
 # PARSING:
 
-heredocs should expand variables and commands
+Heredoc expand delimiter
+heredoc should expand variables and commands
 
 <!-- • Display a prompt when waiting for a new command. -->
 
@@ -75,10 +61,10 @@ heredocs should expand variables and commands
 # EXECUTION:
 
 <!-- • Implement the following redirections:
-	◦ < should redirect input. -->
+	◦ < should redirect input.
 	◦ > should redirect output.
-<!-- ◦ << should be given a delimiter, then read the input until a line containing the delimiter is seen. However, it doesn’t have to update the history! -->
-	◦ >> should redirect output in append mode.
+	◦ << should be given a delimiter, then read the input until a line containing the delimiter is seen. However, it doesn’t have to update the history!
+	◦ >> should redirect output in append mode. -->
 
 <!-- • Handle environment variables ($ followed by a sequence of characters) which
 should expand to their values. -->
