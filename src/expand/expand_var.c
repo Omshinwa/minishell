@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 13:12:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 20:41:45 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ static void	handle_normal_char(char *s, int *i, char **result)
 
 // Remove quotes and expand $VARIABLES in the string S
 // $VARIABLES are found in shell->env
-// if EXPAND_DOLLAR is 0, it doesnt expand variables
-char	*expand_strings(char *s, t_shell *shell, int expand_dollar)
+char	*expand_strings(char *s, t_shell *shell)
 {
 	int		i;
 	int		in_single;
@@ -66,7 +65,44 @@ char	*expand_strings(char *s, t_shell *shell, int expand_dollar)
 			i++;
 		else if (s[i] == '$' && !in_single && s[i + 1])
 		{
-			if (expand_dollar && !handle_dollar(s, &i, &result, shell))
+			if (!handle_dollar(s, &i, &result, shell))
+				return (free(result), NULL);
+		}
+		else
+			handle_normal_char(s, &i, &result);
+	}
+	return (result);
+}
+
+// Remove quotes and expand $VARIABLES in the string S
+// $VARIABLES are found in shell->env
+// if EXPAND_DOLLAR is 0, it doesnt expand variables
+
+// : remove quotes
+// : expand variables if in single quote (default)
+// : expand variables even if not in single quote
+// : dont expand
+// : expand when there's single quote
+// removed && (!in_single || expand_all) 
+char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes, int do_exp_vars)
+{
+	int		i;
+	int		in_single;
+	int		in_double;
+	char	*result;
+
+	i = 0;
+	in_single = 0;
+	in_double = 0;
+	result = ft_strdup("");
+	while (s[i])
+	{
+		update_quote_state(s[i], &in_single, &in_double);
+		if (do_rmv_quotes && ((s[i] == '\'' && !in_double) || (s[i] == '"' && !in_single)))
+    		i++;
+		else if (do_exp_vars && s[i] == '$' && s[i + 1])
+		{
+			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);
 		}
 		else

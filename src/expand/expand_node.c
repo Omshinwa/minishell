@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 15:29:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 20:14:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**expand_argv(char **argv, t_shell *shell)
 		return (NULL);
 	while (i < count)
 	{
-		expanded[i] = expand_strings(argv[i], shell, 1);
+		expanded[i] = expand_strings(argv[i], shell);
 		if (!expanded[i])
 			return (free_argv(expanded),
 				print_red("variable expansion failed"), NULL);
@@ -62,7 +62,7 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 	{
 		if (redir->type != TK_REDIR_2IN)
 		{
-			expanded = expand_strings(redir->filename, shell, 1);
+			expanded = expand_strings(redir->filename, shell);
 			if (expanded)
 			{
 				free(redir->filename);
