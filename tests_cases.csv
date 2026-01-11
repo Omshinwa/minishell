@@ -1,7 +1,6 @@
 input	expected output	error?
-# echo, note: piping it might not work because of some flushing issue
 # if theres an issue, try to correct the first error first (because they might
-# create files you dont expect
+# create files you dont expect )
  @ 		0
 :		0
 gagabougaga		127
