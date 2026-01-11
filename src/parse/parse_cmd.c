@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 19:27:46 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 13:12:18 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static t_redir	*create_new_redir(t_node *node,	t_ctx_parser *ctx)
 		return (ctx->i++, NULL);
 	redir->type = ctx->arr_token[ctx->i].type;
 	ctx->i++;
-	redir->filename = ft_strdup(ctx->arr_token[ctx->i].str);
+	redir->filename = expand_strings(ctx->arr_token[ctx->i].str, ctx->shell, 0);
 	redir->next = NULL;
 	redir->fd = -1;
 	ctx->i++;

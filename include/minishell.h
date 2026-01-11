@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/10 09:54:01 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/11 13:12:59 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	free_argv(char **argv);
 char	**expand_argv(char **argv, t_shell *shell);
 void	expand_redirections(t_redir *redir, t_shell *shell);
 void	expand_cmd_node(t_node *node, t_shell *shell);
-char	*expand_variables(char *s, t_shell *shell);
+char	*expand_strings(char *s, t_shell *shell, int expand_dollar);
 void	expand_node(t_node *node, t_shell *shell);
 
 int		has_wildcard(char *str);

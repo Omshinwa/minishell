@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_var.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/05 09:26:48 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/11 13:12:53 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ static void	handle_normal_char(char *s, int *i, char **result)
 	(*i)++;
 }
 
-char	*expand_variables(char *s, t_shell *shell)
+// Remove quotes and expand $VARIABLES in the string S
+// $VARIABLES are found in shell->env
+// if EXPAND_DOLLAR is 0, it doesnt expand variables
+char	*expand_strings(char *s, t_shell *shell, int expand_dollar)
 {
 	int		i;
 	int		in_single;
@@ -63,7 +66,7 @@ char	*expand_variables(char *s, t_shell *shell)
 			i++;
 		else if (s[i] == '$' && !in_single && s[i + 1])
 		{
-			if (!handle_dollar(s, &i, &result, shell))
+			if (expand_dollar && !handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);
 		}
 		else

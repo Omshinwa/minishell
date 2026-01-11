@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 07:14:07 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/11 13:12:10 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**expand_argv(char **argv, t_shell *shell)
 		return (NULL);
 	while (i < count)
 	{
-		expanded[i] = expand_variables(argv[i], shell);
+		expanded[i] = expand_strings(argv[i], shell, 1);
 		if (!expanded[i])
 			return (free_argv(expanded),
 				print_red("variable expansion failed"), NULL);
@@ -62,7 +62,7 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 	{
 		if (redir->type != TK_REDIR_2IN)
 		{
-			expanded = expand_variables(redir->filename, shell);
+			expanded = expand_strings(redir->filename, shell, 1);
 			if (expanded)
 			{
 				free(redir->filename);
