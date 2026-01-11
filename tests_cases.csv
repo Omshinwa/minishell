@@ -1,0 +1,65 @@
+input	expected output	error?
+# echo, note: piping it might not work because of some flushing issue
+# if theres an issue, try to correct the first error first (because they might
+# create files you dont expect
+ @ 		0
+:		1
+     		0
+echo		0
+echo 2	2	0
+echo $USER	wiwu	0
+echo '$USER'	$USER	0
+echo "$USER"	wiwu	0
+echo "haha"	haha	0
+echo '"haha"'	"haha"	0
+"echo" '1'	1	0
+echo mygod'$USER'whythis	mygod$USERwhythis	0
+echo 'like "Hello "' && echo hahaha	like "Hello " @ hahaha	0
+/		126
+# REDIRS
+>   		1
+<<		1
+>>		1
+><>		1
+>>>		1
+>>>>		1
+<<<<<		1
+echo hi > out >> out2 && < out2 cat && rm -f out out2	hi	0
+echo hi>out>>out2&&<out2 cat&&rm -f out out2	hi	0
+rm -f out && printf '%s\n' "$USER" >> out && cat out && rm -f out	wiwu	0
+printf '%s\n' "$USER" >> out && cat out | grep wiwu && rm -f out	wiwu	0
+echo "$USER" >> out && cat out | grep wiwu && rm -f out	wiwu	0
+echo '$USER' >> out && cat out | grep wiwu && rm -f out		1
+echo hello > out && < out cat && rm -f out	hello	0
+# HEREDOCS
+cat << . @ Hello @ World @ .	Hello @ World	0
+cat << . @ Hello @ World @ 	Hello @ World	0
+cat << . @ $USER @ "$USER" @ '$USER' @ .	wiwu @ "wiwu" @ 'wiwu'	0
+cat << . @ '""$USER" @ .	'""wiwu"	0
+cat << '.' @ '""$USER" @ .	'""$USER"	0
+# OPERATORS
+echo 1 && echo 2	1 @ 2	0
+echo 1 || echo 2	1	0
+echo 1 && echo 2 || echo 3 && echo 4 || echo 5	1 @ 2 @ 4	0
+echo 1 && echo 2 && echo 3 || echo 4 && echo 5	1 @ 2 @ 3 @ 5	0
+cat << "1"'2' @ . @ 12	.	0
+cat << . @ Hello	Hello	0
+echo 1 && || echo 2		1
+ls | grep "e" && >|| echo 1		1
+# PIPE
+echo '"$USER"'"$USER"'$USER' | cat	"$USER"wiwu$USER	0
+echo $USER | cat	wiwu	0
+echo 42 | cat	42	0
+ls | | ls		1
+< TODO | echo 1 | cat	1	0
+# SUBSHELL
+( echo 1 && ( echo 2) && echo 3)|| echo 4	1 @ 2 @ 3	0
+(cd /home) && pwd	/home/wiwu/Documents/minishell	0
+echo ( 1		1
+echo ) 1		1
+echo ( 1 )		1
+# CMD CONTINUATION
+cat << EOF || cat << . && @ 1 @ EOF @ 2 @ . @ cat << ? @ pain @ ?	1 @ pain	0
+echo 1 || echo 2 && @ echo 3 || echo 4 && @ echo 5	1 @ 3 @ 5	0
+echo 1 && ( @ echo 2)	1 @ 2	0
+echo 1 && @ (echo 2)	1 @ 2	0
