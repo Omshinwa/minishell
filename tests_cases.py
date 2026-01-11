@@ -10,9 +10,8 @@ Rules implemented:
 - Convert the \n chars in `input` to newline in stdin. (useful for
     heredoc/multiline simulations).
 - Exit status expectation:
+    - If `error?` is *: exit code must be non-zero (returned an error).
     - If `error?` is 0: exit code must be 0.
-    - If `error?` is 1: exit code must be non-zero (returned an error).
-
 Notes:
 - This runner compares only stdout.
 - minishell often prints prompts; if your minishell prints a prompt to stdout,
@@ -126,7 +125,7 @@ class TestCase:
     idx: int
     raw_input: str
     raw_expected_stdout: str
-    error_flag: int
+    error_flag: "Union[int, str]"
 
     @property
     def stdin_text(self) -> str:
@@ -179,10 +178,13 @@ def read_cases(csv_path: Path) -> List[TestCase]:
 
             if raw_err == "":
                 raise ValueError(f"Line {line_no}: empty 'error?' field")
-            try:
-                err_flag = int(raw_err)
-            except ValueError as e:
-                raise ValueError(f"Line {line_no}: invalid 'error?' value: {raw_err!r}") from e
+            if raw_err == "*":
+                err_flag = "*"
+            else:
+                try:
+                    err_flag = int(raw_err)
+                except ValueError as e:
+                    raise ValueError(f"Line {line_no}: invalid 'error?' value: {raw_err!r}") from e
 
             cases.append(TestCase(idx=line_no, raw_input=raw_in, raw_expected_stdout=raw_exp, error_flag=err_flag))
 
@@ -203,15 +205,18 @@ def run_one(minishell_path: Path, tc: TestCase, timeout_s: float = 5.0) -> Tuple
     return proc.returncode, proc.stdout, proc.stderr
 
 
-def check_exit_code(error_flag: int, code: int) -> bool:
+def check_exit_code(error_flag, code: int) -> bool:
+    # Special wildcard: '*' means any non-zero exit code
+    if error_flag == "*":
+        return code != 0
+    # Numeric 0: success only
     if error_flag == 0:
         return code == 0
-    if error_flag == 1:
-        # For error?==1 we only check that minishell returned an error.
-        return code != 0
-    # If someone adds more flags later, default to strict match of truthiness?
-    # For now, be strict: require exact match for unknown flags.
-    return code == error_flag
+    # For any other integer expectation, require exact match
+    try:
+        return code == int(error_flag)
+    except Exception:
+        return False
 
 
 def main(argv: List[str]) -> int:
