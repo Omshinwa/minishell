@@ -1,3 +1,7 @@
+
+echo $USER >> out && cat out | grep		1
+echo $USER >> out && cat out | grep $USER	wiwu\nwiwu\nwiwu	0
+
 CONCERNANT LES SIGNAUX:
 execve reset les customs signal handlers, mais il n'undo pas SIG_IGN.
 Si on fait signal(machin, SIG_IGN), on doit le reset par SIG_DFL avant de execve.

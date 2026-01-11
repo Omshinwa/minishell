@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 13:12:18 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 16:48:18 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 // Malloc a new REDIR
 // sets the fields correctly (and move up the ctx)
 // add it to the end of NODE->REDIR
-static t_redir	*create_new_redir(t_node *node,	t_ctx_parser *ctx)
+static t_redir	*create_n_append_new_redir(t_node *node, t_ctx_parser *ctx)
 {
 	t_redir	*redir;
 	t_redir	*last_redir;
@@ -27,7 +27,12 @@ static t_redir	*create_new_redir(t_node *node,	t_ctx_parser *ctx)
 		return (ctx->i++, NULL);
 	redir->type = ctx->arr_token[ctx->i].type;
 	ctx->i++;
-	redir->filename = expand_strings(ctx->arr_token[ctx->i].str, ctx->shell, 0);
+	redir->filename = ft_strdup(ctx->arr_token[ctx->i].str);
+	if (!redir->filename)
+	{
+		free(redir);
+		return (ctx->i++, NULL);
+	}
 	redir->next = NULL;
 	redir->fd = -1;
 	ctx->i++;
@@ -40,22 +45,26 @@ static t_redir	*create_new_redir(t_node *node,	t_ctx_parser *ctx)
 	return (redir);
 }
 
-// When the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
-// Calls read_heredoc_fd
-// append a new REDIR to NODE->REDIR
+// This is called when the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
+// calls CREATE N APPEND NEW REDIR
+// if TK_REDIR_2IN : Create a fork child that calls heredoc
 static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 {
 	t_redir	*redir;
 	int		fd[2];
 	int		status;
 
-	redir = create_new_redir(node, ctx);
+	redir = create_n_append_new_redir(node, ctx);
 	if (!redir)
 		return (-1);
 	if (redir->type == TK_REDIR_2IN)
 	{
 		pipe(fd);
-		status = fork_heredoc(node, ctx, redir, fd);
+		if (fork_heredoc_child(node, ctx, redir->filename, fd))
+			return (close(fd[0]), close(fd[1]), -1);
+		ignore_signals();
+		wait(&status);
+		close(fd[1]);
 		if (WIFSIGNALED(status))
 		{
 			close(fd[0]);

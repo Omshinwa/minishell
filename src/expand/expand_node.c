@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 13:12:10 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 15:29:53 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**expand_argv(char **argv, t_shell *shell)
 	count = 0;
 	while (argv[count])
 		count++;
-	expanded = malloc(sizeof(char *) * (count + 1));
+	expanded = ft_calloc(count + 1, sizeof(char *));
 	if (!expanded)
 		return (NULL);
 	while (i < count)

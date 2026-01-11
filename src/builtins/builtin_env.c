@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_env.c                                     :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/02 13:16:52 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/11 19:52:09 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ int	ft_env(t_shell *shell)
 	current = shell->env;
 	while (current)
 	{
-		printf("%s=%s\n", current->key, current->value);
+		if (current->key)
+			ft_putstr_fd(current->key, STDOUT_FILENO);
+		ft_putchar_fd('=', STDOUT_FILENO);
+		if (current->value)
+			ft_putstr_fd(current->value, STDOUT_FILENO);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		current = current->next;
 	}
 	return (0);

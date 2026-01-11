@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:33:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 05:32:58 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/11 19:22:16 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ static void	restore_fds(int saved_stdin, int saved_stdout)
 	close(saved_stdout);
 }
 
+// * Builtins use stdio (printf). When we redirect using dup2, stdout becomes
+// * fully-buffered and data can remain in the stdio buffer across dup2 calls.
+// * Flush before/after to ensure output goes to the intended fd.
+// fflush(NULL);
 int	execute_builtin_redir(char **argv, t_redir *redir, t_shell *shell)
 {
 	int	saved_stdin;

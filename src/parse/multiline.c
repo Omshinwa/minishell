@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 19:27:20 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 15:35:32 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 #include "minishell_signal.h"
 
 // This read what's in the standard input and write to FD
-void	read_heredoc_fd(int fd, char *del)
+void	read_heredoc_fd(int fd, char *del, int do_expand_vars, t_shell *shell)
 {
 	char	*line;
+	char	*expanded_line;
 
 	while (1)
 	{
@@ -28,30 +29,40 @@ void	read_heredoc_fd(int fd, char *del)
 			break ;
 		}
 		if (ft_strcmp(line, del) == 0)
-		{
-			free(line);
 			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		if (do_expand_vars)
+			expanded_line = expand_strings(line, shell, 1);
+		else
+			expanded_line = ft_strdup(line);
+		if (!expanded_line)
+			break ;
 		free(line);
+		write(fd, expanded_line, ft_strlen(expanded_line));
+		write(fd, "\n", 1);
+		free(expanded_line);
 	}
+	free(line);
 }
 
 // Fork a heredoc, close the write fd
-int	fork_heredoc(t_node *node, t_ctx_parser *ctx, t_redir *redir
+int	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter
 	, int fd[2])
 {
-	int	pid;
-	int	status;
+	int		pid;
+	char	*expanded_del;
 
-	status = 0;
+	if (ft_is_in_set(delimiter, '"') || ft_is_in_set(delimiter, '\''))
+		expanded_del = expand_strings(delimiter, ctx->shell, 0);
+	else
+		expanded_del = ft_strdup(delimiter);
 	pid = fork();
 	if (pid == 0)
 	{
 		close(fd[0]);
 		set_signals_multilines();
-		read_heredoc_fd(fd[1], redir->filename);
+		read_heredoc_fd(fd[1], expanded_del,
+			!ft_strcmp(delimiter, expanded_del), ctx->shell);
+		free(expanded_del);
 		close(fd[1]);
 		clean_tokens(&ctx->arr_token);
 		clean_shell(ctx->shell);
@@ -60,10 +71,7 @@ int	fork_heredoc(t_node *node, t_ctx_parser *ctx, t_redir *redir
 	}
 	else if (pid == -1)
 		return (print_red("pid"), -1);
-	close(fd[1]);
-	ignore_signals();
-	wait(&status);
-	return (status);
+	return (0);
 }
 
 // prints a pretty prompt when && || etc
@@ -80,18 +88,18 @@ static char	*new_prompt(t_ctx_parser *ctx)
 		color = BG_RED;
 	else if (ctx->arr_token[ctx->i - 1].type == TK_OPEN_PARENT)
 		color = BG_BLUE;
-	prompt = safe_malloc(sizeof(char) * 40);
+	prompt = safe_malloc(sizeof(char) * 32);
 	if (!prompt)
 		return (NULL);
 	prompt[0] = '\0';
-	ft_strlcat(prompt, "\001", 50);
-	ft_strlcat(prompt, color, 50);
-	ft_strlcat(prompt, "\002", 50);
-	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 50);
-	ft_strlcat(prompt, "\001", 50);
-	ft_strlcat(prompt, RESET, 50);
-	ft_strlcat(prompt, "\002", 50);
-	ft_strlcat(prompt, " ", 50);
+	ft_strlcat(prompt, "\001", 32);
+	ft_strlcat(prompt, color, 32);
+	ft_strlcat(prompt, "\002", 32);
+	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 32);
+	ft_strlcat(prompt, "\001", 32);
+	ft_strlcat(prompt, RESET, 32);
+	ft_strlcat(prompt, "\002", 32);
+	ft_strlcat(prompt, " ", 32);
 	return (prompt);
 }
 

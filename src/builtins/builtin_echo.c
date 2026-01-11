@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:22 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 20:20:40 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/11 19:52:03 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ int	ft_echo(char **args)
 	}
 	while (args[i])
 	{
-		printf("%s", args[i]);
+		ft_putstr_fd(args[i], STDOUT_FILENO);
 		if (args[i + 1])
-			printf(" ");
+			ft_putchar_fd(' ', STDOUT_FILENO);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (0);
 }
