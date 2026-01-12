@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:50:05 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:54:41 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,17 @@ char	*remove_quotes(char *s, t_shell *shell)
 	return (result);
 }
 
+static int	should_expand(char *s, int i, int ignore_quotes, int in_single)
+{
+	if (s[i] != '$' || s[i + 1] == '\0')
+		return (0);
+	if (ignore_quotes)
+		return (1);
+	if (!in_single && (is_var_char(s[i + 1]) || s[i + 1] == '?'))
+		return (1);
+	return (0);
+}
+
 char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 {
 	int		i;
@@ -82,13 +93,7 @@ char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 	while (s[i])
 	{
 		update_quote_state(s[i], &in_single, &in_double);
-		if (ignore_quotes && s[i] == '$' && s[i + 1])
-		{
-			if (!handle_dollar(s, &i, &result, shell))
-				return (free(result), NULL);
-		}
-		else if (!ignore_quotes && s[i] == '$' && !in_single
-			&& (is_var_char(s[i + 1]) || s[i + 1] == '?'))
+		if (should_expand(s, i, ignore_quotes, in_single))
 		{
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);
