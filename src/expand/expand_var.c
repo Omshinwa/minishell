@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 13:40:29 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 16:28:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ char	*expand_strings(char *s, t_shell *shell)
 		update_quote_state(s[i], &in_single, &in_double);
 		if ((s[i] == '\'' && !in_double) || (s[i] == '"' && !in_single))
 			i++;
-		else if (s[i] == '$' && !in_single && s[i + 1])
+		else if (s[i] == '$' && !in_single &&
+			(is_var_char(s[i + 1]) || s[i + 1] == '?'))
 		{
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);

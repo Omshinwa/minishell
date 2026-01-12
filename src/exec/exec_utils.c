@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 19:30:14 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 16:01:57 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*get_path(char *cmd, t_shell *shell)
 	char	**split_path;
 	char	*path;
 
-	if (access(cmd, X_OK) == 0)
+	if (ft_is_in_set(cmd, '/') && (access(cmd, X_OK) == 0))
 		return (ft_strdup(cmd));
 	find_path = find_env_node(shell->env, "PATH")->value;
 	if (!find_path)
