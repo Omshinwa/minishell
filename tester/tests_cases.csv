@@ -1,8 +1,9 @@
 input	expected output	error?
 # if theres an issue, try to correct the first error first (because they might
 # create files you dont expect )
- @ 		0
+ @ 		0	
 :		0
+# : is a detail
 gagabougaga		127
      		0
 echo		0
@@ -46,6 +47,7 @@ cat << "1"'2' @ . @ 12	.	0
 cat << . @ Hello	Hello	0
 echo 1 && || echo 2		*
 ls | grep "e" && >|| echo 1		*
+||		2
 # PIPE
 echo '"$USER"'"$USER"'$USER' | cat	"$USER"wiwu$USER	0
 echo $USER | cat	wiwu	0
@@ -65,3 +67,4 @@ echo 1 && ( @ echo 2)	1 @ 2	0
 echo 1 && @ (echo 2)	1 @ 2	0
 # TEST BUILTINS AND VARIABLE WRITING LIKE VAR=42 THEN PRINT IT
 cd /home/ 42		1
+# $var=echo && $var 40	40	0

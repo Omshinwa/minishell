@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 20:41:45 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 13:40:29 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,10 @@ char	*expand_strings(char *s, t_shell *shell)
 	return (result);
 }
 
-// Remove quotes and expand $VARIABLES in the string S
-// $VARIABLES are found in shell->env
-// if EXPAND_DOLLAR is 0, it doesnt expand variables
-
-// : remove quotes
-// : expand variables if in single quote (default)
-// : expand variables even if not in single quote
-// : dont expand
-// : expand when there's single quote
-// removed && (!in_single || expand_all) 
-char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes, int do_exp_vars)
+// expand_strings with options, if do_exp_vars: always expand
+// regardless of quotes
+char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes,
+	int do_exp_vars)
 {
 	int		i;
 	int		in_single;

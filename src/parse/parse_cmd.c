@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 20:54:36 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 15:10:56 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static int	get_argv_size(t_ctx_parser *ctx)
 			if (ctx->arr_token[i].type != TK_WORD)
 			{
 				print_red("redirection expected a filename.");
-				printf(RED"got `%s` instead."RESET"\n", ctx->arr_token[i].str);
+				print_red_args2("got instead ", ctx->arr_token[i].str);
 				return (-1);
 			}
 		}
@@ -141,8 +141,8 @@ t_node	*parse_simple_command(t_ctx_parser *ctx)
 
 	if (!(ctx->arr_token[ctx->i].type & (TK_WORD | TK_REDIR_IN
 				| TK_REDIR_OUT | TK_REDIR_2IN | TK_REDIR_2OUT)))
-		return (printf(RED"unexpected token `%s`, expected command"RESET"\n",
-				ctx->arr_token[ctx->i].str), NULL);
+		return (print_red_args2("unexpected token", ctx->arr_token[ctx->i].str),
+				NULL);
 	nb_of_words = get_argv_size(ctx);
 	if (nb_of_words == -1)
 		return (NULL);

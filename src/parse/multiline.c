@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   multiline.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 10:17:03 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/12 14:11:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int	command_continuation(t_ctx_parser *ctx)
 		free(line);
 	}
 	free(prompt);
-	new_tokens = tokenize(line);
+	new_tokens = tokenize(line, ctx->shell);
 	free(line);
 	if (!new_tokens)
 		return (-1);

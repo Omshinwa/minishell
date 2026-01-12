@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 08:31:43 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/12 15:19:54 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 {
 	int		exit_status;
 
-	exit_status = shell->last_exit;
 	if (!str || !ft_strlen(str))
 		return ;
 	add_history(str);
@@ -60,8 +59,6 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 		shell->last_exit = exit_status;
 		clean_nodes(&shell->node);
 	}
-	else
-		shell->last_exit = 1;
 }
 
 int	main(int argc, char **argv, char **envp)

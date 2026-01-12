@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 19:27:20 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 15:25:25 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
+#include "minishell.h"
 
 //  ███████████    █████████   ███████████    █████████  ██████████
 // ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███ ▒▒███▒▒▒▒▒███  ███▒▒▒▒▒███▒▒███▒▒▒▒▒█
@@ -121,16 +122,19 @@ t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 	t_ctx_parser	ctx;
 	t_node			*node;
 
-	ctx.arr_token = tokenize(str);
+	ctx.arr_token = tokenize(str, shell);
 	ctx.i = 0;
 	if (!ctx.arr_token)
 		return (NULL);
 	ctx.shell = shell;
 	node = parse_expression(&ctx);
+	if (!node)
+		shell->last_exit = 2;
 	if (node && ctx.arr_token[ctx.i].type != TK_END)
 	{
-		printf(RED"unexpected token `%s`"RESET"\n", ctx.arr_token[ctx.i].str);
+		print_red_args2("unexpected token", ctx.arr_token[ctx.i].str);
 		clean_nodes(&node);
+		shell->last_exit = 2;
 	}
 	clean_tokens(&ctx.arr_token);
 	return (node);

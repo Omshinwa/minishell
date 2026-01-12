@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/11 13:13:20 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 15:10:35 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
+#include "minishell.h"
 
 //  ███████████    ███████    █████   ████ ██████████ ██████   █████  █████████ 
 // ▒█▒▒▒███▒▒▒█  ███▒▒▒▒▒███ ▒▒███   ███▒ ▒▒███▒▒▒▒▒█▒▒██████ ▒▒███  ███▒▒▒▒▒███
@@ -52,8 +53,7 @@ static int	populate_token(char *str, t_token *arr_token, int *size)
 		arr_token[*size] = (t_token){NULL, TK_END};
 		valid_token = set_token(&arr_token[*size], str, i);
 		if (valid_token == -1)
-			return (printf(RED "invalid token at index %i: %c" RESET "\n",
-					i, str[i]), -1);
+			return (print_red_args3("invalid token at index", ft_itoa(i), &str[i]), -1);
 		i = valid_token;
 		(*size)++;
 	}
@@ -64,23 +64,26 @@ static int	populate_token(char *str, t_token *arr_token, int *size)
 // logic: j is the length of tokens, i for str
 // new_i is the new index after setting a token
 /// TODO: could optimize the calloc, im doing the worst case scenario.
-t_token	*tokenize(char *str)
+t_token	*tokenize(char *str, t_shell *shell)
 {
 	int		i;
 	int		size;
 	t_token	*arr_token;
-	int		failed;
+	int		failure;
 
 	i = 0;
 	size = 0;
-	failed = 0;
+	failure = 0;
 	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
 	if (!arr_token)
 		return (NULL);
 	if (populate_token(str, arr_token, &size))
-		failed = 1;
+	{
+		failure = 1;
+		shell->last_exit = 2;
+	}
 	arr_token[size] = (t_token){NULL, TK_END};
-	if (failed || size == 0)
+	if (failure || size == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);
 }

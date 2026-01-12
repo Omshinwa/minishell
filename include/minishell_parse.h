@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/11 14:52:02 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 15:11:19 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int		fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter,
 void	print_tokens(t_token *arr_token);
 void	clean_tokens(t_token **arr_token);
 void	print_nodes(t_node *node, int depth);
-t_token	*tokenize(char *str);
+t_token	*tokenize(char *str, t_shell *shell);
 int		set_token(t_token *token, char *str, int start);
 
 // node.c
@@ -126,5 +126,7 @@ t_node	*parse_simple_command(t_ctx_parser *ctx);
 
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);
+void	print_red_args2(char *arg1, char *arg2);
+void	print_red_args3(char *arg1, char *arg2, char *arg3);
 
 #endif
