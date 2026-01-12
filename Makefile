@@ -3,18 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/10 19:26:28 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/12 09:46:32 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+GREEN	= \033[0;32m
+RED		= \033[0;31m
+RESET	= \033[0m
+TITLE	= \033[1;32m
 
 NAME		=	minishell
 
 CC			=	cc
 
-CFLAGS		=	-Wall -Wextra -Werror -g3 -D_DEFAULT_SOURCE
+CFLAGS		=	-Wall -Wextra -Werror -g3
 
 LINK_FLAG	=	-lreadline
 
@@ -28,6 +33,9 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				builtins/builtin_pwd.c				\
 				builtins/builtin_unset.c			\
 				builtins/builtins.c					\
+				env/env_init.c						\
+				env/env_set.c						\
+				env/env_utils.c						\
 				exec/exec_builtins.c				\
 				exec/exec_cmd.c						\
 				exec/exec_redir.c					\
@@ -41,9 +49,6 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				expand/expand_wildcards_utils.c		\
 				expand/expand_wildcards_utils2.c	\
 				clean.c								\
-				env_init.c							\
-				env_set.c							\
-				env_utils.c							\
 				error.c								\
 				main.c								\
 				parse/parse.c						\
@@ -72,22 +77,44 @@ HEADERS = $(addprefix $(INCLUDES),$(HEADER_FILES))
 all: $(NAME)
 
 $(NAME): $(OBJECTS) $(LIBFT_A)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) $(LINK_FLAG) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) $(LINK_FLAG) -o $(NAME)
+	
+	@echo "$(GREEN)✔ Successfully compiled$(RESET)"
+	@echo
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADERS)
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -I$(INCLUDES) -c $< -o $@
 
 $(LIBFT_A):
-	$(MAKE) -C $(LIBFT_DIR)
+
+	@echo "$(TITLE)"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo "  ███╗   ███╗ ██╗ ███╗   ██╗ ██╗ ███████╗ ██╗  ██╗ ███████╗ ██╗     ██╗"
+	@echo "  ████╗ ████║ ██║ ████╗  ██║ ██║ ██╔════╝ ██║  ██║ ██╔════╝ ██║     ██║"
+	@echo "  ██╔████╔██║ ██║ ██╔██╗ ██║ ██║ ███████╗ ███████║ █████╗   ██║     ██║"
+	@echo "  ██║╚██╔╝██║ ██║ ██║╚██╗██║ ██║ ╚════██║ ██╔══██║ ██╔══╝   ██║     ██║"
+	@echo "  ██║ ╚═╝ ██║ ██║ ██║ ╚████║ ██║ ███████║ ██║  ██║ ███████╗ ███████╗███████╗"
+	@echo "  ╚═╝     ╚═╝ ╚═╝ ╚═╝  ╚═══╝ ╚═╝ ╚══════╝ ╚═╝  ╚═╝ ╚══════╝ ╚══════╝╚══════╝"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo "$(RESET)Made by $(RED)wiwu$(RESET) and $(RED)dasamuel$(RESET)"
+	@echo
+
+	@$(MAKE) --silent -C $(LIBFT_DIR)
 	
 clean:
-	$(RM) $(OBJ_PATH)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@$(RM) $(OBJ_PATH)
+	@$(MAKE) --silent -C $(LIBFT_DIR) clean
+	
+	@echo "$(GREEN)✔ Object files successfully deleted$(RESET)"
+	@echo
 
 fclean: clean
-	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(RM) $(NAME)
+	@$(MAKE) --silent -C $(LIBFT_DIR) fclean
+
+	@echo "$(GREEN)✔ Executable successfully deleted$(RESET)"
+	@echo
 
 re: fclean all
 
