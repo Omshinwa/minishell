@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 06:15:56 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:26:53 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static int	exec_external_cmd(t_node *node, t_shell *shell, char *path)
 
 int	execute_simple_command(t_node *node, t_shell *shell)
 {
-	char	*path;
+	char		*path;
+	struct stat	st;
 
 	if (!node->argv || !node->argv[0])
 		return (0);
@@ -58,12 +59,20 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 			return (execute_builtin_redir(node->argv, node->redir, shell));
 		return (execute_builtin(node->argv, shell));
 	}
+	if (node->argv[0][0] == '\0')
+		return (0);
 	path = get_path(node->argv[0], shell);
 	if (!path)
 	{
 		ft_putstr_fd(node->argv[0], 2);
 		ft_putendl_fd(": command not found", 2);
 		return (127);
+	}
+	if (stat(path, &st) == 0) {
+		if (S_ISDIR(st.st_mode)) {
+			print_red_args2("is a directory, not a cmd:", node->argv[0]);
+			return 126;
+		}
 	}
 	return (exec_external_cmd(node, shell, path));
 }

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/12 15:11:19 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 19:28:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	print_tokens(t_token *arr_token);
 void	clean_tokens(t_token **arr_token);
 void	print_nodes(t_node *node, int depth);
 t_token	*tokenize(char *str, t_shell *shell);
-int		set_token(t_token *token, char *str, int start);
+int		set_token(t_token *arr_token, int arr_i, char *str, int start);
 
 // node.c
 t_node	*new_node(t_node_type type, t_node *left, t_node *right);

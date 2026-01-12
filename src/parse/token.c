@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 15:10:35 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 20:05:43 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,19 @@ void	clean_tokens(t_token **arr_token)
 	*arr_token = NULL;
 }
 
-static int	populate_token(char *str, t_token *arr_token, int *size)
+// given the STR to parse and the  empty malloced ARR_TOKEN 
+// create and put all the tokens
+// Return the size of the array
+// -1 if any error
+static int	populate_token(char *str, t_token *arr_token)
 {
 	int		i;
 	int		valid_token;
+	int		size;
 
 	i = 0;
 	valid_token = -1;
+	size = 0;
 	while (str[i])
 	{
 		if (str[i] == ' ' || str[i] == '\n')
@@ -50,14 +56,30 @@ static int	populate_token(char *str, t_token *arr_token, int *size)
 			i++;
 			continue ;
 		}
-		arr_token[*size] = (t_token){NULL, TK_END};
-		valid_token = set_token(&arr_token[*size], str, i);
+		arr_token[size] = (t_token){NULL, TK_END};
+		valid_token = set_token(arr_token, size, str, i);
 		if (valid_token == -1)
 			return (print_red_args3("invalid token at index", ft_itoa(i), &str[i]), -1);
 		i = valid_token;
-		(*size)++;
+		size++;
 	}
-	return (0);
+	return (size);
+}
+
+void	expand_tokens(t_token *arr_token, int size, t_shell *shell)
+{
+	int		i;
+	char	*expanded;
+
+	i = -1;
+	while(++i < size)
+	{
+		if (i > 0 && arr_token[i - 1].type == TK_REDIR_2IN)
+			continue ;
+		expanded = expand_strings_options(arr_token[i].str, shell, 0, 0, 1);
+		free(arr_token[i].str);
+		arr_token[i].str = expanded;
+	}
 }
 
 // Goes through the string input, Returns an array of tokens.
@@ -67,54 +89,55 @@ static int	populate_token(char *str, t_token *arr_token, int *size)
 t_token	*tokenize(char *str, t_shell *shell)
 {
 	int		i;
-	int		size;
 	t_token	*arr_token;
 	int		failure;
+	int		size;
 
 	i = 0;
-	size = 0;
 	failure = 0;
 	arr_token = safe_malloc(sizeof(t_token) * (ft_strlen(str) + 1));
 	if (!arr_token)
 		return (NULL);
-	if (populate_token(str, arr_token, &size))
+	size = populate_token(str, arr_token);
+	if (size == -1)
 	{
 		failure = 1;
 		shell->last_exit = 2;
 	}
 	arr_token[size] = (t_token){NULL, TK_END};
+	expand_tokens(arr_token, size, shell);
 	if (failure || size == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);
 }
 
-// void	print_tokens(t_token *arr_token)
-// {
-// 	int		i;
-// 	t_token	token;
+void	print_tokens(t_token *arr_token)
+{
+	int		i;
+	t_token	token;
 
-// 	i = -1;
-// 	if (!arr_token)
-// 		return ;
-// 	while (arr_token[++i].type != TK_END)
-// 	{
-// 		token = arr_token[i];
-// 		printf(BOLD);
-// 		if (token.type == TK_WORD)
-// 			printf(BG_WHITE BLACK "%s" RESET, token.str);
-// 		else if (token.type == TK_PIPE)
-// 			printf(BG_RED "%s" RESET, token.str);
-// 		else if (token.type == TK_REDIR_IN || token.type == TK_REDIR_OUT)
-// 			printf(BG_MAGENTA "%s" RESET, token.str);
-// 		else if (token.type == TK_REDIR_2IN || token.type == TK_REDIR_2OUT)
-// 			printf(BG_MAGENTA "%s" RESET, token.str);
-// 		else if (token.type == TK_OP_AND)
-// 			printf(BG_GREEN "%s" RESET, token.str);
-// 		else if (token.type == TK_OP_OR)
-// 			printf(BG_YELLOW "%s" RESET, token.str);
-// 		else if (token.type == TK_OPEN_PARENT || token.type == TK_CLOSE_PARENT)
-// 			printf(BG_BLUE "%s" RESET, token.str);
-// 		printf(" ");
-// 	}
-// 	printf("\n");
-// }
+	i = -1;
+	if (!arr_token)
+		return ;
+	while (arr_token[++i].type != TK_END)
+	{
+		token = arr_token[i];
+		printf(BOLD);
+		if (token.type == TK_WORD)
+			printf(BG_WHITE BLACK "%s" RESET, token.str);
+		else if (token.type == TK_PIPE)
+			printf(BG_RED "%s" RESET, token.str);
+		else if (token.type == TK_REDIR_IN || token.type == TK_REDIR_OUT)
+			printf(BG_MAGENTA "%s" RESET, token.str);
+		else if (token.type == TK_REDIR_2IN || token.type == TK_REDIR_2OUT)
+			printf(BG_MAGENTA "%s" RESET, token.str);
+		else if (token.type == TK_OP_AND)
+			printf(BG_GREEN "%s" RESET, token.str);
+		else if (token.type == TK_OP_OR)
+			printf(BG_YELLOW "%s" RESET, token.str);
+		else if (token.type == TK_OPEN_PARENT || token.type == TK_CLOSE_PARENT)
+			printf(BG_BLUE "%s" RESET, token.str);
+		printf(" ");
+	}
+	printf("\n");
+}

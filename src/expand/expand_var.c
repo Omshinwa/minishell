@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 16:28:28 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 20:04:32 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	*expand_strings(char *s, t_shell *shell)
 // expand_strings with options, if do_exp_vars: always expand
 // regardless of quotes
 char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes,
-	int do_exp_vars)
+	int do_exp_vars, int do_exp_vars_only_double_quotes)
 {
 	int		i;
 	int		in_single;
@@ -95,6 +95,12 @@ char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes,
 		if (do_rmv_quotes && ((s[i] == '\'' && !in_double) || (s[i] == '"' && !in_single)))
     		i++;
 		else if (do_exp_vars && s[i] == '$' && s[i + 1])
+		{
+			if (!handle_dollar(s, &i, &result, shell))
+				return (free(result), NULL);
+		}
+		else if (do_exp_vars_only_double_quotes && s[i] == '$' && !in_single &&
+			(is_var_char(s[i + 1]) || s[i + 1] == '?'))
 		{
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);

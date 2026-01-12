@@ -6,11 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/10 20:49:45 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 19:28:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parse.h"
+#include "minishell.h"
 
 // (|, <, >, &, (, ), espace).
 static int	is_valid_word_char(char c)
@@ -109,18 +110,21 @@ static int	set_token_else(t_token *token, char *str, char c, int end)
 	return (end);
 }
 
+// Set a single token.
 // Given the string to parse and the current index, 
 // Set the token type, return END as the new index
 // returns -1 on error
 // --> if (c == '!') 	///		use this line to set invalid chars
-int	set_token(t_token *token, char *str, int start)
+int	set_token(t_token *arr_token, int arr_i, char *str, int start)
 {
 	int	end;
 	int	c;
+	t_token	*token;
 
+	token = &arr_token[arr_i];
+	// token->str = NULL;
 	c = str[start];
 	end = start;
-	token->str = NULL;
 	if (c == '!')
 		return (token->type = TK_END, -1);
 	else if (is_valid_word_char(c) || c == '"' || c == '\'')
