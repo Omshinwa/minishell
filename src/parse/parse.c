@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 20:06:59 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:14:19 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ t_node	*parse_command(t_ctx_parser *ctx)
 //  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
 // ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
 
+// print_tokens(ctx.arr_token);
 t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 {
 	t_ctx_parser	ctx;
 	t_node			*node;
 
 	ctx.arr_token = tokenize(str, shell);
-	// print_tokens(ctx.arr_token);
 	ctx.i = 0;
 	if (!ctx.arr_token)
 		return (NULL);
@@ -133,7 +133,7 @@ t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 		shell->last_exit = 2;
 	if (node && ctx.arr_token[ctx.i].type != TK_END)
 	{
-		print_red_args2("unexpected token", ctx.arr_token[ctx.i].str);
+		print_2red("unexpected token", ctx.arr_token[ctx.i].str);
 		clean_nodes(&node);
 		shell->last_exit = 2;
 	}

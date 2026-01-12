@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 20:04:32 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:50:05 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,14 @@ static void	handle_normal_char(char *s, int *i, char **result)
 	(*i)++;
 }
 
-// Remove quotes and expand $VARIABLES in the string S
-// $VARIABLES are found in shell->env
-char	*expand_strings(char *s, t_shell *shell)
+char	*remove_quotes(char *s, t_shell *shell)
 {
 	int		i;
 	int		in_single;
 	int		in_double;
 	char	*result;
 
+	(void) shell;
 	i = 0;
 	in_single = 0;
 	in_double = 0;
@@ -63,22 +62,13 @@ char	*expand_strings(char *s, t_shell *shell)
 		update_quote_state(s[i], &in_single, &in_double);
 		if ((s[i] == '\'' && !in_double) || (s[i] == '"' && !in_single))
 			i++;
-		else if (s[i] == '$' && !in_single &&
-			(is_var_char(s[i + 1]) || s[i + 1] == '?'))
-		{
-			if (!handle_dollar(s, &i, &result, shell))
-				return (free(result), NULL);
-		}
 		else
 			handle_normal_char(s, &i, &result);
 	}
 	return (result);
 }
 
-// expand_strings with options, if do_exp_vars: always expand
-// regardless of quotes
-char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes,
-	int do_exp_vars, int do_exp_vars_only_double_quotes)
+char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 {
 	int		i;
 	int		in_single;
@@ -92,15 +82,13 @@ char	*expand_strings_options(char *s, t_shell *shell, int do_rmv_quotes,
 	while (s[i])
 	{
 		update_quote_state(s[i], &in_single, &in_double);
-		if (do_rmv_quotes && ((s[i] == '\'' && !in_double) || (s[i] == '"' && !in_single)))
-    		i++;
-		else if (do_exp_vars && s[i] == '$' && s[i + 1])
+		if (ignore_quotes && s[i] == '$' && s[i + 1])
 		{
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);
 		}
-		else if (do_exp_vars_only_double_quotes && s[i] == '$' && !in_single &&
-			(is_var_char(s[i + 1]) || s[i + 1] == '?'))
+		else if (!ignore_quotes && s[i] == '$' && !in_single
+			&& (is_var_char(s[i + 1]) || s[i + 1] == '?'))
 		{
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);

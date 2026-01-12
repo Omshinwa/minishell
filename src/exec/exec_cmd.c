@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 18:26:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:13:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,19 @@ static int	exec_external_cmd(t_node *node, t_shell *shell, char *path)
 	return (get_exit_status(status));
 }
 
+static int	is_it_directory(char *path)
+{
+	struct stat	st;
+
+	stat(path, &st);
+	if (S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}
+
 int	execute_simple_command(t_node *node, t_shell *shell)
 {
 	char		*path;
-	struct stat	st;
 
 	if (!node->argv || !node->argv[0])
 		return (0);
@@ -65,14 +74,12 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 	if (!path)
 	{
 		ft_putstr_fd(node->argv[0], 2);
-		ft_putendl_fd(": command not found", 2);
+		ft_putendl_fd(": file / cmd / directory not found", 2);
 		return (127);
 	}
-	if (stat(path, &st) == 0) {
-		if (S_ISDIR(st.st_mode)) {
-			print_red_args2("is a directory, not a cmd:", node->argv[0]);
-			return 126;
-		}
-	}
+	if (access(path, X_OK) != 0)
+		return (print_red("permissions denied"), 126);
+	if (is_it_directory(path))
+		return (print_2red("is a directory, not a cmd:", path), 126);
 	return (exec_external_cmd(node, shell, path));
 }

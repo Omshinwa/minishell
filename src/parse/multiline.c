@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 20:05:38 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:26:48 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	read_heredoc_fd(int fd, char *del, int do_expand_vars, t_shell *shell)
 		if (ft_strcmp(line, del) == 0)
 			break ;
 		if (do_expand_vars)
-			expanded_line = expand_strings_options(line, shell, 0, 1, 0);
+			expanded_line = expand_variable(line, shell, 1);
 		else
 			expanded_line = ft_strdup(line);
 		if (!expanded_line)
@@ -52,7 +52,7 @@ int	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter
 	char	*expanded_del;
 
 	if (ft_is_in_set(delimiter, '"') || ft_is_in_set(delimiter, '\''))
-		expanded_del = expand_strings_options(delimiter, ctx->shell, 1, 0, 0);
+		expanded_del = remove_quotes(delimiter, ctx->shell);
 	else
 		expanded_del = ft_strdup(delimiter);
 	pid = fork();

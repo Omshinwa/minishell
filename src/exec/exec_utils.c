@@ -6,11 +6,18 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 16:01:57 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:09:53 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	file_exists(char *path)
+{
+	struct stat	st;
+
+	return (stat(path, &st) == 0);
+}
 
 void	free_split(char **split)
 {
@@ -35,7 +42,7 @@ char	*try_path(char *dir, char *cmd)
 	temp = ft_strjoin(dir, "/");
 	path = ft_strjoin(temp, cmd);
 	free(temp);
-	if (access(path, X_OK) == 0)
+	if (file_exists(path))
 		return (path);
 	free(path);
 	return (NULL);
@@ -48,7 +55,7 @@ char	*get_path(char *cmd, t_shell *shell)
 	char	**split_path;
 	char	*path;
 
-	if (ft_is_in_set(cmd, '/') && (access(cmd, X_OK) == 0))
+	if (ft_is_in_set(cmd, '/') && file_exists(cmd))
 		return (ft_strdup(cmd));
 	find_path = find_env_node(shell->env, "PATH")->value;
 	if (!find_path)

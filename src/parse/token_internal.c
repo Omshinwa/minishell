@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/12 19:28:28 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/12 21:15:00 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,11 @@ static int	set_token_else(t_token *token, char *str, char c, int end)
 // --> if (c == '!') 	///		use this line to set invalid chars
 int	set_token(t_token *arr_token, int arr_i, char *str, int start)
 {
-	int	end;
-	int	c;
-	t_token	*token;
+	int			end;
+	int			c;
+	t_token		*token;
 
 	token = &arr_token[arr_i];
-	// token->str = NULL;
 	c = str[start];
 	end = start;
 	if (c == '!')
