@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 12:30:06 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 12:34:03 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	read_heredoc_fd(int fd, char *del, int do_expand_vars, t_shell *shell)
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
 		if (!line)
 		{
-			printf(RED"here-doc: expected %s got EOF instead"RESET"\n", del);
+			printf(RED"here-doc: expected `%s` got EOF instead"RESET"\n", del);
 			break ;
 		}
 		if (ft_strcmp(line, del) == 0)
