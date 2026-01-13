@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 10:54:59 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 10:14:21 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,7 @@ int	ft_cd(char **args, t_shell *shell)
 	int		len_args;
 	char	*path;
 
-	len_args = count_args(args);
-	if (len_args > 2)
-	{
-		ft_putendl_fd("cd: too many arguments", 2);
-		shell->last_exit = 1;
-		return (1);
-	}
-	else if (!args[1])
+	if (!args[1])
 	{
 		path = getenv("HOME");
 		if (!path)
@@ -58,6 +51,14 @@ int	ft_cd(char **args, t_shell *shell)
 			shell->last_exit = 1;
 			return (1);
 		}
+		return (chdir(path));
+	}
+	len_args = count_args(args);
+	if (len_args > 2)
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		shell->last_exit = 1;
+		return (1);
 	}
 	return (cd_with_path(args, shell));
 }
