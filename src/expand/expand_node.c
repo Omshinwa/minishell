@@ -101,7 +101,6 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 			{
 				free_argv(expanded_argv);
 				node->argv = wildcards_argv;
-				free_argv(wildcards_argv);
 			}
 			else
 				node->argv = expanded_argv;
