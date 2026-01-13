@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:13:13 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 08:01:54 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	exec_child_process(t_node *node, t_shell *shell, char *path)
 	{
 		perror("execve");
 		free(path);
-		exit(1);
+		exit(127);
 	}
 }
 
@@ -56,6 +56,23 @@ static int	is_it_directory(char *path)
 	return (0);
 }
 
+static int	access_directory_problem(char *path)
+{
+	if (access(path, X_OK) != 0)
+	{
+		print_red("permissions denied");
+		free(path);
+		return (126);
+	}
+	if (is_it_directory(path))
+	{
+		print_2red("is a directory, not a cmd:", path);
+		free(path);
+		return (126);
+	}
+	return (1);
+}
+
 int	execute_simple_command(t_node *node, t_shell *shell)
 {
 	char		*path;
@@ -78,8 +95,8 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 		return (127);
 	}
 	if (access(path, X_OK) != 0)
-		return (print_red("permissions denied"), 126);
+		return (access_directory_problem(path));
 	if (is_it_directory(path))
-		return (print_2red("is a directory, not a cmd:", path), 126);
+		return (access_directory_problem(path));
 	return (exec_external_cmd(node, shell, path));
 }

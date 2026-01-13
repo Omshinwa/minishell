@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:51:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 07:13:27 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_argv(char **argv)
-{
-	int	i;
-
-	i = 0;
-	if (!argv)
-		return ;
-	while (argv[i])
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
-}
 
 char	**expand_argv(char **argv, t_shell *shell)
 {
@@ -54,6 +39,27 @@ char	**expand_argv(char **argv, t_shell *shell)
 	return (expanded);
 }
 
+static int	expand_redir_wildcard(t_redir *redir)
+{
+	char	**matches;
+
+	if (!has_wildcard(redir->filename))
+		return (0);
+	matches = expand_single_wildcard(redir->filename);
+	if (!matches || !matches[0])
+		return (0);
+	if (matches[1])
+	{
+		free_argv(matches);
+		print_red("minishell: ambiguous redirect");
+		return (-1);
+	}
+	free(redir->filename);
+	redir->filename = ft_strdup(matches[0]);
+	free_argv(matches);
+	return (0);
+}
+
 void	expand_redirections(t_redir *redir, t_shell *shell)
 {
 	char	*expanded;
@@ -68,6 +74,8 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 				free(redir->filename);
 				redir->filename = expanded;
 			}
+			if (expand_redir_wildcard(redir) == -1)
+				return ;
 		}
 		redir = redir->next;
 	}
