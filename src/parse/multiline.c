@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:51:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 12:30:06 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter
 	int		pid;
 	char	*expanded_del;
 
-	if (ft_is_in_set(delimiter, '"') || ft_is_in_set(delimiter, '\''))
-		expanded_del = remove_quotes(delimiter, ctx->shell);
-	else
-		expanded_del = ft_strdup(delimiter);
 	pid = fork();
 	if (pid == 0)
 	{
+		if (ft_is_in_set(delimiter, '"') || ft_is_in_set(delimiter, '\''))
+			expanded_del = remove_quotes(delimiter, ctx->shell);
+		else
+			expanded_del = ft_strdup(delimiter);
 		close(fd[0]);
 		set_signals_multilines();
 		read_heredoc_fd(fd[1], expanded_del,

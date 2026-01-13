@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:48:40 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 12:24:41 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 			{
 				free_argv(expanded_argv);
 				node->argv = wildcards_argv;
-				free_argv(wildcards_argv);
 			}
 			else
 				node->argv = expanded_argv;
