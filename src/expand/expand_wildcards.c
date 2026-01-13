@@ -64,7 +64,7 @@ char	**expand_wildcards_in_argv(char **argv)
 	len = count_total_args(argv);
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
-		return (free_argv(new_argv), NULL);
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (argv[i])
