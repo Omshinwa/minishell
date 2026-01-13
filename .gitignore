@@ -4,3 +4,4 @@ obj/*
 minishell
 readline.supp
 val
+minishell_tester

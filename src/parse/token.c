@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 05:48:07 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 05:49:57 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ t_token	*tokenize(char *str, t_shell *shell)
 	int		size;
 	t_token	*arr_token;
 	int		failure;
-	int		size;
 
 	i = 0;
 	size = 0;
