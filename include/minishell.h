@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 16:30:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 18:27:58 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ void	update_quote_state(char c, int *in_single, int *in_double);
 
 void	free_argv(char **argv);
 char	**expand_argv(char **argv, t_shell *shell);
-void	expand_redirections(t_redir *redir, t_shell *shell);
-void	expand_cmd_node(t_node *node, t_shell *shell);
+int		expand_cmd_node(t_node *node, t_shell *shell);
 
 void	expand_node(t_node *node, t_shell *shell);
 char	*remove_quotes(char *s);

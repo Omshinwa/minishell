@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:48:27 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 18:38:05 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,11 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 {
 	char		*path;
 	struct stat	path_stat;
+	int			expand_fail;
 
+	expand_fail = expand_cmd_node(node, shell);
+	if (expand_fail)
+		return (1);
 	if (is_builtin(node->argv[0]))
 	{
 		if (node->redir)

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 16:59:36 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 18:33:02 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,10 @@ static int	expand_redir_wildcard(t_redir *redir)
 	return (0);
 }
 
-void	expand_redirections(t_redir *redir, t_shell *shell)
+static int	expand_redirections(t_redir *redir)
 {
 	char	*expanded;
 
-	(void) shell;
 	while (redir)
 	{
 		if (redir->type != TK_REDIR_2IN)
@@ -95,21 +94,26 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 				redir->filename = expanded;
 			}
 			if (expand_redir_wildcard(redir) == -1)
-				return ;
+				return (-1);
 		}
 		redir = redir->next;
 	}
+	return (0);
 }
 
 // expand var -> expand wildcards -> remove quotes (single node) 
-void	expand_cmd_node(t_node *node, t_shell *shell)
+int	expand_cmd_node(t_node *node, t_shell *shell)
 {
 	expand_argv_variables(node->argv, shell);
 	eat_empty_args(node->argv);
 	node->argv = expand_wildcards_in_argv(node->argv);
 	expand_argv_quotes(node->argv);
 	if (node->redir)
-		expand_redirections(node->redir, shell);
+	{
+		if (expand_redirections(node->redir))
+			return (-1);
+	}
+	return (0);
 	
 }
 
