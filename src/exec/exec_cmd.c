@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:13:13 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 08:40:19 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 {
 	char		*path;
 
-	if (!node->argv || !node->argv[0])
-		return (0);
+	if (!node->argv || !node->argv[0] || !node->argv[0][0])
+		return (ft_putendl_fd("empty command", 2), 127);
 	if (is_builtin(node->argv[0]))
 	{
 		if (node->redir)

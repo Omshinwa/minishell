@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
+#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/12 09:46:32 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/13 08:18:07 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				exec/exec_tree.c					\
 				exec/exec_utils.c					\
 				expand/expand_utils.c				\
+				expand/expand_utils2.c				\
 				expand/expand_var.c					\
 				expand/expand_node.c				\
 				expand/expand_wildcards.c			\

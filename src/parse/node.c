@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/10 19:29:15 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 08:47:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ void	clean_nodes(t_node **node_addr)
 	*node_addr = NULL;
 }
 
-// // When you call it, give DEPTH the value 0
-// // This will print NODE and every children node
+// // // When you call it, give DEPTH the value 0
+// // // This will print NODE and every children node
 // void	print_nodes(t_node *node, int depth)
 // {
 // 	char	*color;

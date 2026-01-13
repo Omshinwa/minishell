@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:51:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 08:34:28 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,27 +105,13 @@ void	expand_cmd_node(t_node *node, t_shell *shell)
 // after expanding the vars, shift_all_argv if there's an empty arg
 void	expand_node(t_node *node, t_shell *shell)
 {
-	int	i;
-	int	size;
-
 	if (!node)
 		return ;
 	expand_node(node->left, shell);
 	expand_node(node->right, shell);
 	if (node->type == NODE_CMD)
 	{
+		shift_all_args(node->argv);
 		expand_cmd_node(node, shell);
-		if (node->argv[0] != NULL && node->argv[1] != NULL
-			&& node->argv[0][0] == '\0')
-		{
-			i = -1;
-			size = 0;
-			while (node->argv[++i] != NULL)
-				size++;
-			free(node->argv[0]);
-			i = -1;
-			while (++i < size)
-				node->argv[i] = node->argv[i + 1];
-		}
 	}
 }

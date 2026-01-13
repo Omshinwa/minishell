@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/12 21:51:37 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 08:17:37 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	expand_cmd_node(t_node *node, t_shell *shell);
 void	expand_node(t_node *node, t_shell *shell);
 char	*remove_quotes(char *s, t_shell *shell);
 char	*expand_variable(char *s, t_shell *shell, int ignore_quotes);
+void	shift_all_args(char **argv);
 
 int		has_wildcard(char *str);
 int		match_pattern(char *str, char *pattern);
