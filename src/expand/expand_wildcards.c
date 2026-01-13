@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 06:55:06 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 17:07:44 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 20:50:06 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ char	**expand_wildcards_in_argv(char **argv)
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
 		return (NULL);
-	i = 0;
+	i = -1;
 	j = 0;
-	while (argv[i])
+	while (argv[++i])
 	{
 		if (!process_arg(argv, new_argv, &j, i))
 		{
@@ -76,7 +76,6 @@ char	**expand_wildcards_in_argv(char **argv)
 			return (NULL);
 		}
 		free(argv[i]);
-		i++;
 	}
 	free(argv);
 	new_argv[j] = NULL;
