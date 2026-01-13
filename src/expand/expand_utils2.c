@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 11:18:29 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 15:41:41 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	shift_element(char **argv, int i, int end)
 // if all of them are empty, change argv[0] to 'true' (empty command)
 // if theres exist a NULL arg and we encountered a non NULL arg,
 // move the NULL arg to the end
-void	shift_all_args(char **argv)
+void	eat_empty_args(char **argv)
 {
 	int	i;
 	int	size;

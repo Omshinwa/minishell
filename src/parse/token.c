@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 13:02:11 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 15:51:21 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,21 @@ static int	populate_token(char *str, t_token *arr_token)
 	return (size);
 }
 
-void	expand_tokens(t_token *arr_token, int size, t_shell *shell)
-{
-	int		i;
-	char	*expanded;
+// void	expand_tokens(t_token *arr_token, int size, t_shell *shell)
+// {
+// 	int		i;
+// 	char	*expanded;
 
-	i = -1;
-	while (++i < size)
-	{
-		if (i > 0 && arr_token[i - 1].type == TK_REDIR_2IN)
-			continue ;
-		expanded = expand_variable(arr_token[i].str, shell, 0);
-		free(arr_token[i].str);
-		arr_token[i].str = expanded;
-	}
-}
+// 	i = -1;
+// 	while (++i < size)
+// 	{
+// 		if (i > 0 && arr_token[i - 1].type == TK_REDIR_2IN)
+// 			continue ;
+// 		expanded = expand_variable(arr_token[i].str, shell, 0);
+// 		free(arr_token[i].str);
+// 		arr_token[i].str = expanded;
+// 	}
+// }
 
 // Goes through the string input, Returns an array of tokens.
 // logic: j is the length of tokens, i for str
@@ -107,7 +107,7 @@ t_token	*tokenize(char *str, t_shell *shell)
 		return (clean_tokens(&arr_token), arr_token);
 	}
 	arr_token[size] = (t_token){NULL, TK_END};
-	expand_tokens(arr_token, size, shell);
+	// expand_tokens(arr_token, size, shell);
 	if (failure || size == 0)
 		clean_tokens(&arr_token);
 	return (arr_token);

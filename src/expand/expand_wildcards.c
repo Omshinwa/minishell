@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcards.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 06:55:06 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 12:31:43 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:54:50 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ static int	process_arg(char **argv, char **new_argv, int *j, int i)
 	return (1);
 }
 
+// FREES EVERY ELEMENT IN ARGV
 char	**expand_wildcards_in_argv(char **argv)
 {
 	int		i;
@@ -74,6 +75,7 @@ char	**expand_wildcards_in_argv(char **argv)
 			free_argv(new_argv);
 			return (NULL);
 		}
+		free(argv[i]);
 		i++;
 	}
 	new_argv[j] = NULL;

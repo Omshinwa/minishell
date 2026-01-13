@@ -3,40 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   expand_node.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 12:33:37 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 16:59:36 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	**expand_argv(char **argv, t_shell *shell)
+void	expand_argv_variables(char **argv, t_shell *shell)
 {
-	int		i;
-	int		count;
-	char	**expanded;
-
-	if (!argv)
-		return (NULL);
+	int	i;
+	char	*str;
+	
 	i = 0;
-	count = 0;
-	while (argv[count])
-		count++;
-	expanded = ft_calloc(count + 1, sizeof(char *));
-	if (!expanded)
-		return (NULL);
-	while (i < count)
+	if (!argv)
+		return ;
+	while (argv[i] != NULL)
 	{
-		expanded[i] = remove_quotes(argv[i], shell);
-		if (!expanded[i])
-			return (free_argv(expanded),
-				print_red("variable expansion failed"), NULL);
+		str = expand_variable(argv[i], shell, 0);
+		free(argv[i]);
+		argv[i] = str;
+		if (!argv[i])
+		{
+			free_argv(argv);
+			print_red("expansion variables failed");
+			return ;
+		}
 		i++;
 	}
-	expanded[i] = NULL;
-	return (expanded);
+}
+
+void	expand_argv_quotes(char **argv)
+{
+	int	i;
+	char	*str;
+	
+	i = 0;
+	if (!argv)
+		return ;
+	while (argv[i] != NULL)
+	{
+		str = remove_quotes(argv[i]);
+		free(argv[i]);
+		argv[i] = str;
+		if (!argv[i])
+		{
+			free_argv(argv);
+			print_red("expansion variables failed");
+			return ;
+		}
+		i++;
+	}
 }
 
 static int	expand_redir_wildcard(t_redir *redir)
@@ -64,11 +83,12 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 {
 	char	*expanded;
 
+	(void) shell;
 	while (redir)
 	{
 		if (redir->type != TK_REDIR_2IN)
 		{
-			expanded = remove_quotes(redir->filename, shell);
+			expanded = remove_quotes(redir->filename);
 			if (expanded)
 			{
 				free(redir->filename);
@@ -81,45 +101,28 @@ void	expand_redirections(t_redir *redir, t_shell *shell)
 	}
 }
 
+// expand var -> expand wildcards -> remove quotes (single node) 
 void	expand_cmd_node(t_node *node, t_shell *shell)
 {
-	int		i;
-	char	**expanded_argv;
-	char	**wildcards_argv;
-
-	if (node->argv)
-	{
-		expanded_argv = expand_argv(node->argv, shell);
-		if (expanded_argv)
-		{
-			i = 0;
-			wildcards_argv = expand_wildcards_in_argv(expanded_argv);
-			while (node->argv && node->argv[i])
-				free(node->argv[i++]);
-			free(node->argv);
-			if (wildcards_argv)
-			{
-				free_argv(expanded_argv);
-				node->argv = wildcards_argv;
-			}
-			else
-				node->argv = expanded_argv;
-		}
-	}
+	expand_argv_variables(node->argv, shell);
+	eat_empty_args(node->argv);
+	node->argv = expand_wildcards_in_argv(node->argv);
+	expand_argv_quotes(node->argv);
 	if (node->redir)
 		expand_redirections(node->redir, shell);
+	
 }
 
-// after expanding the vars, shift_all_argv if there's an empty arg
-void	expand_node(t_node *node, t_shell *shell)
-{
-	if (!node)
-		return ;
-	expand_node(node->left, shell);
-	expand_node(node->right, shell);
-	if (node->type == NODE_CMD)
-	{
-		shift_all_args(node->argv);
-		expand_cmd_node(node, shell);
-	}
-}
+// // after expanding the vars, shift_all_argv if there's an empty arg
+// void	expand_node(t_node *node, t_shell *shell)
+// {
+// 	if (!node)
+// 		return ;
+// 	expand_node(node->left, shell);
+// 	expand_node(node->right, shell);
+// 	if (node->type == NODE_CMD)
+// 	{
+// 		eat_empty_args(node->argv);
+// 		expand_cmd_node(node, shell);
+// 	}
+// }

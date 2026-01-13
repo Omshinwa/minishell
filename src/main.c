@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 09:53:34 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 15:45:05 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	shell->node = get_abstract_syntax_tree(str, shell);
 	if (shell->node)
 	{
-		expand_node(shell->node, shell);
 		exit_status = execute_tree(shell->node, shell);
 		shell->last_exit = exit_status;
 		clean_nodes(&shell->node);

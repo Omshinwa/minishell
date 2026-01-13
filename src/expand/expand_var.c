@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:54:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 16:45:35 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,13 @@ static void	handle_normal_char(char *s, int *i, char **result)
 	(*i)++;
 }
 
-char	*remove_quotes(char *s, t_shell *shell)
+char	*remove_quotes(char *s)
 {
 	int		i;
 	int		in_single;
 	int		in_double;
 	char	*result;
 
-	(void) shell;
 	i = 0;
 	in_single = 0;
 	in_double = 0;
@@ -79,6 +78,7 @@ static int	should_expand(char *s, int i, int ignore_quotes, int in_single)
 	return (0);
 }
 
+// ALSO FREEs S at the end
 char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 {
 	int		i;

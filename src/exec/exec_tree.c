@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:38:06 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 16:57:08 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ int	execute_tree(t_node *node, t_shell *shell)
 	if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, shell));
 	if (node->type == NODE_CMD)
+	{
+		expand_cmd_node(node, shell);
 		return (execute_simple_command(node, shell));
+	}
 	return (0);
 }
