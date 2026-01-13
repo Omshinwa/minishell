@@ -6,18 +6,22 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:13:24 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 13:02:53 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_3red(char *arg1, char *arg2, char *arg3)
+void	print_3red(char *arg1, int i, char *arg3)
 {
+	char	*arg2;
+
+	arg2 = ft_itoa(i);
 	ft_putstr_fd(RED "Err: ", 2);
 	ft_putstr_fd(arg1, 2);
 	ft_putstr_fd(" ", 2);
 	ft_putstr_fd(arg2, 2);
+	free(arg2);
 	ft_putstr_fd("  `", 2);
 	ft_putstr_fd(arg3, 2);
 	ft_putstr_fd("`", 2);

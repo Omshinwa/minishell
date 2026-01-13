@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 12:38:14 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 13:02:11 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,7 @@ static int	populate_token(char *str, t_token *arr_token)
 		arr_token[size] = (t_token){NULL, TK_END};
 		valid_token = set_token(arr_token, size, str, i);
 		if (valid_token == -1)
-			return (print_3red("invalid token at index", ft_itoa(i), &str[i]),
-				-1);
+			return (print_3red("invalid token at index", i, &str[i]), -1);
 		i = valid_token;
 		size++;
 	}

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/12 21:13:23 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 13:03:23 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,6 @@ t_node	*parse_simple_command(t_ctx_parser *ctx);
 void	print_red(char *str);
 void	*safe_malloc(size_t __size);
 void	print_2red(char *arg1, char *arg2);
-void	print_3red(char *arg1, char *arg2, char *arg3);
+void	print_3red(char *arg1, int i, char *arg3);
 
 #endif
