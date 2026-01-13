@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 08:45:27 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 11:18:29 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,17 @@ void	shift_all_args(char **argv)
 	i = size;
 	while (--i >= 0)
 	{
-		if (argv[i][0] == '\0' && exist_non_null)
+		if (argv[i][0] == '\0')
+		{
+			free(argv[i]);
 			shift_element(argv, i, size);
-		else if (argv[i][0] != '\0')
+		}
+		else
 			exist_non_null = 1;
 	}
 	if (exist_non_null == 0)
 	{
-		free(argv[0]);
 		argv[0] = ft_strdup("true");
+		argv[1] = NULL;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 13:43:56 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 06:50:04 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:37:50 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,26 @@
 
 static void	exec_left_pipe(t_node *node, t_shell *shell, int pipefd[2])
 {
+	int	exit_code;
+
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
-	exit(execute_tree(node->left, shell));
+	exit_code = execute_tree(node->left, shell);
+	clean_shell(shell);
+	exit(exit_code);
 }
 
 static void	exec_right_pipe(t_node *node, t_shell *shell, int pipefd[2])
 {
+	int	exit_code;
+
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
-	exit(execute_tree(node->right, shell));
+	exit_code = execute_tree(node->right, shell);
+	clean_shell(shell);
+	exit(exit_code);
 }
 
 static int	wait_for_children(pid_t pid_left, pid_t pid_right)

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:39:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:22:22 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 11:38:06 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	execute_subshell(t_node *node, t_shell *shell)
 	if (pid == 0)
 	{
 		code = execute_tree(node->left, shell);
+		clean_shell(shell);
 		exit(code);
 	}
 	ignore_signals();
