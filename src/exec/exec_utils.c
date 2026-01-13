@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 11:32:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/12 21:09:53 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 09:19:07 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ char	*get_path(char *cmd, t_shell *shell)
 	char	*find_path;
 	char	**split_path;
 	char	*path;
+	t_env	*path_node;
 
 	if (ft_is_in_set(cmd, '/') && file_exists(cmd))
 		return (ft_strdup(cmd));
-	find_path = find_env_node(shell->env, "PATH")->value;
-	if (!find_path)
+	path_node = find_env_node(shell->env, "PATH");
+	if (!path_node || !path_node->value)
 		return (NULL);
+	find_path = path_node->value;
 	split_path = ft_split(find_path, ':');
 	if (!split_path)
 		return (NULL);

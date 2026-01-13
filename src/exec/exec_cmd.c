@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 08:54:18 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 09:23:24 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ static int	is_it_directory(char *path)
 {
 	struct stat	st;
 
-	stat(path, &st);
+	if (stat(path, &st) != 0)
+		return (0);
 	if (S_ISDIR(st.st_mode))
 		return (1);
 	return (0);
@@ -85,8 +86,6 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 			return (execute_builtin_redir(node->argv, node->redir, shell));
 		return (execute_builtin(node->argv, shell));
 	}
-	if (node->argv[0][0] == '\0')
-		return (0);
 	path = get_path(node->argv[0], shell);
 	if (!path)
 	{

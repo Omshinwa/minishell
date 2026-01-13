@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/13 08:18:07 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/13 09:43:15 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,7 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				parse/token_internal.c				\
 				parse/node.c						\
 				parse/parse_cmd.c					\
+				signal_set.c						\
 				signal.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
