@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 07:52:47 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:11:26 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 07:13:20 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,19 @@ void	clean_env(t_env *env)
 		free(env);
 		env = tmp;
 	}
+}
+
+void	free_argv(char **argv)
+{
+	int	i;
+
+	i = 0;
+	if (!argv)
+		return ;
+	while (argv[i])
+	{
+		free(argv[i]);
+		i++;
+	}
+	free(argv);
 }
