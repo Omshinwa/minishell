@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 06:55:06 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:33:28 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:47:31 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**expand_wildcards_in_argv(char **argv)
 	len = count_total_args(argv);
 	new_argv = malloc(sizeof(char *) * (len + 1));
 	if (!new_argv)
-		return (free_argv(new_argv), NULL);
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (argv[i])
