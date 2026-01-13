@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 08:17:37 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 10:49:13 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <string.h>
 # include <fcntl.h>
 # include <dirent.h>
+# include <limits.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
 # include <readline/readline.h>

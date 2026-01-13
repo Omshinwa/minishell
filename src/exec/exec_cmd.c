@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:06:26 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:39:03 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 11:48:27 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,29 +50,24 @@ static int	exec_external_cmd(t_node *node, t_shell *shell, char *path)
 	return (get_exit_status(status));
 }
 
-static int	is_it_directory(char *path)
+static int	print_error(char *cmd, int n)
 {
-	struct stat	st;
-
-	if (stat(path, &st) != 0)
-		return (0);
-	if (S_ISDIR(st.st_mode))
-		return (1);
-	return (0);
-}
-
-static int	access_directory_problem(char *path)
-{
-	if (access(path, X_OK) != 0)
+	if (n == 1)
 	{
-		print_red("permissions denied");
-		free(path);
+		ft_putstr_fd(cmd, 2);
+		ft_putendl_fd(": command not found", 2);
+		return (127);
+	}
+	else if (n == 2)
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putendl_fd(": Is a directory", 2);
 		return (126);
 	}
-	if (is_it_directory(path))
+	else if (n == 3)
 	{
-		print_2red("is a directory, not a cmd:", path);
-		free(path);
+		ft_putstr_fd(cmd, 2);
+		ft_putendl_fd(": Permission denied", 2);
 		return (126);
 	}
 	return (1);
@@ -81,9 +76,8 @@ static int	access_directory_problem(char *path)
 int	execute_simple_command(t_node *node, t_shell *shell)
 {
 	char		*path;
+	struct stat	path_stat;
 
-	if (!node->argv || !node->argv[0] || !node->argv[0][0])
-		return (ft_putendl_fd("empty command", 2), 127);
 	if (is_builtin(node->argv[0]))
 	{
 		if (node->redir)
@@ -91,15 +85,13 @@ int	execute_simple_command(t_node *node, t_shell *shell)
 		return (execute_builtin(node->argv, shell));
 	}
 	path = get_path(node->argv[0], shell);
-	if (!path)
-	{
-		ft_putstr_fd(node->argv[0], 2);
-		ft_putendl_fd(": file / cmd / directory not found", 2);
-		return (127);
-	}
+	if (!path || !node->argv[0][0])
+		return (print_error(node->argv[0], 1));
+	if (stat(path, &path_stat) == -1)
+		return (print_error(node->argv[0], 1));
+	if (S_ISDIR(path_stat.st_mode))
+		return (print_error(node->argv[0], 2));
 	if (access(path, X_OK) != 0)
-		return (access_directory_problem(path));
-	if (is_it_directory(path))
-		return (access_directory_problem(path));
+		return (print_error(node->argv[0], 3));
 	return (exec_external_cmd(node, shell, path));
 }

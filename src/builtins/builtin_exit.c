@@ -6,12 +6,37 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:39:29 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 11:48:16 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	ft_atol_safe(char *s, long *res)
+{
+	long	v;
+	int		sign;
+
+	v = 0;
+	sign = 1;
+	if (*s == '+' || *s == '-')
+		if (*s++ == '-')
+			sign = -1;
+	if (!*s)
+		return (0);
+	while (*s)
+	{
+		if (!ft_isdigit(*s))
+			return (0);
+		if (v > (LONG_MAX - (*s - '0')) / 10)
+			return (0);
+		v = v * 10 + (*s++ - '0');
+	}
+	*res = v * sign;
+	return (1);
+}
+
+/*
 static int	is_valid_number(char *args)
 {
 	int	i;
@@ -28,7 +53,7 @@ static int	is_valid_number(char *args)
 		i++;
 	}
 	return (1);
-}
+}*/
 
 void	invalid_args(char *args, t_shell *shell)
 {
@@ -41,12 +66,13 @@ void	invalid_args(char *args, t_shell *shell)
 
 int	ft_exit(char **args, t_shell *shell)
 {
-	int	exit_code;
+	long	exit_code;
 
+	exit_code = shell->last_exit;
 	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (args[1])
 	{
-		if (!is_valid_number(args[1]))
+		if (!ft_atol_safe(args[1], &exit_code))
 			invalid_args(args[1], shell);
 		if (args[2])
 		{
@@ -56,7 +82,7 @@ int	ft_exit(char **args, t_shell *shell)
 		}
 		exit_code = ft_atoi(args[1]);
 		clean_shell(shell);
-		exit(exit_code);
+		exit((unsigned char)exit_code);
 	}
 	exit_code = shell->last_exit;
 	clean_shell(shell);
