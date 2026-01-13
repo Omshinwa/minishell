@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 08:46:44 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/13 09:53:34 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,15 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	}
 }
 
+static void	update_sigint_receiver(t_shell *shell)
+{
+	if (is_sigint_received())
+	{
+		shell->last_exit = 130;
+		clear_sigint_received();
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -76,6 +85,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		set_signals_interactive_mode();
 		line = readline("👻👻> ");
+		update_sigint_receiver(shell);
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
@@ -84,7 +94,5 @@ int	main(int argc, char **argv, char **envp)
 		parse_and_run_command(line, shell);
 		free(line);
 	}
-	exit_code = shell->last_exit;
-	clean_shell(shell);
-	return (exit_code);
+	return (exit_code = shell->last_exit, clean_shell(shell), exit_code);
 }
