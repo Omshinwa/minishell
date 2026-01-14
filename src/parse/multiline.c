@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 11:47:03 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 13:30:58 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 			expanded_line = expand_variable(line, shell, 1);
 		else
 			expanded_line = ft_strdup(line);
-		free(line);
 		if (!expanded_line)
 			break ;
 		write(fd, expanded_line, ft_strlen(expanded_line));
 		write(fd, "\n", 1);
+		free(line);
 		free(expanded_line);
 	}
+	free(line);
 }
 
 // Fork a heredoc, close the write fd

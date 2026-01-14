@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 10:33:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 16:46:00 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,11 @@ static int	expand_redirections(t_redir *redir)
 int	expand_cmd_node(t_node *node, t_shell *shell)
 {
 	expand_argv_variables(node->argv, shell);
-	shift_empty_args(node->argv);
+	handle_empty_args(&node->argv);
 	node->argv = expand_wildcards_in_argv(node->argv);
 	expand_argv_quotes(node->argv);
+	if (!node->argv)
+		return (-1);
 	if (node->redir)
 	{
 		if (expand_redirections(node->redir))
