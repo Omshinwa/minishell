@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 15:41:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 10:35:10 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,17 @@ static void	shift_element(char **argv, int i, int end)
 
 // move every empty arg to the end of the array
 // if all of them are empty, change argv[0] to 'true' (empty command)
-// if theres exist a NULL arg and we encountered a non NULL arg,
-// move the NULL arg to the end
-void	eat_empty_args(char **argv)
+// they even get moved past the NULL element
+void	shift_empty_args(char **argv)
 {
 	int	i;
 	int	size;
-	int	exist_non_null;
+	int	all_empty_elements;
 
 	size = 0;
 	while (argv[size] != NULL)
 		size++;
-	exist_non_null = 0;
+	all_empty_elements = 1;
 	i = size;
 	while (--i >= 0)
 	{
@@ -51,9 +50,9 @@ void	eat_empty_args(char **argv)
 			shift_element(argv, i, size);
 		}
 		else
-			exist_non_null = 1;
+			all_empty_elements = 0;
 	}
-	if (exist_non_null == 0)
+	if (all_empty_elements)
 	{
 		argv[0] = ft_strdup("true");
 		argv[1] = NULL;

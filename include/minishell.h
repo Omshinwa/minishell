@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 08:50:58 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 10:33:51 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int		expand_cmd_node(t_node *node, t_shell *shell);
 void	expand_node(t_node *node, t_shell *shell);
 char	*remove_quotes(char *s);
 char	*expand_variable(char *s, t_shell *shell, int ignore_quotes);
-void	eat_empty_args(char **argv);
+void	shift_empty_args(char **argv);
 
 int		has_wildcard(char *str);
 int		match_pattern(char *str, char *pattern);
