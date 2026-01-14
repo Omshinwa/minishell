@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/14 16:45:55 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/14 17:28:53 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,9 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				parse/node.c						\
 				parse/parse_cmd.c					\
 				signal_set.c						\
-				signal.c
+				signal.c							\
+				parse/get_next_line.c				\
+				parse/get_next_line_utils.c			\
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/

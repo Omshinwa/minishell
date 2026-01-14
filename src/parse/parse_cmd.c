@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 11:30:42 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 20:19:14 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 		ignore_signals();
 		wait(&status);
 		close(fd[1]);
-		if (WIFSIGNALED(status))
+		if (WIFSIGNALED(status) || (WIFEXITED(status) && WEXITSTATUS(status) == 130))
 		{
-			if (WTERMSIG(status) == SIGINT)
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 				mark_sigint_received();
 			close(fd[0]);
 			return (write(STDOUT_FILENO, "\n", 1), rl_on_new_line(), -1);

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 11:50:27 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 17:23:20 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # define BG_MAGENTA "\033[45m"
 # define BG_CYAN    "\033[46m"
 # define BG_WHITE   "\033[47m"
+
+# include "get_next_line.h"
 
 # include "libft.h"
 # include <stdlib.h>

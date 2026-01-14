@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 13:30:58 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 20:19:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,15 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 
 	while (1)
 	{
-		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
+		if (isatty(STDIN_FILENO))
+			ft_putstr_fd("\001" BG_MAGENTA "\002<< \001" RESET "\002", STDOUT_FILENO);
+		line = get_next_line_strip_nl(STDIN_FILENO);
+		if (is_sigint_received())
+			break ;
 		if (!line)
 		{
-			print_2red("here-doc: got EOF when expected", del);
+			if (!is_sigint_received())
+				print_2red("here-doc: got EOF when expected", del);
 			break ;
 		}
 		if (ft_strcmp(line, del) == 0)
@@ -48,27 +53,28 @@ void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim
 {
 	int		pid;
 	char	*exp_del;
+	int		exit_code;
 
 	pid = fork();
 	if (pid == 0)
 	{
+		exit_code = 0;
 		if (ft_is_in_set(delim, '"') || ft_is_in_set(delim, '\''))
 			exp_del = remove_quotes(delim);
 		else
 			exp_del = ft_strdup(delim);
 		set_signals_multilines();
+		close(fd[0]);
 		write_heredoc(fd[1], exp_del, !ft_strcmp(delim, exp_del), ctx->shell);
+		if (is_sigint_received())
+			exit_code = 130;
 		free(exp_del);
+		close(fd[1]);
+		clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
+		exit(exit_code);
 	}
 	else if (pid == -1)
 		print_red("pid fail");
-	if (pid <= 0)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
-		exit(pid);
-	}
 }
 
 // prints a pretty prompt when && || etc

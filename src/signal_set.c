@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_set.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 08:53:06 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 20:33:52 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ void	redisplay_prompt(int signum)
 	rl_redisplay();
 }
 
+void	mark_sigint_and_write(int signum)
+{
+	(void)signum;
+	mark_sigint_received();
+}
+
 // useful
 void	set_signals_interactive_mode(void)
 {
@@ -34,7 +40,12 @@ void	set_signals_interactive_mode(void)
 // useful
 void	set_signals_multilines(void)
 {
-	signal(SIGINT, SIG_DFL);
+	struct sigaction	sa;
+
+	sa.sa_handler = mark_sigint_and_write;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
 	signal(SIGQUIT, SIG_IGN);
 }
 

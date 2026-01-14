@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 17:14:24 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 19:20:42 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,33 +59,19 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	}
 }
 
-static void	update_sigint_receiver(t_shell *shell)
-{
-	if (is_sigint_received())
-	{
-		shell->last_exit = 130;
-		clear_sigint_received();
-	}
-}
-
-// if (isatty(fileno(stdin)))
-// 	shell->prompt = readline(shell->terminal_prompt);
-int	main(int argc, char **argv, char **envp)
+static void	minishell_tty(t_shell *shell)
 {
 	char	*line;
-	t_shell	*shell;
-	int		exit_code;
 
-	(void)argc;
-	(void)argv;
-	shell = init_shell(envp);
-	if (!shell)
-		return (1);
 	while (1)
 	{
 		set_signals_interactive_mode();
 		line = readline("\001"BOLD BG_WHITE"\002>>\001"RESET"\002 ");
-		update_sigint_receiver(shell);
+		if (is_sigint_received())
+		{
+			shell->last_exit = 130;
+			clear_sigint_received();
+		}
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
@@ -94,5 +80,37 @@ int	main(int argc, char **argv, char **envp)
 		parse_and_run_command(line, shell);
 		free(line);
 	}
+	return ;
+}
+
+static void	minishell_inline(t_shell *shell)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = get_next_line_strip_nl(STDIN_FILENO);
+		if (!line)
+			break ;
+		parse_and_run_command(line, shell);
+		free(line);
+	}
+	return ;
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	*shell;
+	int		exit_code;
+
+	(void)argc;
+	(void)argv;
+	shell = init_shell(envp);
+	if (!shell)
+		return (1);
+	if (isatty(STDIN_FILENO))
+		minishell_tty(shell);
+	else
+		minishell_inline(shell);
 	return (exit_code = shell->last_exit, clean_shell(shell), exit_code);
 }
