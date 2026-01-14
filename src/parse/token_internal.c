@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   token_internal.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/12 21:15:00 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 08:52:40 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parse.h"
 #include "minishell.h"
 
 // (|, <, >, &, (, ), espace).

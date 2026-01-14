@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/13 11:48:16 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 06:44:31 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,6 @@ static int	ft_atol_safe(char *s, long *res)
 	*res = v * sign;
 	return (1);
 }
-
-/*
-static int	is_valid_number(char *args)
-{
-	int	i;
-
-	i = 0;
-	if (args[i] == '+' || args[i] == '-')
-		i++;
-	if (!args[i])
-		return (0);
-	while (args[i])
-	{
-		if (!ft_isdigit(args[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}*/
 
 void	invalid_args(char *args, t_shell *shell)
 {
