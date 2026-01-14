@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/13 13:03:23 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 11:50:27 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,20 +101,18 @@ typedef struct s_ctx_parser
 
 // multilines.c
 int		command_continuation(t_ctx_parser *ctx);
-int		fork_heredoc(t_node *node, t_ctx_parser *ctx,
-			t_redir *redir, int fd[2]);
-int		fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter,
+void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim,
 			int fd[2]);
 // token.c
-void	print_tokens(t_token *arr_token);
-void	clean_tokens(t_token **arr_token);
-void	print_nodes(t_node *node, int depth);
 t_token	*tokenize(char *str, t_shell *shell);
 int		set_token(t_token *arr_token, int arr_i, char *str, int start);
+void	print_tokens(t_token *arr_token);
+void	clean_tokens(t_token **arr_token);
 
 // node.c
 t_node	*new_node(t_node_type type, t_node *left, t_node *right);
 void	clean_nodes(t_node **node);
+void	print_nodes(t_node *node, int depth);
 
 t_node	*get_abstract_syntax_tree(char *str, t_shell *shell);
 

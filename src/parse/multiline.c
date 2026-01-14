@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   multiline.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 08:52:13 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 11:47:03 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // This read what's in the standard input and write to FD
-void	read_heredoc_fd(int fd, char *del, int do_expand_vars, t_shell *shell)
+void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 {
 	char	*line;
 	char	*expanded_line;
@@ -42,33 +42,32 @@ void	read_heredoc_fd(int fd, char *del, int do_expand_vars, t_shell *shell)
 }
 
 // Fork a heredoc, close the write fd
-int	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delimiter
+void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim
 	, int fd[2])
 {
 	int		pid;
-	char	*expanded_del;
+	char	*exp_del;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		if (ft_is_in_set(delimiter, '"') || ft_is_in_set(delimiter, '\''))
-			expanded_del = remove_quotes(delimiter);
+		if (ft_is_in_set(delim, '"') || ft_is_in_set(delim, '\''))
+			exp_del = remove_quotes(delim);
 		else
-			expanded_del = ft_strdup(delimiter);
-		close(fd[0]);
+			exp_del = ft_strdup(delim);
 		set_signals_multilines();
-		read_heredoc_fd(fd[1], expanded_del,
-			!ft_strcmp(delimiter, expanded_del), ctx->shell);
-		free(expanded_del);
-		close(fd[1]);
-		clean_tokens(&ctx->arr_token);
-		clean_shell(ctx->shell);
-		clean_nodes(&node);
-		exit(0);
+		write_heredoc(fd[1], exp_del, !ft_strcmp(delim, exp_del), ctx->shell);
+		free(exp_del);
 	}
 	else if (pid == -1)
-		return (print_red("pid"), -1);
-	return (0);
+		print_red("pid fail");
+	if (pid <= 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
+		exit(pid);
+	}
 }
 
 // prints a pretty prompt when && || etc

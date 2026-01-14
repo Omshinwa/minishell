@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 10:33:51 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 11:23:20 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,7 @@ int		get_exit_status(int status);
 void	clean_shell(t_shell *shell);
 void	clean_env(t_env *env);
 void	clean_nodes(t_node **node_addr);
+void	clean_stuff(t_token **arr_token, t_node **node, t_shell *shell,
+			int flag);
 
 #endif
