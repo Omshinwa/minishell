@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 08:42:52 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 16:44:25 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 17:14:44 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ static void	shift_empty_args(char **argv)
 	}
 }
 
-//TODO EMOJI chars
 // first move the empty args to the end.
 // If the first element is still NUll, that means
 // all of them are Null, then we do a trick where we switch the

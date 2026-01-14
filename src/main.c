@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 08:52:59 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 17:14:24 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ static void	update_sigint_receiver(t_shell *shell)
 	}
 }
 
+// if (isatty(fileno(stdin)))
+// 	shell->prompt = readline(shell->terminal_prompt);
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -82,7 +84,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_signals_interactive_mode();
-		line = readline("👻👻> ");
+		line = readline("\001"BOLD BG_WHITE"\002>>\001"RESET"\002 ");
 		update_sigint_receiver(shell);
 		if (!line)
 		{
