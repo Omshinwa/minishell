@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 08:52:47 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 18:40:27 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	populate_token(char *str, t_token *arr_token)
 	size = 0;
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '\n')
+		if (str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
 		{
 			i++;
 			continue ;
@@ -111,33 +111,33 @@ t_token	*tokenize(char *str, t_shell *shell)
 	return (arr_token);
 }
 
-// void	print_tokens(t_token *arr_token)
-// {
-// 	int		i;
-// 	t_token	token;
+void	print_tokens(t_token *arr_token)
+{
+	int		i;
+	t_token	token;
 
-// 	i = -1;
-// 	if (!arr_token)
-// 		return ;
-// 	while (arr_token[++i].type != TK_END)
-// 	{
-// 		token = arr_token[i];
-// 		printf(BOLD);
-// 		if (token.type == TK_WORD)
-// 			printf(BG_WHITE BLACK "%s" RESET, token.str);
-// 		else if (token.type == TK_PIPE)
-// 			printf(BG_RED "%s" RESET, token.str);
-// 		else if (token.type == TK_REDIR_IN || token.type == TK_REDIR_OUT)
-// 			printf(BG_MAGENTA "%s" RESET, token.str);
-// 		else if (token.type == TK_REDIR_2IN || token.type == TK_REDIR_2OUT)
-// 			printf(BG_MAGENTA "%s" RESET, token.str);
-// 		else if (token.type == TK_OP_AND)
-// 			printf(BG_GREEN "%s" RESET, token.str);
-// 		else if (token.type == TK_OP_OR)
-// 			printf(BG_YELLOW "%s" RESET, token.str);
-// 		else if (token.type == TK_OPEN_PARENT || token.type == TK_CLOSE_PARENT)
-// 			printf(BG_BLUE "%s" RESET, token.str);
-// 		printf(" ");
-// 	}
-// 	printf("\n");
-// }
+	i = -1;
+	if (!arr_token)
+		return ;
+	while (arr_token[++i].type != TK_END)
+	{
+		token = arr_token[i];
+		printf(BOLD);
+		if (token.type == TK_WORD)
+			printf(BG_WHITE BLACK "%s" RESET, token.str);
+		else if (token.type == TK_PIPE)
+			printf(BG_RED "%s" RESET, token.str);
+		else if (token.type == TK_REDIR_IN || token.type == TK_REDIR_OUT)
+			printf(BG_MAGENTA "%s" RESET, token.str);
+		else if (token.type == TK_REDIR_2IN || token.type == TK_REDIR_2OUT)
+			printf(BG_MAGENTA "%s" RESET, token.str);
+		else if (token.type == TK_OP_AND)
+			printf(BG_GREEN "%s" RESET, token.str);
+		else if (token.type == TK_OP_OR)
+			printf(BG_YELLOW "%s" RESET, token.str);
+		else if (token.type == TK_OPEN_PARENT || token.type == TK_CLOSE_PARENT)
+			printf(BG_BLUE "%s" RESET, token.str);
+		printf(" ");
+	}
+	printf("\n");
+}
