@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
+#    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/14 06:30:23 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/14 10:14:59 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -112,7 +112,7 @@ clean:
 	@echo
 
 fclean: clean
-	@$(RM) $(NAME)
+	@$(RM) $(NAME) $(NAME)_bonus
 	@$(MAKE) --silent -C $(LIBFT_DIR) fclean
 
 	@echo "$(GREEN)✔ Executable successfully deleted$(RESET)"
@@ -120,4 +120,11 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus: $(NAME)_bonus
+
+$(NAME)_bonus: $(OBJECTS) $(LIBFT_A)
+	@$(CC) $(CFLAGS) $(OBJECTS) $(LIBFT_A) $(LINK_FLAG) -o $(NAME)_bonus
+	@echo "$(GREEN)✔ Successfully compiled$(RESET)"
+	@echo
+
+.PHONY: all clean fclean re bonus
