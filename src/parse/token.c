@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 08:52:47 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/15 16:25:12 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	populate_token(char *str, t_token *arr_token)
 	size = 0;
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '\n')
+		if (str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
 		{
 			i++;
 			continue ;
