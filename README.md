@@ -1,4 +1,3 @@
-
 echo $USER >> out && cat out | grep		1
 echo $USER >> out && cat out | grep $USER	wiwu\nwiwu\nwiwu	0
 

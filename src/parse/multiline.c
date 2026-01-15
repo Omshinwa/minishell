@@ -6,9 +6,12 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 21:08:13 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/15 11:41:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// PROBLEME: tu peux faire des CTRL D a la suite avec get next line
+
 
 #include "minishell.h"
 
