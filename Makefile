@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/14 17:28:53 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/15 16:03:19 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				builtins/builtin_export.c			\
 				builtins/builtin_pwd.c				\
 				builtins/builtin_unset.c			\
-				builtins/builtins.c					\
 				env/env_init.c						\
 				env/env_set.c						\
 				env/env_utils.c						\

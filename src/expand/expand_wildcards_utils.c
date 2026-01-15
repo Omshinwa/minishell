@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_wildcards_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 06:39:06 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 13:30:16 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/15 07:16:44 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	has_wildcard(char *str)
 
 int	match_pattern(char *str, char *pattern)
 {
-	if (*pattern == '\0')
-		return (*str == '\0');
+	if (!*pattern)
+		return (!*str);
 	if (*pattern == '*')
 	{
 		if (match_pattern(str, pattern + 1))
