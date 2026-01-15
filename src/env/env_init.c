@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 08:07:43 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 08:52:20 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/15 07:10:10 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,18 @@ t_env	*new_env_node(char *key, char *value)
 	if (!node)
 		return (NULL);
 	node->key = ft_strdup(key);
+	if (!node->key)
+	{
+		free(node);
+		return (NULL);
+	}
 	node->value = ft_strdup(value);
+	if (!node->value)
+	{
+		free(node->key);
+		free(node);
+		return (NULL);
+	}
 	node->next = NULL;
 	return (node);
 }

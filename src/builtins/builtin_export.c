@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:09 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/09 10:07:36 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/15 07:40:38 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int	ft_export(char **args, t_shell *shell)
 		while (current)
 		{
 			if (ft_strcmp(current->value, "") != 0)
-				printf("declare -x %s=%s\n", current->key, current->value);
+				printf("declare -x %s=\"%s\"\n", current->key, current->value);
 			else
 				printf("declare -x %s\n", current->key);
 			current = current->next;
