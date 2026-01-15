@@ -58,6 +58,32 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 	if (redir->type == TK_REDIR_2IN)
 	{
 		pipe(fd);
+		if (!isatty(STDIN_FILENO))
+		{
+			char	*exp_del;
+			int		do_expand_vars;
+
+			if (ft_is_in_set(redir->filename, '"')
+				|| ft_is_in_set(redir->filename, '\''))
+				exp_del = remove_quotes(redir->filename);
+			else
+				exp_del = ft_strdup(redir->filename);
+			if (!exp_del)
+				return (close(fd[0]), close(fd[1]), -1);
+			do_expand_vars = !ft_strcmp(redir->filename, exp_del);
+			set_signals_multilines();
+			write_heredoc(fd[1], exp_del, do_expand_vars, ctx->shell);
+			reset_signals();
+			free(exp_del);
+			close(fd[1]);
+			if (is_sigint_received())
+			{
+				close(fd[0]);
+				return (write(STDOUT_FILENO, "\n", 1), rl_on_new_line(), -1);
+			}
+			redir->fd = fd[0];
+			return (0);
+		}
 		fork_heredoc_child(node, ctx, redir->filename, fd);
 		ignore_signals();
 		wait(&status);

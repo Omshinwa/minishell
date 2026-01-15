@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 18:47:41 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 21:08:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,15 @@ t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 	ctx.shell = shell;
 	node = parse_expression(&ctx);
 	if (!node)
-		shell->last_exit = 2;
+	{
+		if (is_sigint_received())
+		{
+			shell->last_exit = 130;
+			clear_sigint_received();
+		}
+		else
+			shell->last_exit = 2;
+	}
 	if (node && ctx.arr_token[ctx.i].type != TK_END)
 	{
 		print_2red("unexpected token", ctx.arr_token[ctx.i].str);

@@ -6,14 +6,13 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 20:32:59 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 20:44:48 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_SIGNAL_H
 # define MINISHELL_SIGNAL_H
 
-# define _POSIX_C_SOURCE 200809L
 # include <signal.h>
 # include <unistd.h>
 # include <readline/readline.h>

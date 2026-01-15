@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 20:19:13 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 21:08:13 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static int	not_just_empty_space(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ')
+		if (!ft_isspace((unsigned char)str[i]))
 			return (1);
 		i++;
 	}
@@ -136,7 +136,19 @@ int	command_continuation(t_ctx_parser *ctx)
 		return (-1);
 	while (1)
 	{
-		line = readline(prompt);
+		if (isatty(STDIN_FILENO))
+		{
+			set_signals_interactive_mode();
+			line = readline(prompt);
+		}
+		else
+		{
+			set_signals_multilines();
+			line = get_next_line_strip_nl(STDIN_FILENO);
+			reset_signals();
+		}
+		if (is_sigint_received())
+			return (free(prompt), free(line), -1);
 		if (!line)
 			return (free(prompt), print_red("syntax: unexpected EOF"), -1);
 		if (not_just_empty_space(line))

@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#             */
-/*   Updated: 2026/01/14 17:23:20 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 20:55:46 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_ctx_parser
 
 // multilines.c
 int		command_continuation(t_ctx_parser *ctx);
+void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell);
 void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim,
 			int fd[2]);
 // token.c

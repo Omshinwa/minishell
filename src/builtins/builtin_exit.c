@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 06:44:31 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/14 21:07:50 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_exit(char **args, t_shell *shell)
 	long	exit_code;
 
 	exit_code = shell->last_exit;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	// ft_putendl_fd("exit", STDOUT_FILENO);
 	if (args[1])
 	{
 		if (!ft_atol_safe(args[1], &exit_code))
