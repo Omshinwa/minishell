@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:17:13 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 21:07:50 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/16 10:35:10 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ int	ft_exit(char **args, t_shell *shell)
 		if (args[2])
 		{
 			ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
-			clean_shell(shell);
-			exit(1);
+			shell->last_exit = 1;
+			return (1);
 		}
 		exit_code = ft_atoi(args[1]);
 		clean_shell(shell);

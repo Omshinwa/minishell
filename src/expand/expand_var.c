@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 07:40:33 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/14 06:46:59 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/15 11:14:08 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 			if (!handle_dollar(s, &i, &result, shell))
 				return (free(result), NULL);
 		}
-		else
+		else if (!(in_single || in_double) && (s[i] == '$'
+				&& (s[i + 1] == '"' || s[i + 1] == '\'')))
+			i++;
+		if (s[i])
 			handle_normal_char(s, &i, &result);
 	}
 	return (result);

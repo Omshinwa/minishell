@@ -6,7 +6,7 @@
 #    By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/15 16:17:40 by wiwu             ###   ########.fr        #
+#    Updated: 2026/01/16 10:33:42 by wiwu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -128,8 +128,4 @@ $(NAME)_bonus: $(OBJECTS) $(LIBFT_A)
 	@echo "$(GREEN)✔ Successfully compiled$(RESET)"
 	@echo
 
-val: all 
-	clear
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes --trace-children=yes ./minishell
-
-.PHONY: all clean fclean re bonus val
+.PHONY: all clean fclean re bonus
