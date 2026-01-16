@@ -6,7 +6,7 @@
 /*   By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 10:33:30 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/15 06:13:16 by dasamuel         ###   ########.fr       */
+/*   Updated: 2026/01/15 11:20:03 by dasamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int	execute_builtin(char **args, t_shell *shell)
 		return (ft_exit(args, shell));
 	return (0);
 }
-
 
 int	execute_builtin_redir(char **argv, t_redir *redir, t_shell *shell)
 {

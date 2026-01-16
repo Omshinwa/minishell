@@ -6,7 +6,7 @@
 /*   By: wiwu <wiwu@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 13:25:17 by dasamuel          #+#    #+#             */
-/*   Updated: 2026/01/15 16:25:54 by wiwu             ###   ########.fr       */
+/*   Updated: 2026/01/14 13:30:58 by wiwu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static int	not_just_empty_space(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (!ft_isspace((unsigned char)str[i]))
+		if (str[i] != ' ')
 			return (1);
 		i++;
 	}
