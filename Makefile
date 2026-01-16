@@ -6,7 +6,7 @@
 #    By: dasamuel <dasamuel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/30 15:04:13 by wiwu              #+#    #+#              #
-#    Updated: 2026/01/15 07:17:20 by dasamuel         ###   ########.fr        #
+#    Updated: 2026/01/15 11:45:48 by dasamuel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -126,8 +126,4 @@ $(NAME)_bonus: $(OBJECTS) $(LIBFT_A)
 	@echo "$(GREEN)✔ Successfully compiled$(RESET)"
 	@echo
 
-val: all 
-	clear
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes --trace-children=yes ./minishell
-
-.PHONY: all clean fclean re bonus val
+.PHONY: all clean fclean re bonus
