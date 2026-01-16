@@ -58,7 +58,8 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				parse/node.c						\
 				parse/parse_cmd.c					\
 				signal_set.c						\
-				signal.c
+				signal.c							\
+				parse/get_next_line.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/

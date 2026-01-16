@@ -127,4 +127,6 @@ void	*safe_malloc(size_t __size);
 void	print_2red(char *arg1, char *arg2);
 void	print_3red(char *arg1, int i, char *arg3);
 
+char	*get_next_line_strip_nl(int fd);
+
 #endif
