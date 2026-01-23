@@ -17,7 +17,6 @@
 # include <unistd.h>
 # include <readline/readline.h>
 
-void	redisplay_prompt(int signum);
 void	set_signals_interactive_mode(void);
 void	set_signals_multilines(void);
 void	ignore_signals(void);

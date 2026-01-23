@@ -26,14 +26,14 @@
         // inferior 1
         // inferior 2
         // config to uncomment for this to work:
-        {
-          "description": "Follow child after fork",
-          "text": "set follow-fork-mode child"
-        },
-        {
-          "description": "Keep parent attached",
-          "text": "set detach-on-fork off"
-        }
+        // {
+        //   "description": "Follow child after fork",
+        //   "text": "set follow-fork-mode child"
+        // },
+        // {
+        //   "description": "Keep parent attached",
+        //   "text": "set detach-on-fork off"
+        // }
       ],
       "miDebuggerPath": "/usr/bin/gdb",
       "preLaunchTask": "build program"

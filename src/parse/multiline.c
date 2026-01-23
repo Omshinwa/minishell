@@ -21,6 +21,8 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 	while (1)
 	{
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
+		if (is_sigint_received())
+			break ;
 		if (!line)
 		{
 			print_2red("here-doc: got EOF when expected", del);
@@ -46,29 +48,22 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim
 	, int fd[2])
 {
-	int		pid;
+	// int		pid;
 	char	*exp_del;
 
-	pid = fork();
-	if (pid == 0)
-	{
-		if (ft_is_in_set(delim, '"') || ft_is_in_set(delim, '\''))
-			exp_del = remove_quotes(delim);
-		else
-			exp_del = ft_strdup(delim);
-		set_signals_multilines();
-		write_heredoc(fd[1], exp_del, !ft_strcmp(delim, exp_del), ctx->shell);
-		free(exp_del);
-	}
-	else if (pid == -1)
-		print_red("pid fail");
-	if (pid <= 0)
-	{
-		close(fd[0]);
-		close(fd[1]);
-		clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
-		exit(pid);
-	}
+	(void) node;
+
+	if (ft_is_in_set(delim, '"') || ft_is_in_set(delim, '\''))
+		exp_del = remove_quotes(delim);
+	else
+		exp_del = ft_strdup(delim);
+	set_signals_multilines();
+	write_heredoc(fd[1], exp_del, !ft_strcmp(delim, exp_del), ctx->shell);
+	free(exp_del);
+	// close(fd[0]);
+	close(fd[1]);
+	// clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
+	// exit(pid);
 }
 
 // prints a pretty prompt when && || etc
