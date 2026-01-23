@@ -16,18 +16,18 @@
 // This is a modified gnl that only reads 1 byte at a time, because of that, we
 // don't need a static var
 // len is given as an arg just for norminette
+// return NULL when read() hits EOF and no data was read.
 static char	*get_next_line(int fd, int len)
 {
-	static char	*remain;
-	char		buffer[1];
+	char		*remain;
+	char		buffer;
 	ssize_t		read_res;
 	char		*temp;
 
-	remain = ft_strdup("");
-	while (!ft_is_in_set(remain, '\n'))
+	remain = NULL;
+	while (!remain || !ft_is_in_set(remain, '\n'))
 	{
-		len = ft_strlen(remain);
-		read_res = read(fd, buffer, 1);
+		read_res = read(fd, &buffer, 1);
 		if (read_res == -1)
 		{
 			free(remain);
@@ -37,10 +37,11 @@ static char	*get_next_line(int fd, int len)
 			break ;
 		temp = safe_malloc(len + 2);
 		ft_memcpy(temp, remain, len);
-		temp[len] = buffer[0];
+		temp[len] = buffer;
 		temp[len + 1] = '\0';
 		free(remain);
 		remain = temp;
+		len++;
 	}
 	return (remain);
 }
@@ -51,11 +52,8 @@ char	*get_next_line_strip_nl(int fd)
 	char	*line;
 
 	tmp = get_next_line(fd, 0);
-	if (errno == EINTR)
-	{
-		free(tmp);
+	if (!tmp)
 		return (NULL);
-	}
 	line = ft_strtrim(tmp, "\n");
 	free(tmp);
 	return (line);

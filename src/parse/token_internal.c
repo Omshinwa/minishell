@@ -18,7 +18,7 @@ static int	is_valid_word_char(char c)
 	if (ft_isalnum(c))
 		return (1);
 	if (c == '|' || c == '<' || c == '>' || c == '&'
-		|| c == '(' || c == ')' || c == ' ' || c == '"' || c == '\'')
+		|| c == '(' || c == ')' || ft_isspace(c) || c == '"' || c == '\'')
 		return (0);
 	if (c == ';' || c == '\\')
 		return (0);

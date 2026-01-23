@@ -55,35 +55,6 @@ void	call_heredoc(t_node *node, t_ctx_parser *ctx, char *delim
 	close(fd[1]);
 }
 
-// // prints a pretty prompt when && || etc
-// static char	*new_prompt(t_ctx_parser *ctx)
-// {
-// 	char	*prompt;
-// 	char	*color;
-
-// 	if (ctx->arr_token[ctx->i - 1].type == TK_OP_AND)
-// 		color = BG_GREEN;
-// 	else if (ctx->arr_token[ctx->i - 1].type == TK_OP_OR)
-// 		color = BG_YELLOW;
-// 	else if (ctx->arr_token[ctx->i - 1].type == TK_PIPE)
-// 		color = BG_RED;
-// 	else if (ctx->arr_token[ctx->i - 1].type == TK_OPEN_PARENT)
-// 		color = BG_BLUE;
-// 	prompt = safe_malloc(sizeof(char) * 32);
-// 	if (!prompt)
-// 		return (NULL);
-// 	prompt[0] = '\0';
-// 	ft_strlcat(prompt, "\001", 32);
-// 	ft_strlcat(prompt, color, 32);
-// 	ft_strlcat(prompt, "\002", 32);
-// 	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 32);
-// 	ft_strlcat(prompt, "\001", 32);
-// 	ft_strlcat(prompt, RESET, 32);
-// 	ft_strlcat(prompt, "\002", 32);
-// 	ft_strlcat(prompt, " ", 32);
-// 	return (prompt);
-// }
-
 // prints a pretty prompt when && || etc
 static char	*new_prompt(t_ctx_parser *ctx, char prompt[32])
 {

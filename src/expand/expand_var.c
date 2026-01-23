@@ -101,7 +101,7 @@ char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 		else if (!(in_single || in_double) && (s[i] == '$'
 				&& (s[i + 1] == '"' || s[i + 1] == '\'')))
 			i++;
-		if (s[i])
+		else if (s[i])
 			handle_normal_char(s, &i, &result);
 	}
 	return (result);

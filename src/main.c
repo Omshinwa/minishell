@@ -43,13 +43,14 @@ t_shell	*init_shell(char **envp)
 // If there's an issue and you need to debug add the print:
 // expand_node(shell->node, shell);
 // print_nodes(shell->node, 0);
-static void	parse_and_run_command(char *str, t_shell *shell)
+static void	parse_and_run_command(char *str, t_shell *shell, int interactive)
 {
 	int		exit_status;
 
 	if (!str || !ft_strlen(str))
 		return ;
-	add_history(str);
+	if (interactive)
+		add_history(str);
 	shell->node = get_abstract_syntax_tree(str, shell);
 	if (shell->node)
 	{
@@ -78,24 +79,32 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_shell	*shell;
 	int		exit_code;
+	int		interactive;
 
 	(void)argc;
 	(void)argv;
 	shell = init_shell(envp);
 	if (!shell)
 		return (1);
+	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
 	while (1)
 	{
-		set_signals_interactive();
-		line = readline("\001"BOLD BG_WHITE"\002@@\001"RESET"\002 ");
+		if (interactive)
+		{
+			set_signals_interactive();
+			line = readline("\001"BOLD BG_WHITE"\002@@\001"RESET"\002 ");
+		}
+		else
+			line = get_next_line_strip_nl(STDIN_FILENO);
 		if (!line)
 		{
-			write(STDOUT_FILENO, "exit\n", 5);
+			if (interactive)
+				write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
 		if (update_sigint_receiver(shell, &line))
 			continue ;
-		parse_and_run_command(line, shell);
+		parse_and_run_command(line, shell, interactive);
 		free(line);
 	}
 	return (exit_code = shell->last_exit, clean_shell(shell), exit_code);

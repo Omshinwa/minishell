@@ -50,7 +50,7 @@ static int	populate_token(char *str, t_token *arr_token)
 	size = 0;
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '\n')
+		if (ft_isspace(str[i]) || str[i] == '\n')
 		{
 			i++;
 			continue ;
