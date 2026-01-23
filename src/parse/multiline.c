@@ -20,7 +20,10 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 
 	while (1)
 	{
-		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
+		if (isatty(STDIN_FILENO))
+			line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
+		else
+			line = get_next_line_strip_nl(STDIN_FILENO);
 		if (!line)
 			print_2red("here-doc: got EOF when expected", del);
 		if (is_sigint_received() || !line || ft_strcmp(line, del) == 0)
@@ -56,9 +59,10 @@ void	call_heredoc(t_node *node, t_ctx_parser *ctx, char *delim
 }
 
 // prints a pretty prompt when && || etc
-static char	*new_prompt(t_ctx_parser *ctx, char prompt[32])
+static char	*pretty_prompt(t_ctx_parser *ctx)
 {
 	int		type;
+	char	prompt[32];
 
 	type = ctx->arr_token[ctx->i - 1].type;
 	prompt[0] = '\0';
@@ -71,7 +75,7 @@ static char	*new_prompt(t_ctx_parser *ctx, char prompt[32])
 	else if (type == TK_OPEN_PARENT)
 		ft_strlcat(prompt, "\001" BG_BLUE "\002(", 32);
 	ft_strlcat(prompt, "\001" RESET "\002 ", 32);
-	return (prompt);
+	return (readline(prompt));
 }
 
 static int	not_just_empty_space(char *str)
@@ -96,12 +100,13 @@ int	command_continuation(t_ctx_parser *ctx)
 {			
 	char	*line;
 	t_token	*new_tokens;
-	char	prompt[32];
 
-	new_prompt(ctx, prompt);
 	while (1)
 	{
-		line = readline(prompt);
+		if (isatty(STDIN_FILENO))
+			line = pretty_prompt(ctx);
+		else
+			line = get_next_line_strip_nl(STDIN_FILENO);
 		if (is_sigint_received())
 			return (free(line), -1);
 		if (!line)

@@ -46,6 +46,7 @@ typedef struct s_shell
 	t_node			*node;
 	char			**envp;
 	t_env			*env;
+	int				is_tty;
 	int				last_exit;
 }	t_shell;
 

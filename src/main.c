@@ -37,19 +37,28 @@ t_shell	*init_shell(char **envp)
 	shell->last_exit = 0;
 	shell->envp = envp;
 	shell->node = NULL;
+	shell->is_tty = (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO));
+	if (shell->is_tty)
+		set_signals_interactive();
 	return (shell);
 }
 
 // If there's an issue and you need to debug add the print:
 // expand_node(shell->node, shell);
 // print_nodes(shell->node, 0);
-static void	parse_and_run_command(char *str, t_shell *shell, int interactive)
+static void	parse_and_run_command(char *str, t_shell *shell)
 {
 	int		exit_status;
 
+	if (is_sigint_received())
+	{
+		shell->last_exit = 130;
+		clear_sigint_received();
+		return ;
+	}
 	if (!str || !ft_strlen(str))
 		return ;
-	if (interactive)
+	if (shell->is_tty)
 		add_history(str);
 	shell->node = get_abstract_syntax_tree(str, shell);
 	if (shell->node)
@@ -60,18 +69,6 @@ static void	parse_and_run_command(char *str, t_shell *shell, int interactive)
 	}
 }
 
-static int	update_sigint_receiver(t_shell *shell, char **line)
-{
-	if (is_sigint_received())
-	{
-		shell->last_exit = 130;
-		clear_sigint_received();
-		free(*line);
-		return (1);
-	}
-	return (0);
-}
-
 // if (isatty(fileno(stdin)))
 // 	shell->prompt = readline(shell->terminal_prompt);
 int	main(int argc, char **argv, char **envp)
@@ -79,32 +76,25 @@ int	main(int argc, char **argv, char **envp)
 	char	*line;
 	t_shell	*shell;
 	int		exit_code;
-	int		interactive;
 
 	(void)argc;
 	(void)argv;
 	shell = init_shell(envp);
 	if (!shell)
 		return (1);
-	interactive = isatty(STDIN_FILENO) && isatty(STDOUT_FILENO);
 	while (1)
 	{
-		if (interactive)
-		{
-			set_signals_interactive();
+		if (shell->is_tty)
 			line = readline("\001"BOLD BG_WHITE"\002@@\001"RESET"\002 ");
-		}
 		else
 			line = get_next_line_strip_nl(STDIN_FILENO);
 		if (!line)
 		{
-			if (interactive)
+			if (shell->is_tty)
 				write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
-		if (update_sigint_receiver(shell, &line))
-			continue ;
-		parse_and_run_command(line, shell, interactive);
+		parse_and_run_command(line, shell);
 		free(line);
 	}
 	return (exit_code = shell->last_exit, clean_shell(shell), exit_code);
