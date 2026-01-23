@@ -59,13 +59,16 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	}
 }
 
-static void	update_sigint_receiver(t_shell *shell)
+static int	update_sigint_receiver(t_shell *shell, char **line)
 {
 	if (is_sigint_received())
 	{
 		shell->last_exit = 130;
 		clear_sigint_received();
+		free(*line);
+		return (1);
 	}
+	return (0);
 }
 
 // if (isatty(fileno(stdin)))
@@ -83,14 +86,15 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	while (1)
 	{
-		set_signals_interactive_mode();
+		set_signals_interactive();
 		line = readline("\001"BOLD BG_WHITE"\002@@\001"RESET"\002 ");
-		update_sigint_receiver(shell);
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
 		}
+		if (update_sigint_receiver(shell, &line))
+			continue ;
 		parse_and_run_command(line, shell);
 		free(line);
 	}

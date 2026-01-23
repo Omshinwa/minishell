@@ -18,7 +18,7 @@
 # include <readline/readline.h>
 
 void	set_signals_interactive_mode(void);
-void	set_signals_multilines(void);
+void	set_signals_interactive(void);
 void	ignore_signals(void);
 void	reset_signals(void);
 

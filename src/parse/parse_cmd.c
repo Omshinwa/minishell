@@ -50,7 +50,6 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 {
 	t_redir	*redir;
 	int		fd[2];
-	// int		status;
 
 	redir = create_n_append_new_redir(node, ctx);
 	if (!redir)
@@ -58,17 +57,7 @@ static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 	if (redir->type == TK_REDIR_2IN)
 	{
 		pipe(fd);
-		fork_heredoc_child(node, ctx, redir->filename, fd);
-		// ignore_signals();
-		// wait(&status);
-		// close(fd[1]);
-		// if (WIFSIGNALED(status))
-		// {
-		// 	if (WTERMSIG(status) == SIGINT)
-		// 		mark_sigint_received();
-		// 	close(fd[0]);
-		// 	return (write(STDOUT_FILENO, "\n", 1), rl_on_new_line(), -1);
-		// }
+		call_heredoc(node, ctx, redir->filename, fd);
 		if (is_sigint_received())
 		{
 			mark_sigint_received();

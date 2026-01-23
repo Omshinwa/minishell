@@ -13,19 +13,15 @@
 #include "minishell.h"
 #include <errno.h>
 
-// move the define to the header
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
-#endif
-
-// remain is either NULL or has a \0 terminated string inside
-static char	*get_next_line(int fd)
+// This is a modified gnl that only reads 1 byte at a time, because of that, we
+// don't need a static var
+// len is given as an arg just for norminette
+static char	*get_next_line(int fd, int len)
 {
 	static char	*remain;
 	char		buffer[1];
 	ssize_t		read_res;
 	char		*temp;
-	int len;
 
 	remain = ft_strdup("");
 	while (!ft_is_in_set(remain, '\n'))
@@ -54,7 +50,7 @@ char	*get_next_line_strip_nl(int fd)
 	char	*tmp;
 	char	*line;
 
-	tmp = get_next_line(fd);
+	tmp = get_next_line(fd, 0);
 	if (errno == EINTR)
 	{
 		free(tmp);

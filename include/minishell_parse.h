@@ -101,7 +101,7 @@ typedef struct s_ctx_parser
 
 // multilines.c
 int		command_continuation(t_ctx_parser *ctx);
-void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim,
+void	call_heredoc(t_node *node, t_ctx_parser *ctx, char *delim,
 			int fd[2]);
 // token.c
 t_token	*tokenize(char *str, t_shell *shell);

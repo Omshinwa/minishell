@@ -12,18 +12,6 @@
 
 #include "minishell.h"
 
-// This is used as signal handler, when called during a readline(), it just
-// reprints the prompt on a new line.
-static void	redisplay_prompt(int signum)
-{
-	(void)signum;
-	mark_sigint_received();
-	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
 static void	heredoc_ctrl_c(int signum)
 {
 	(void)signum;
@@ -31,15 +19,12 @@ static void	heredoc_ctrl_c(int signum)
 	rl_done = 1;
 }
 
-void	set_signals_interactive_mode(void)
+static int	event(void)
 {
-	signal(SIGINT, redisplay_prompt);
-	signal(SIGQUIT, SIG_IGN);
+	return (0);
 }
 
-int event(void) { return (0); }
-
-void	set_signals_multilines(void)
+void	set_signals_interactive(void)
 {
 	signal(SIGINT, heredoc_ctrl_c);
 	rl_event_hook = event;

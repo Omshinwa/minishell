@@ -21,14 +21,9 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 	while (1)
 	{
 		line = readline("\001" BG_MAGENTA "\002" "<<" "\001" RESET "\002 ");
-		if (is_sigint_received())
-			break ;
 		if (!line)
-		{
 			print_2red("here-doc: got EOF when expected", del);
-			break ;
-		}
-		if (ft_strcmp(line, del) == 0)
+		if (is_sigint_received() || !line || ft_strcmp(line, del) == 0)
 			break ;
 		if (do_expand_vars)
 			expanded_line = expand_variable(line, shell, 1);
@@ -45,53 +40,66 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 }
 
 // Fork a heredoc, close the write fd
-void	fork_heredoc_child(t_node *node, t_ctx_parser *ctx, char *delim
+void	call_heredoc(t_node *node, t_ctx_parser *ctx, char *delim
 	, int fd[2])
 {
-	// int		pid;
 	char	*exp_del;
 
 	(void) node;
-
 	if (ft_is_in_set(delim, '"') || ft_is_in_set(delim, '\''))
 		exp_del = remove_quotes(delim);
 	else
 		exp_del = ft_strdup(delim);
-	set_signals_multilines();
 	write_heredoc(fd[1], exp_del, !ft_strcmp(delim, exp_del), ctx->shell);
 	free(exp_del);
-	// close(fd[0]);
 	close(fd[1]);
-	// clean_stuff(&ctx->arr_token, &node, ctx->shell, 7);
-	// exit(pid);
 }
 
-// prints a pretty prompt when && || etc
-static char	*new_prompt(t_ctx_parser *ctx)
-{
-	char	*prompt;
-	char	*color;
+// // prints a pretty prompt when && || etc
+// static char	*new_prompt(t_ctx_parser *ctx)
+// {
+// 	char	*prompt;
+// 	char	*color;
 
-	if (ctx->arr_token[ctx->i - 1].type == TK_OP_AND)
-		color = BG_GREEN;
-	else if (ctx->arr_token[ctx->i - 1].type == TK_OP_OR)
-		color = BG_YELLOW;
-	else if (ctx->arr_token[ctx->i - 1].type == TK_PIPE)
-		color = BG_RED;
-	else if (ctx->arr_token[ctx->i - 1].type == TK_OPEN_PARENT)
-		color = BG_BLUE;
-	prompt = safe_malloc(sizeof(char) * 32);
-	if (!prompt)
-		return (NULL);
+// 	if (ctx->arr_token[ctx->i - 1].type == TK_OP_AND)
+// 		color = BG_GREEN;
+// 	else if (ctx->arr_token[ctx->i - 1].type == TK_OP_OR)
+// 		color = BG_YELLOW;
+// 	else if (ctx->arr_token[ctx->i - 1].type == TK_PIPE)
+// 		color = BG_RED;
+// 	else if (ctx->arr_token[ctx->i - 1].type == TK_OPEN_PARENT)
+// 		color = BG_BLUE;
+// 	prompt = safe_malloc(sizeof(char) * 32);
+// 	if (!prompt)
+// 		return (NULL);
+// 	prompt[0] = '\0';
+// 	ft_strlcat(prompt, "\001", 32);
+// 	ft_strlcat(prompt, color, 32);
+// 	ft_strlcat(prompt, "\002", 32);
+// 	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 32);
+// 	ft_strlcat(prompt, "\001", 32);
+// 	ft_strlcat(prompt, RESET, 32);
+// 	ft_strlcat(prompt, "\002", 32);
+// 	ft_strlcat(prompt, " ", 32);
+// 	return (prompt);
+// }
+
+// prints a pretty prompt when && || etc
+static char	*new_prompt(t_ctx_parser *ctx, char prompt[32])
+{
+	int		type;
+
+	type = ctx->arr_token[ctx->i - 1].type;
 	prompt[0] = '\0';
-	ft_strlcat(prompt, "\001", 32);
-	ft_strlcat(prompt, color, 32);
-	ft_strlcat(prompt, "\002", 32);
-	ft_strlcat(prompt, ctx->arr_token[ctx->i - 1].str, 32);
-	ft_strlcat(prompt, "\001", 32);
-	ft_strlcat(prompt, RESET, 32);
-	ft_strlcat(prompt, "\002", 32);
-	ft_strlcat(prompt, " ", 32);
+	if (type == TK_OP_AND)
+		ft_strlcat(prompt, "\001" BG_GREEN "\002&&", 32);
+	else if (type == TK_OP_OR)
+		ft_strlcat(prompt, "\001" BG_YELLOW "\002||", 32);
+	else if (type == TK_PIPE)
+		ft_strlcat(prompt, "\001" BG_RED "\002|", 32);
+	else if (type == TK_OPEN_PARENT)
+		ft_strlcat(prompt, "\001" BG_BLUE "\002(", 32);
+	ft_strlcat(prompt, "\001" RESET "\002 ", 32);
 	return (prompt);
 }
 
@@ -102,7 +110,7 @@ static int	not_just_empty_space(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ')
+		if (!ft_isspace(str[i]))
 			return (1);
 		i++;
 	}
@@ -113,26 +121,24 @@ static int	not_just_empty_space(char *str)
 // We tokenize the new input, and change the context's array of token to the
 // new array and set the index to 0.
 // Return 0 on success, -1 on error
-// set_signals_multilines() if we used fork, but we don't
 int	command_continuation(t_ctx_parser *ctx)
-{
+{			
 	char	*line;
 	t_token	*new_tokens;
-	char	*prompt;
+	char	prompt[32];
 
-	prompt = new_prompt(ctx);
-	if (!prompt)
-		return (-1);
+	new_prompt(ctx, prompt);
 	while (1)
 	{
 		line = readline(prompt);
+		if (is_sigint_received())
+			return (free(line), -1);
 		if (!line)
-			return (free(prompt), print_red("syntax: unexpected EOF"), -1);
+			return (print_red("syntax: unexpected EOF"), -1);
 		if (not_just_empty_space(line))
 			break ;
 		free(line);
 	}
-	free(prompt);
 	new_tokens = tokenize(line, ctx->shell);
 	free(line);
 	if (!new_tokens)

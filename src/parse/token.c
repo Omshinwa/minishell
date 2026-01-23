@@ -65,26 +65,10 @@ static int	populate_token(char *str, t_token *arr_token)
 	return (size);
 }
 
-// void	expand_tokens(t_token *arr_token, int size, t_shell *shell)
-// {
-// 	int		i;
-// 	char	*expanded;
-
-// 	i = -1;
-// 	while (++i < size)
-// 	{
-// 		if (i > 0 && arr_token[i - 1].type == TK_REDIR_2IN)
-// 			continue ;
-// 		expanded = expand_variable(arr_token[i].str, shell, 0);
-// 		free(arr_token[i].str);
-// 		arr_token[i].str = expanded;
-// 	}
-// }
-
 // Goes through the string input, Returns an array of tokens.
 // logic: j is the length of tokens, i for str
 // new_i is the new index after setting a token
-/// TODO: could optimize the calloc, im doing the worst case scenario.
+/// for the malloc size calc, im doing the worst case scenario.
 t_token	*tokenize(char *str, t_shell *shell)
 {
 	int		i;
