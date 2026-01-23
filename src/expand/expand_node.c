@@ -79,7 +79,7 @@ static int	expand_redir_wildcard(t_redir *redir)
 	return (0);
 }
 
-static int	expand_redirections(t_redir *redir)
+static int	expand_redirections(t_redir *redir, t_shell *shell)
 {
 	char	*expanded;
 
@@ -87,6 +87,12 @@ static int	expand_redirections(t_redir *redir)
 	{
 		if (redir->type != TK_REDIR_2IN)
 		{
+			expanded = expand_variable(redir->filename, shell, 0);
+			if (expanded)
+			{
+				free(redir->filename);
+				redir->filename = expanded;
+			}
 			expanded = remove_quotes(redir->filename);
 			if (expanded)
 			{
@@ -101,7 +107,8 @@ static int	expand_redirections(t_redir *redir)
 	return (0);
 }
 
-// expand var -> expand wildcards -> remove quotes (single node) 
+// (single node)
+// expand var -> expand wildcards -> remove quotes
 int	expand_cmd_node(t_node *node, t_shell *shell)
 {
 	expand_argv_variables(node->argv, shell);
@@ -110,10 +117,7 @@ int	expand_cmd_node(t_node *node, t_shell *shell)
 	expand_argv_quotes(node->argv);
 	if (!node->argv)
 		return (-1);
-	if (node->redir)
-	{
-		if (expand_redirections(node->redir))
-			return (-1);
-	}
+	if (expand_redirections(node->redir, shell))
+		return (-1);
 	return (0);
 }

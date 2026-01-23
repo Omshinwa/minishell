@@ -53,7 +53,7 @@ static void	shift_empty_args(char **argv)
 
 // first move the empty args to the end.
 // If the first element is still NUll, that means
-// all of them are Null, then we do a trick where we switch the
+// all of them are empty, then we do a trick where we switch the
 // first cmd with `true`
 void	handle_empty_args(char ***argv)
 {

@@ -50,7 +50,8 @@ int	ft_exit(char **args, t_shell *shell)
 	long	exit_code;
 
 	exit_code = shell->last_exit;
-	ft_putendl_fd("exit", STDOUT_FILENO);
+	if (shell->is_tty)
+		ft_putendl_fd("exit", STDOUT_FILENO);
 	if (args[1])
 	{
 		if (!ft_atol_safe(args[1], &exit_code))

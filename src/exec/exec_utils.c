@@ -58,6 +58,8 @@ char	*get_path(char *cmd, t_shell *shell)
 
 	if (ft_is_in_set(cmd, '/') && file_exists(cmd))
 		return (ft_strdup(cmd));
+	else if (ft_is_in_set(cmd, '/') && !file_exists(cmd))
+		return (NULL);
 	path_node = find_env_node(shell->env, "PATH");
 	if (!path_node || !path_node->value)
 		return (NULL);
@@ -65,16 +67,14 @@ char	*get_path(char *cmd, t_shell *shell)
 	split_path = ft_split(find_path, ':');
 	if (!split_path)
 		return (NULL);
-	i = 0;
-	while (split_path[i])
+	i = -1;
+	while (split_path[++i])
 	{
 		path = try_path(split_path[i], cmd);
 		if (path)
 			return (free_split(split_path), path);
-		i++;
 	}
-	free_split(split_path);
-	return (NULL);
+	return (free_split(split_path), NULL);
 }
 
 int	get_exit_status(int status)
