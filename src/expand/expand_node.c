@@ -108,7 +108,6 @@ static int	expand_redirections(t_redir *redir, t_shell *shell)
 }
 
 // (single node)
-// expand var -> expand wildcards -> remove quotes
 int	expand_cmd_node(t_node *node, t_shell *shell)
 {
 	expand_argv_variables(node->argv, shell);

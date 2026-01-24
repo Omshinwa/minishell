@@ -78,7 +78,6 @@ static int	should_expand(char *s, int i, int ignore_quotes, int in_single)
 	return (0);
 }
 
-// ALSO FREEs S at the end
 char	*expand_variable(char *s, t_shell *shell, int ignore_quotes)
 {
 	int		i;
