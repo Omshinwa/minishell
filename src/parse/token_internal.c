@@ -134,5 +134,7 @@ int	set_token(t_token *arr_token, int arr_i, char *str, int start)
 	if (end == -1)
 		return (-1);
 	token->str = ft_substr(str, start, end - start);
+	if (!token->str)
+		return (token->type = TK_END, -1);
 	return (end);
 }

@@ -29,13 +29,12 @@ static char	*get_next_line(int fd, int len)
 	{
 		read_res = read(fd, &buffer, 1);
 		if (read_res == -1)
-		{
-			free(remain);
-			remain = NULL;
-		}
-		if (read_res <= 0)
-			break ;
+			return (free(remain), NULL);
+		else if (read_res == 0)
+			return (remain);
 		temp = safe_malloc(len + 2);
+		if (!temp)
+			return (free(remain), NULL);
 		ft_memcpy(temp, remain, len);
 		temp[len] = buffer;
 		temp[len + 1] = '\0';

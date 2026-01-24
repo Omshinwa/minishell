@@ -141,6 +141,8 @@ t_node	*parse_simple_command(t_ctx_parser *ctx)
 	if (nb_of_words == -1)
 		return (NULL);
 	node = new_node(NODE_CMD, NULL, NULL);
+	if (!node)
+		return (NULL);
 	node->argv = safe_malloc((nb_of_words + 1) * sizeof(char *));
 	if (!node->argv)
 		return (clean_nodes(&node), NULL);

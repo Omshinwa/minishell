@@ -51,6 +51,7 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				clean.c								\
 				error.c								\
 				main.c								\
+				parse/get_next_line.c				\
 				parse/parse.c						\
 				parse/multiline.c					\
 				parse/token.c						\
@@ -59,7 +60,6 @@ SRC_FILES	=	builtins/builtin_cd.c				\
 				parse/parse_cmd.c					\
 				signal_set.c						\
 				signal.c							\
-				parse/get_next_line.c
 
 OBJ_FILES	=	$(SRC_FILES:.c=.o)
 SRC_PATH	=	src/
