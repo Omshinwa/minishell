@@ -38,8 +38,6 @@ t_shell	*init_shell(char **envp)
 	shell->envp = envp;
 	shell->node = NULL;
 	shell->is_tty = (isatty(STDIN_FILENO) && isatty(STDOUT_FILENO));
-	if (shell->is_tty)
-		set_signals_interactive();
 	return (shell);
 }
 
@@ -69,23 +67,17 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	}
 }
 
-// if (isatty(fileno(stdin)))
-// 	shell->prompt = readline(shell->terminal_prompt);
-int	main(int argc, char **argv, char **envp)
+static void	main_loop(t_shell *shell)
 {
 	char	*line;
-	t_shell	*shell;
-	int		exit_code;
 
-	(void)argc;
-	(void)argv;
-	shell = init_shell(envp);
-	if (!shell)
-		return (1);
 	while (1)
 	{
 		if (shell->is_tty)
+		{
+			set_signals_interactive();
 			line = readline("\001"BOLD BG_WHITE"\002@@\001"RESET"\002 ");
+		}
 		else
 			line = get_next_line_strip_nl(STDIN_FILENO);
 		if (!line)
@@ -97,5 +89,20 @@ int	main(int argc, char **argv, char **envp)
 		parse_and_run_command(line, shell);
 		free(line);
 	}
+}
+
+// if (isatty(fileno(stdin)))
+// 	shell->prompt = readline(shell->terminal_prompt);
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	*shell;
+	int		exit_code;
+
+	(void)argc;
+	(void)argv;
+	shell = init_shell(envp);
+	if (!shell)
+		return (1);
+	main_loop(shell);
 	return (exit_code = shell->last_exit, clean_shell(shell), exit_code);
 }
