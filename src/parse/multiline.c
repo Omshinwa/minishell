@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 // This read what's in the standard input and write to FD
-void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
+static void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 {
 	char	*line;
 	char	*expanded_line;
@@ -42,7 +42,6 @@ void	write_heredoc(int fd, char *del, int do_expand_vars, t_shell *shell)
 	free(line);
 }
 
-// Fork a heredoc, close the write fd
 void	call_heredoc(t_node *node, t_ctx_parser *ctx, char *delim
 	, int fd[2])
 {

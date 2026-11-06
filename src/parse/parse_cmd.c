@@ -45,7 +45,7 @@ static t_redir	*create_n_append_new_redir(t_node *node, t_ctx_parser *ctx)
 
 // This is called when the token at ARR_TOKEN[*INDEX] is < or > or << or >>:
 // calls CREATE N APPEND NEW REDIR
-// if TK_REDIR_2IN : Create a fork child that calls heredoc
+// if TK_REDIR_2IN : immediately calls heredoc
 static int	parse_redirection(t_node *node,	t_ctx_parser *ctx)
 {
 	t_redir	*redir;

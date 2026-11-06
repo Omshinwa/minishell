@@ -16,6 +16,7 @@ static void	exec_child_process(t_node *node, t_shell *shell, char *path)
 {
 	if (handle_redirections(node->redir) != 0)
 	{
+		free(path);
 		clean_shell(shell);
 		exit(1);
 	}

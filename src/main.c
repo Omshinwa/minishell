@@ -59,6 +59,7 @@ static void	parse_and_run_command(char *str, t_shell *shell)
 	if (shell->is_tty)
 		add_history(str);
 	shell->node = get_abstract_syntax_tree(str, shell);
+	// print_nodes(shell->node, 0);
 	if (shell->node)
 	{
 		exit_status = execute_tree(shell->node, shell);

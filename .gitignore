@@ -1,1 +1,11 @@
 .DS_Store
+.*/*
+*.o
+obj/*
+minishell
+minishell_bonus
+readline.supp
+val
+minishell_tester
+*.a
+*.sh

@@ -44,7 +44,7 @@ int	ft_cd(char **args, t_shell *shell)
 
 	if (!args[1])
 	{
-		path = getenv("HOME");
+		path = get_env_value(shell, "HOME");
 		if (!path)
 		{
 			ft_putendl_fd("cd: HOME not set", 2);

@@ -116,13 +116,13 @@ t_node	*parse_command(t_ctx_parser *ctx)
 //  █████   █████ ████████ ▒▒█████████     █████    █████    ▒▒██████ ▒▒██████ 
 // ▒▒▒▒▒   ▒▒▒▒▒ ▒▒▒▒▒▒▒▒   ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒    ▒▒▒▒▒      ▒▒▒▒▒▒   ▒▒▒▒▒▒  
 
-// print_tokens(ctx.arr_token);
 t_node	*get_abstract_syntax_tree(char *str, t_shell *shell)
 {
 	t_ctx_parser	ctx;
 	t_node			*node;
 
 	ctx.arr_token = tokenize(str, shell);
+	// print_tokens(ctx.arr_token);
 	ctx.i = 0;
 	if (!ctx.arr_token)
 		return (NULL);
