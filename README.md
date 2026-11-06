@@ -1,27 +1,39 @@
+# minishell
 
-echo $USER >> out && cat out | grep		1
-echo $USER >> out && cat out | grep $USER	wiwu\nwiwu\nwiwu	0
+A small shell written in C for the 42 curriculum, by wiwu and dasamuel.
 
-CONCERNANT LES SIGNAUX:
-execve reset les customs signal handlers, mais il n'undo pas SIG_IGN.
-Si on fait signal(machin, SIG_IGN), on doit le reset par SIG_DFL avant de execve.
+I wrote a printer to vizualise the tokens and Abstract Syntax Tree the shell constructs. Which makes it easier to debug.
+Note: Instead of the usual view of a tree with the root in the middle, I use indentation to indicate children (nodes that have the same indentation are siblings).
 
-Q: Tu peux me montrer ton Abstract syntax tree (un printer?).
+<img src="docs/ast-branches.png" width="456" alt="OR at the root. Its left child is a pipe of echo and cat. Its right child is a subshell holding AND, with cat and echo below it.">
 
-valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp --track-fds=yes --trace-children=yes ./minishell
-
-ulimit -n 10 to test a reasonable amount of pipes / redirections that fit under the limit
+<img src="docs/ast-two-sides.png" width="477" alt="AND at the root. Its left child is OR and its right child is a pipe, each holding a subshell and a command.">
 
 
-f1r4s7% cat << delimiter_1 &&
-cmdand heredoc> this is the first cat
-cmdand heredoc> delimiter_1
-cmdand> cat << delimiter_2 && echo 'hold on this isnt all' ||       
-cmdand cmdand cmdor heredoc> second cat
-cmdand cmdand cmdor heredoc> delimiter_2
-cmdand cmdand cmdor> echo "last"    
+## Tokens
 
-test just entering newlines for the trailing && / ||
+### Parentheses
 
-# check which chars are valid or not for words / args
-ex: / is like an alphanumerical char
+<img src="docs/tokens-parentheses.png" width="699" alt="Nested parentheses split into blue tokens, with pipes and && and || around them">
+
+### Pipes, redirections, heredocs
+
+<img src="docs/tokens-pipes-redirects.png" width="560" alt="Pipelines with redirections, and a heredoc piped into cat">
+
+### `&&` and `||`
+
+<img src="docs/tokens-and-or.png" width="560" alt="Commands chained with && and ||">
+
+### Quotes and expansions
+
+An operator inside quotes is just part of the word. `$USER` and `*.txt` are still plain words at this stage, and only get expanded when the command runs.
+
+<img src="docs/tokens-quotes.png" width="560" alt="Quoted strings staying as a single token">
+
+### Trailing operators
+
+<img src="docs/continuation.png" width="560" alt="Continuation prompts for &&, ||, | and (">
+
+### Syntax errors
+
+<img src="docs/syntax-errors.png" width="560" alt="Five rejected commands and their error messages">
